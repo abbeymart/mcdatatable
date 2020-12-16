@@ -5,7 +5,7 @@
  * @Description: mc-datatable: active ui component
  */
 
-import { strToBool } from "@mconnect/mcutils";
+import { strToBool } from "../helper";
 import { ActivePropsType } from "../types";
 
 export function Active(props: ActivePropsType) {
