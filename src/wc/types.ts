@@ -93,18 +93,6 @@ export interface PageNavPropsType {
     pageNavNumber: (e: Event, val: string | number) => void;
 }
 
-export interface TableMessagePropsType {
-    isActive?: boolean;
-    activeLabel?: string;
-    inActiveLabel?: string;
-}
-
-export interface TableSearchPropsType {
-    isActive?: boolean;
-    activeLabel?: string;
-    inActiveLabel?: string;
-}
-
 export interface DataSourceType {
     type: "provider" | "taskLink";
     task?: TaskFunctionType;        // this.addItemId | deleteItem | updateItem
