@@ -5,13 +5,8 @@
  */
 
 import {
-    TableStyle,
-    SortStyle,
-    DataFieldsType,
-    DataItemsType,
-    PagePositionType,
-    DataFieldType,
-    ItemValueType
+    TableStyle, SortStyle, DataFieldsType, DataItemsType,
+    PagePositionType, DataFieldType, ItemValueType,
 } from "../types";
 import { sortBy } from "lodash"
 import { Observable, Subscriber } from "rxjs";
@@ -185,7 +180,7 @@ class DtStore {
         return this.dataItems.length;
     }
 
-    get DataFieldsCount(){
+    get DataFieldsCount() {
         return this.DataFields.length;
     }
 

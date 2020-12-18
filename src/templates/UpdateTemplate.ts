@@ -11,7 +11,7 @@ export function Active(props: UpdatePropsType) {
     const itemLabel = props.itemLabel || "Update"
         // activate update component
     return `
-    <a href="#" onclick="${props.itemTask(props.itemData)}">
+    <a href="#" onclick="props.itemTask(e, props.itemData)">
         ${itemLabel}<i class="fa fa-edit"></i>
     </a>`
 }

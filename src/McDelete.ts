@@ -45,7 +45,7 @@ class McDelete extends HTMLElement {
         if (itemDomRef && props.action && (typeof props.action === "function") && props.itemId) {
             itemDomRef.onclick = (e) => {
                 e.preventDefault();
-                props.action(props.itemId);
+                props.action(e, props.itemId);
             }
         }
     }

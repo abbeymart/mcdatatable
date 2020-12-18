@@ -27,7 +27,7 @@ export interface ItemFieldType{
 }
 
 export interface UpdateTaskFunctionType {
-    (item: ItemValueType): any
+    (e: Event, item: ItemValueType): any
 }
 
 export interface UpdatePropsType {
@@ -37,7 +37,7 @@ export interface UpdatePropsType {
 }
 
 export interface DeleteTaskFunctionType {
-    (itemId: string): any
+    (e: Event, itemId: string): any
 }
 
 export interface DeletePropsType {

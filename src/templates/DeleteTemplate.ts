@@ -11,7 +11,7 @@ export function Active(props: DeletePropsType) {
     const itemLabel = props.itemLabel || "Update"
     // activate update component
     return `
-    <a href="#" onclick="${props.itemTask(props.itemId)}">
+    <a href="#" onclick="props.itemTask(e, props.itemId)">
         ${itemLabel}<i class="fa fa-times-circle"></i>
     </a>`
 }

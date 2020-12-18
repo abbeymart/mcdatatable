@@ -13,7 +13,7 @@ import {
     DOMType,
     TablePropsType,
     TableStyle,
-    DataItemType, EventType
+    ItemValueType, EventType
 } from "./types";
 import { dtstore } from "./store/DtStore";
 import { sortBy } from "lodash";
@@ -264,10 +264,10 @@ class McTable extends HTMLElement {
     }
 
     // TODO: events implementation for item/record-fields
-    async eventAction(item: DataItemType, fieldEvents: Array<EventType>) {
+    async eventAction(item: ItemValueType, fieldEvents: Array<EventType>) {
         let eventsTask = ""
         if (fieldEvents && fieldEvents.length > 0) {
-            let fieldParams: DataItemType | string = {}
+            let fieldParams: ItemValueType | string = {}
             fieldEvents.forEach(ev => {
                 switch (ev.type) {
                     case "click":
