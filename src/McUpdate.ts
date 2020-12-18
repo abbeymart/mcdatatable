@@ -5,7 +5,7 @@
  */
 
 // types
-import {UpdateTaskFunctionType, ValueType} from "./types";
+import { UpdateTaskFunctionType } from "./types";
 
 class McUpdate extends HTMLElement {
     protected action: UpdateTaskFunctionType;
@@ -26,8 +26,8 @@ class McUpdate extends HTMLElement {
         return ['label'];
     }
 
-    attributeChangedCallback(name: string, oldVal: ValueType, newValue: ValueType) {
-        if (oldVal === newValue) {
+    attributeChangedCallback(name: string, oldVal: any, newValue: any) {
+        if (JSON.stringify(oldVal) === JSON.stringify(newValue)) {
             return;
         }
         if (name === 'label') {

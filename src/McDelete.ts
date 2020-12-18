@@ -5,7 +5,7 @@
  */
 
 // types
-import {DeleteTaskFunctionType, ValueType} from "./types";
+import {DeleteTaskFunctionType} from "./types";
 
 class McDelete extends HTMLElement {
     protected action: DeleteTaskFunctionType;

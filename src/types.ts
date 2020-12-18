@@ -18,13 +18,21 @@ export interface TaskFunctionType {
     (val?: any): any
 }
 
+export interface ItemValueType{
+    [key: string]: any;
+}
+
+export interface ItemFieldType{
+    [key: string]: any;
+}
+
 export interface UpdateTaskFunctionType {
-    (item: object): any
+    (item: ItemValueType): any
 }
 
 export interface UpdatePropsType {
     itemTask: UpdateTaskFunctionType;
-    itemData: object;
+    itemData: ItemValueType;
     itemLabel?: string;
 }
 
@@ -38,7 +46,7 @@ export interface DeletePropsType {
     itemLabel?: string;
 }
 
-export type ValueType = string | object | UpdateTaskFunctionType | DeleteTaskFunctionType;
+// export type ValueType = string | object | number | UpdateTaskFunctionType | DeleteTaskFunctionType;
 
 export interface TableStyle {
     table: string;
@@ -52,8 +60,8 @@ export interface SortStyle {
 }
 
 export interface DataTablePropsType {
-    dataFields: Array<object>;
-    dataItems: Array<object>;
+    dataFields: Array<DataFieldType>;
+    dataItems: Array<ItemValueType>;
     currentPage: number;
     dataTotal: number;         // default: 0
     recordTotal: number;       // computed from dataTotal or dataItems
@@ -110,18 +118,14 @@ export interface EventType {
     params?: string[];
 }
 
-export interface DataItemType {
-    [key: string]: any;
-}
-
-export type DataItemsType = Array<DataItemType>;
+export type DataItemsType = Array<ItemValueType>;
 
 export interface DataFieldType {
     name: string;
     label: string;
     type: string; // "boolean"
     default?: boolean | string | number | object | Array<boolean> | Array<string> | Array<number> | Array<object>;
-    order?: number;
+    order: number;
     sort?: boolean;
     source: DataSourceType;
     events?: Array<EventType>;

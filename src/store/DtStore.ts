@@ -4,7 +4,15 @@
  * @Description: mc-datatable store, single source of truth for mc-datatable data
  */
 
-import { TableStyle, SortStyle, DataFieldsType, DataItemsType, PagePositionType, DataFieldType } from "../types";
+import {
+    TableStyle,
+    SortStyle,
+    DataFieldsType,
+    DataItemsType,
+    PagePositionType,
+    DataFieldType,
+    ItemValueType
+} from "../types";
 import { sortBy } from "lodash"
 import { Observable, Subscriber } from "rxjs";
 
@@ -25,6 +33,12 @@ class DtStore {
     protected initialDataTotal: number;     // to limit number of records to process
     protected sortAsc: boolean;
     protected sortDesc: boolean;
+    // other props
+    // protected activeLabel: string;
+    // protected deleteLabel: string;
+    // protected updateLabel: string;
+    // protected itemId: string;
+    // protected itemData: ItemValueType;
 
     constructor() {
         // required attributes | default values
