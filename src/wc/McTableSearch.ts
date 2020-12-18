@@ -17,52 +17,27 @@ class McTableSearch extends HTMLElement {
         this.renderComponent();
     }
 
-    static get observedAttributes() {
-        return ['dataitems'];
-    }
-
-    attributeChangedCallback(name: string, oldVal: number[], newValue: number[]) {
-        if (oldVal === newValue) {
-            return;
-        }
-        this.renderComponent();
-    }
-
     // getters ands setters
     get searchKey(): string {
-        return dtstore.searchKey;
+        return dtstore.SearchKey;
     }
 
     set searchKey(value: string) {
-        dtstore.searchKey = value;
-        // this.setAttribute('searchKey', value.toString());
+        dtstore.SearchKey = value;
+    }
+
+    // methods
+    setSearchKey(e: Event, val: string) {
+        e.preventDefault();
+        this.searchKey = val;
     }
 
     renderComponent() {
         this.innerHTML = `
             <div>
-                <input class="w3-input mc-bold-label" type="text" id="mc-table-search-key" placeholder="Enter Search Keywords">
+                <input class="w3-input mc-bold-label" type="text" id="mc-table-search-key" placeholder="Enter Search Keywords" onkeyup="this.setSearchKey(e, e.target.value)">
             </div>
         `;
-        // event's handlers
-        // Component DOM references
-        this.#DOM = TableHelper.getTableSearch(this.ownerDocument);
-        const tableSearch = this.#DOM.tableSearch;
-
-        // handle & emit events
-        if (tableSearch) {
-            tableSearch.onchange = (e: any) => {
-                e.preventDefault();
-                // emit event, for other sub-components
-                e.target.itemType = 'table-search';
-                e.target.itemValue = e.target.value || '';
-                McTableSearch.emitPageEvent(e);
-                // update store value(s):
-                if (e.target.value) {
-                    this.searchKey = e.target.value;
-                }
-            };
-        }
     }
 
     disconnectedCallback() {
@@ -70,16 +45,6 @@ class McTableSearch extends HTMLElement {
         this.innerHTML = '';
     }
 
-    static emitPageEvent(e: any) {
-        e.preventDefault();
-        // emit 'itemType event
-        const compChange = new CustomEvent(e.target.itemType, {
-            bubbles: true,
-            cancelable: true,
-            detail: {type: e.target.itemType, value: e.target.itemValue}
-        });
-        e.target.dispatchEvent(compChange);
-    }
 }
 
 let mcTableSearch;

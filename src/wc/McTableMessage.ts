@@ -3,7 +3,7 @@
  * @Company: mConnect.biz | @License: MIT
  * @Description: mc-table-message, to display table-view message(e.g. showing 1 to 10 of 350 records)
  */
-import {dtstore} from "./store/DtStore";
+import { dtstore } from "./store/DtStore";
 
 class McTableMessage extends HTMLElement {
     constructor() {
@@ -12,50 +12,21 @@ class McTableMessage extends HTMLElement {
         this.renderComponent();
     }
 
-    // attributes, set/changed from the parent/main component [McDataTable or McTable]
-    static get observedAttributes() {
-        return ['pagelimit', 'datatotal', 'currentpage', 'initialdatatotal'];
-    }
-
-    attributeChangedCallback(name: string, oldVal: number, newValue: number) {
-        if (oldVal === newValue) {
-            return;
-        }
-        // re-render component for change to any of the observed attributes change
-        this.renderComponent();
-    }
-
     // getters and setters
     get initialDataTotal(): number {
-        return dtstore.initialDataTotal;
-    }
-
-    set initialDataTotal(value: number) {
-        this.setAttribute('initialdatatotal', value.toString());
+        return dtstore.InitialDataTotal;
     }
 
     get dataTotal(): number {
-        return dtstore.dataTotal;
-    }
-
-    set dataTotal(value: number) {
-        this.setAttribute('datatotal', value.toString());
+        return dtstore.DataTotal;
     }
 
     get pageLimit(): number {
-        return dtstore.pageLimit;
-    }
-
-    set pageLimit(value: number) {
-        this.setAttribute('pagelimit', value.toString());
+        return dtstore.PageLimit;
     }
 
     get currentPage(): number {
-        return dtstore.currentPage;
-    }
-
-    set currentPage(value: number) {
-        this.setAttribute('currentpage', value.toString());
+        return dtstore.CurrentPage;
     }
 
     get itemFrom(): number {

@@ -60,21 +60,14 @@ class McDataTable extends HTMLElement {
         // to determine dataitems (by skip && limit)
         // issue/concerns/considerations: performance with fetch-action for every page
 
-        // render template,
+        // render template
         this.renderComponent();
     }
 
     // TODO: observed attributes to re-render component(s)
     //  i.e. subscribe to appropriate prop(s) and re-render impacted component(s)
-    static get observedAttributes() {
-        return ['datatotal', 'dataitems', 'datafields', 'initialdatatotal', 'tablestyle', 'sortstyle'];
-    }
-    attributeChangedCallback(name: string, oldVal: ObValueType, newValue: ObValueType) {
-        if (oldVal === newValue) {
-            return;
-        }
-    }
 
+    // getters and setters (props) for mcDatatable component
     get PageLimit(): number {
         return dtstore.PageLimit;
     }
@@ -82,7 +75,7 @@ class McDataTable extends HTMLElement {
     set PageLimit(value: number) {
         this.pageLimit = value;
         dtstore.PageLimit = value;
-        // TODO: reload affected component(s)
+        // TODO: reload affected component(s) via publish-subscribe
     }
 
     get CurrentPage(): number {
@@ -104,7 +97,7 @@ class McDataTable extends HTMLElement {
     }
 
     get PageStart(): number {
-        return this.pageStart;
+        return dtstore.PageStart;
     }
 
     set PageStart(value: number) {
@@ -113,7 +106,7 @@ class McDataTable extends HTMLElement {
     }
 
     get PageLimits(): number[] {
-        return this.pageLimits;
+        return dtstore.PageLimits;
     }
 
     set PageLimits(value: number[]) {
@@ -122,7 +115,7 @@ class McDataTable extends HTMLElement {
     }
 
     get TableStyle(): TableStyle {
-        return this.TableStyle;
+        return dtstore.TableStyle;
     }
 
     set TableStyle(value: TableStyle) {
@@ -132,7 +125,7 @@ class McDataTable extends HTMLElement {
     }
 
     get SortStyle(): SortStyle {
-        return this.sortStyle;
+        return dtstore.SortStyle;
     }
 
     set SortStyle(value: SortStyle) {
@@ -142,7 +135,7 @@ class McDataTable extends HTMLElement {
     }
 
     get DataFields(): DataFieldsType {
-        return this.dataFields;
+        return dtstore.DataFields;
     }
 
     set DataFields(value: DataFieldsType) {
@@ -152,7 +145,7 @@ class McDataTable extends HTMLElement {
     }
 
     get DataTotal(): number {
-        return this.dataTotal;
+        return dtstore.DataTotal;
     }
 
     set DataTotal(value: number) {
@@ -161,7 +154,7 @@ class McDataTable extends HTMLElement {
     }
 
     get DataItems(): DataItemsType {
-        return this.dataItems;
+        return dtstore.DataItems;
     }
 
     set DataItems(value: DataItemsType) {
@@ -170,37 +163,29 @@ class McDataTable extends HTMLElement {
         // this.setAttribute('dataitems', 'new-data-items');
     }
 
-    get DataCount() {
-        return this.dataItems.length;
+    get DataItemsCount() {
+        return dtstore.DataItemsCount;
     }
 
     get RecordTotal() {
-        return this.dataTotal ? this.dataTotal : this.DataCount;
+        return dtstore.RecordTotal;
     }
 
     renderComponent() {
         // render template,
-        if (dtstore.RecordTotal > 0 && (Array.isArray(dtstore.DataFields) && dtstore.DataFields.length > 0) &&
-            (Array.isArray(dtstore.DataItems) && dtstore.DataItems.length > 0)) {
+        if (dtstore.RecordTotal > 0 && dtstore.DataFieldsCount > 0 && dtstore.DataItemsCount > 0) {
             this.innerHTML = DataTableTemplate();
         } else {
             this.innerHTML = TableNoDataTemplate();
         }
-        // component #DOM elements/references
-        this.DOM = TableHelper.getDOM(this.ownerDocument);
-        // sub-components' events handling
-        if (this.DOM) {
-            this.pageEvents(this.DOM);
-        }
+
     }
 
     disconnectedCallback() {
+        // cleanup - reset DOM, removeEventLister(s), garbage collection...
+        this.innerHTML = "";
     }
 
-    // events' handlers ==> TODO: publish-subscribe
-    pageEvents(domScope: DOMType) {
-        // pageNav events handler
-    }
 }
 
 let mcDataTable;

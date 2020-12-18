@@ -4,161 +4,107 @@
  * @Description: mc-table-body, for data rows, must match table-header (count/responsive style)
  */
 
-import mcTableTemplate from './templates/TableTemplate';
-import TableHelper from './templates/TableHelpers';
-import {DataFieldType, DataFieldsType, DataItemsType, DOMType, TablePropsType, TableStyle} from "./types";
-import {dtstore} from "./store/DtStore";
-import {sortBy} from "lodash";
+import TableTemplate from "./templates/TableTemplate";
+import TableHelper from "./templates/TableHelpers";
+import {
+    DataFieldType,
+    DataFieldsType,
+    DataItemsType,
+    DOMType,
+    TablePropsType,
+    TableStyle,
+    DataItemType, EventType
+} from "./types";
+import { dtstore } from "./store/DtStore";
+import { sortBy } from "lodash";
 
 class McTable extends HTMLElement {
-    #pagePosition: string = 'first-page';
-    #pageNum: number = 1;
-    #sortAsc: boolean = false;
-    #sortDesc: boolean = false;
-    #itemsIds: string[] = [];
-    #DOM: DOMType = {};
-
     constructor() {
         super()
         // attributes
         this.renderComponent();
     }
 
-    static get observedAttributes() {
-        return ['datafields', 'dataitems', 'pagelimit', 'currentpage', 'searchkey'];
-    }
-
-    attributeChangedCallback(name: string, oldVal: any, newValue: any) {
-        if (oldVal === newValue) {
-            return;
-        }
-        this.renderComponent();
-    }
-
     renderComponent() {
         const props: TablePropsType = {
-            tableFields: dtstore.dataFields,
-            tableItems: dtstore.dataItems,
-            tableRecords: this.tableRecords(),
-            tableStyle: dtstore.tableStyle,
-            sortStyleAsc: this.sortStyleAsc(),
-            sortStyleDesc: this.sortStyleDesc(),
+            tableFields  : dtstore.DataFields,
+            tableItems   : dtstore.DataItems,
+            tableRecords : this.TableRecords,
+            tableStyle   : dtstore.TableStyle,
+            sortStyleAsc : this.SortStyleAsc,
+            sortStyleDesc: this.SortStyleDesc,
         }
-        this.innerHTML = mcTableTemplate(props);
-
-        // event's handlers
-        this.#DOM = TableHelper.getPageNavDOM(this.ownerDocument);
-
+        this.innerHTML = TableTemplate(props);
         // handle / emit events
-        const mcTableHeader = document.getElementsByClassName('mc-table-header');
-        if (mcTableHeader && mcTableHeader.length > 0) {
-            // @ts-ignore
-            for (let colDom of mcTableHeader) {
-                colDom.onclick = (e: any) => {
-                    e.preventDefault();
-                    // capture header-column data value
-                    const fieldValue = e.target.getAttribute('data-mc-table-header-field');
-                    // emit event, for other sub-components
-                    e.target.itemType = 'table-header-column';
-                    // e.target.itemValue = parseInt(currentPageNum);
-                    McTable.emitTableHeaderEvent(e);
-                    // perform page-action
-                    if (fieldValue && typeof fieldValue === 'string') {
-                        (async () => await this.sortDataByField(JSON.parse(fieldValue)))();
-                    }
-                };
-            }
-        }
-    }
-
-    // getters and setters
-    get sortAsc(): boolean {
-        return this.#sortAsc;
-    }
-
-    set sortAsc(value: boolean) {
-        this.#sortAsc = value;
-    }
-
-    get sortDesc(): boolean {
-        return this.#sortDesc;
-    }
-
-    set sortDesc(value: boolean) {
-        this.#sortDesc = value;
-    }
-
-    get datafields(): DataFieldsType {
-        return [];
-    }
-
-    set datafields(value: DataFieldsType) {
-        this.setAttribute('datafields', 'new-data-fields');
-    }
-
-    get dataitems(): DataItemsType {
-        return [];
-    }
-
-    set dataitems(value: DataItemsType) {
-        this.setAttribute('dataitems', 'new-data-items');
-    }
-
-    get searchkey() {
-        return this.getAttribute('searchkey');
-    }
-
-    set searchkey(value) {
-        this.setAttribute('searchkey', 'new-search-value');
-    }
-
-    get pagelimit(): number {
-        return dtstore.pageLimit;
-    }
-
-    set pagelimit(value: number) {
-        this.setAttribute('pagelimit', 'new-page-limit');
-    }
-
-    get currentpage(): number {
-        return 1;
-    }
-
-    set currentpage(value: number) {
-        this.setAttribute('currentpage', 'new-current-page');
     }
 
     // computed values (getters)
-    dataFields() {
-        return this.$store.getters['mcDataTable/getDataFields'];
+    get SortAsc(): boolean {
+        return dtstore.SortAsc;
     }
 
-    dataItemsStore() {
-        return this.$store.getters['mcDataTable/getDataItems'];
+    set SortAsc(value: boolean) {
+        dtstore.SortAsc = value;
     }
 
-    dataItems() {
+    get SortDesc(): boolean {
+        return dtstore.SortDesc;
+    }
+
+    set SortDesc(value: boolean) {
+        dtstore.SortDesc = value;
+    }
+
+    get SearchKey(): string {
+        return dtstore.SearchKey;
+    }
+
+    get PageStart(): number {
+        return dtstore.PageStart;
+    }
+
+    get PageLimit(): number {
+        return dtstore.PageLimit;
+    }
+
+    get DataFields(): DataFieldsType {
+        return dtstore.DataFields;
+    }
+
+    get DataItems(): DataItemsType {
+        return dtstore.DataItems;
+    }
+
+    set DataItems(value: DataItemsType) {
+        dtstore.DataItems = value;
+    }
+
+    set DataTotal(value: number) {
+        dtstore.DataTotal = value;
+    }
+
+    get dataItems() {
         // transform data-items for complete table-items search
-        // console.log('data-items: ', this.dataItemsValue);
-        return this.dataItemsStore.map(item => {
+        // console.log("data-items: ", this.dataItemsValue);
+        return this.DataItemsStore.map(item => {
             // clone the item
             let itemInfo = Object.assign({}, item);
-            this.tableFields.forEach(field => {
-                if (field.source.type && field.source.type === 'provider') {
+            this.TableFields.forEach(field => {
+                if (field.source.type && field.source.type === "provider") {
                     if (field.source.params) {
                         let fieldParams;
                         const fieldSourceParams = field.source.params;
                         if (fieldSourceParams && Array.isArray(fieldSourceParams) && fieldSourceParams.length > 0) {
-                            if (fieldSourceParams.includes('all') || fieldSourceParams.includes('item')) {
+                            if (fieldSourceParams.includes("all") || fieldSourceParams.includes("item")) {
                                 fieldParams = item;
                             } else {
-                                fieldParams = fieldSourceParams.map(param => item[param]).join(', ');
+                                fieldParams = fieldSourceParams.map(param => item[param]).join(", ");
                             }
                         }
-                        if (field.source.transform && typeof field.source.transform === 'function') {
+                        if (field.source.transform && typeof field.source.transform === "function") {
                             itemInfo[field.name] = field.source.transform(fieldParams);
                         }
-                    } else if (field.source.transform && typeof field.source.transform === 'function') {
+                    } else if (field.source.transform && typeof field.source.transform === "function") {
                         itemInfo[field.name] = field.source.transform(itemInfo[field.name]);
                     }
                 }
@@ -167,126 +113,123 @@ class McTable extends HTMLElement {
         });
     }
 
-    pageStart() {
-        return this.$store.getters['mcDataTable/getPageStart'];
+    get SortStyle() {
+        return dtstore.SortStyle;
     }
 
-    sortStyle() {
-        return this.$store.getters['mcDataTable/getSortStyle'];
+    get TableStyle() {
+        return dtstore.TableStyle;
     }
 
-    tableStyle() {
-        return this.$store.getters['mcDataTable/getTableStyle'];
+    get SortStyleAsc() {
+        return dtstore.SortAsc ? `${dtstore.SortStyle.asc} mc-table-sort-style` : `${dtstore.SortStyle.asc}`;
     }
 
-    pageLimit() {
-        return this.$store.getters['mcDataTable/getPageLimit'];
+    get SortStyleDesc(): string {
+        return dtstore.SortDesc ? `${dtstore.SortStyle.desc} mc-table-sort-style` : `${dtstore.SortStyle.desc}`;
     }
 
-    currentPage() {
-        return this.$store.getters['mcDataTable/getCurrentPage'];
+    get CurrentPage(): number {
+        return dtstore.CurrentPage;
     }
 
-    itemTotal() {
-        return this.dataItems.length;
+    get ItemsTotal(): number {
+        return dtstore.DataItems.length;
     }
 
-    sortStyleAsc() {
-        return this.sortAsc ? `${this.sortStyle.asc} mc-table-sort-style` : `${this.sortStyle.asc}`;
+    get TableFields(): DataFieldsType {
+        return sortBy(dtstore.DataFields, ["order"]);
     }
 
-    sortStyleDesc() {
-        return this.sortDesc ? `${this.sortStyle.desc} mc-table-sort-style` : `${this.sortStyle.desc}`;
+    get DataItemsStore(): DataItemsType {
+        return dtstore.DataItems;
     }
 
-    tableFields() {
-        return this.$lo.sortBy(this.dataFields, ['order']);
-    }
-
-    dataItemsSearch() {
+    get DataItemsSearch() {
         // search data-items by search-key
-        // const searchKey = this.$store.getters['mcDataTable/getSearchKey'];
-        const itemKeys = this.dataFields.map(item => item.name);
-        return this.dataItems.filter(item => itemKeys.some(key => {
-                return item[key] ? item[key].toString().toLowerCase().includes(this.$store.getters['mcDataTable/getSearchKey'].toString().toLowerCase()) : false;
+        // const searchKey = this.$store.getters["mcDataTable/getSearchKey"];
+        const itemKeys = this.DataFields.map(item => item.name);
+        return this.DataItems.filter(item => itemKeys.some(key => {
+                return item[key] ? item[key].toString().toLowerCase().includes(dtstore.SearchKey.toString().toLowerCase()) : false;
             }
         ));
     }
 
-    tableItems() {
+    get TableItems(): DataItemsType {
         // determine tableData for the currentPage by pageLimit
-        let tableData = [];
+        let tableData: DataItemsType = [];
 
         // scenarios for calculating tableData for the currentPage  >> mcTableBody
-        const dataSize = this.dataItemsSearch.length;
+        const dataSize = this.DataItemsSearch.length;
         // 1. if dataSize <= pageLimit: display all items for the currentPage(1)
-        if (dataSize <= this.pageLimit) {
-            tableData = this.dataItemsSearch;
+        if (dataSize <= this.PageLimit) {
+            tableData = this.DataItemsSearch;
         }
         // update dataTotal store-value
-        this.$store.dispatch('mcDataTable/setDataTotal', dataSize);
+        this.DataTotal = dataSize
+        // this.$store.dispatch("mcDataTable/setDataTotal", dataSize);
 
         // 2. if dataSize > pageLimit:
-        if (dataSize > this.pageLimit) {
+        if (dataSize > this.PageLimit) {
             // currentPage === 1
-            if (this.currentPage === 1) {
+            if (this.CurrentPage === 1) {
                 // slice records from the start of currentPage up to pageLimit
-                tableData = this.dataItemsSearch.slice(0, this.pageLimit)
+                tableData = this.DataItemsSearch.slice(0, this.PageLimit)
             }
             // dataSize is less than the total records up to the end of the currentPage
-            else if (dataSize <= this.currentPage * this.pageLimit) {
+            else if (dataSize <= this.CurrentPage * this.PageLimit) {
                 // slice records from the start of the currentPage to end of dataItems
-                tableData = this.dataItemsSearch.slice(((this.currentPage - 1) * this.pageLimit));
+                tableData = this.DataItemsSearch.slice(((this.CurrentPage - 1) * this.PageLimit));
             } else {
                 // slice records from the start of the currentPage to end of currentPage
-                tableData = this.dataItemsSearch.slice(((this.currentPage - 1) * this.pageLimit), (this.currentPage * this.pageLimit));
+                tableData = this.DataItemsSearch.slice(((this.CurrentPage - 1) * this.PageLimit), (this.CurrentPage * this.PageLimit));
             }
         }
         return tableData;
     }
 
-    tableRecords() {
+    get TableRecords(): DataItemsType {
         try {
             // transform table-items, by data-fields
-            return this.tableItems.map(item => {
+            return this.TableItems.map(item => {
                 let itemInfo = Object.assign({}, item);
                 // initialise the itemInfo fieldsInfo
-                itemInfo ['fieldsInfo'] = [];
+                itemInfo ["fieldsInfo"] = [];
                 // sort by table-field order
-                this.tableFields.forEach((field) => {
+                this.TableFields.forEach((field) => {
                     // compose the table field/column
                     // column/field value
                     let fieldSource = field.source,
                         fieldName = field.name,
                         fieldType = field.source.type,
-                        fieldTask = '',
-                        fieldParams = '',
-                        fieldLabel = field['label'],
-                        fieldValue = 'N/A';
+                        fieldTask = null,
+                        fieldParams = null,
+                        fieldLabel = field["label"],
+                        fieldValue = "N/A";
 
-                    if (fieldType === 'provider') {
+                    if (fieldType === "provider") {
                         // field-value already transformed from dataItems computed values
                         fieldValue = item[fieldName];
                     } else {
-                        fieldTask = field.source.task ? field.source.task : '';
+                        fieldTask = field.source.task ? field.source.task : "";
                         const fieldSourceParams = field.source.params;
                         if (fieldSourceParams && Array.isArray(fieldSourceParams) && fieldSourceParams.length > 0) {
-                            if (fieldSourceParams.includes('all') || fieldSourceParams.includes('item')) {
+                            if (fieldSourceParams.includes("all") || fieldSourceParams.includes("item")) {
                                 fieldParams = item;
                             } else {
-                                fieldParams = fieldSourceParams.map(param => item[param]).join(', ');
+                                fieldParams = fieldSourceParams.map(param => item[param]).join(", ");
                             }
                         }
                     }
 
-                    itemInfo ['fieldsInfo'].push({
-                        fieldValue: fieldValue,
+                    itemInfo ["fieldsInfo"].push({
+                        fieldValue : fieldValue,
                         fieldSource: fieldSource,
-                        fieldType: fieldType,
-                        fieldName: fieldName,
-                        fieldTask: fieldTask,
+                        fieldType  : fieldType,
+                        fieldName  : fieldName,
+                        fieldTask  : fieldTask,
                         fieldParams: fieldParams,
-                        fieldLabel: fieldLabel,
+                        fieldLabel : fieldLabel,
                     });
                 });
 
@@ -294,7 +237,7 @@ class McTable extends HTMLElement {
             });
 
         } catch (e) {
-            console.log('error rendering table: ', e.message);
+            console.log("error rendering table: ", e.message);
             return [];
         }
     }
@@ -303,36 +246,78 @@ class McTable extends HTMLElement {
     async sortDataByField(field: DataFieldType) {
         // toggle sort order, for dataItems
         if (field.sort) {
-            if (this.sortAsc) {
+            if (this.SortAsc) {
                 // sort in descending order
-                const dataItems = dtstore.dataItems;
-                dtstore.dataItems = sortBy(dataItems, [field.name]).reverse();
-                this.sortAsc = false;
-                this.sortDesc = true;
+                const dataItems = dtstore.DataItems;
+                dtstore.DataItems = sortBy(dataItems, [field.name]).reverse();
+                this.SortAsc = false;
+                this.SortDesc = true;
             } else {
                 // sort in ascending order
-                const dataItems = dtstore.dataItems;
-                dtstore.dataItems = sortBy(dataItems, [field.name]);
+                const dataItems = dtstore.DataItems;
+                dtstore.DataItems = sortBy(dataItems, [field.name]);
                 // this.tableItems = this.$lo.sortBy(this.tableItems, [fieldName]);
-                this.sortAsc = true;
-                this.sortDesc = false;
+                this.SortAsc = true;
+                this.SortDesc = false;
             }
         }
     }
 
-    disconnectedCallback() {
-        // cleanup - reset DOM, removeEventLister(s), garbage collection...
-        this.innerHTML = '';
+    // TODO: events implementation for item/record-fields
+    async eventAction(item: DataItemType, fieldEvents: Array<EventType>) {
+        let eventsTask = ""
+        if (fieldEvents && fieldEvents.length > 0) {
+            let fieldParams: DataItemType | string = {}
+            fieldEvents.forEach(ev => {
+                switch (ev.type) {
+                    case "click":
+                        // params
+                        if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                            if (ev.params.includes("all") || ev.params.includes("item")) {
+                                fieldParams = item
+                            } else {
+                                fieldParams = ev.params.map(param => item[param]).join(", ");
+                            }
+                        }
+                        eventsTask += `click=${ev.task? ev.task(fieldParams) : null} `
+                        break
+                    case "change":
+                        if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                            if (ev.params.includes("all") || ev.params.includes("item")) {
+                                fieldParams = item
+                            } else {
+                                fieldParams = ev.params.map(param => item[param]).join(", ");
+                            }
+                        }
+                        eventsTask += `change=${ev.task? ev.task(fieldParams) : null} `
+                        break
+                    case "mouseover":
+                        if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                            if (ev.params.includes("all") || ev.params.includes("item")) {
+                                fieldParams = item
+                            } else {
+                                fieldParams = ev.params.map(param => item[param]).join(", ");
+                            }
+                        }
+                        eventsTask += `mouseover=${ev.task? ev.task(fieldParams) : null} `
+                        break
+                    default:
+                        break
+                }
+            })
+        }
+        return eventsTask
     }
+
 
     // events emitter
     static emitTableEvent(e: any) {
         e.preventDefault();
         // emit itemType event | or use observable
         const compItemChange = new CustomEvent(e.target.itemType, {
-            bubbles: true,
+            bubbles   : true,
             cancelable: true,
-            detail: {type: e.target.itemType, value: e.target.itemValue}
+            detail    : {type: e.target.itemType, value: e.target.itemValue}
         });
         e.target.dispatchEvent(compItemChange);
     }
@@ -340,26 +325,30 @@ class McTable extends HTMLElement {
     // @ts-ignore
     static emitTableHeaderEvent(e) {
         e.preventDefault();
-        const itemPath = e.target.getAttribute('data-app-top-menu-path');
-        const itemTitle = e.target.getAttribute('data-app-top-menu-title');
+        const itemPath = e.target.getAttribute("data-app-top-menu-path");
+        const itemTitle = e.target.getAttribute("data-app-top-menu-title");
 
-        // emit 'mc-top-menu-change' event | or use observable
-        const appMenuChange = new CustomEvent('mc-top-menu-change', {
-            bubbles: true,
+        // emit "mc-top-menu-change" event | or use observable
+        const appMenuChange = new CustomEvent("mc-top-menu-change", {
+            bubbles   : true,
             cancelable: true,
-            detail: {path: itemPath, title: itemTitle}
+            detail    : {path: itemPath, title: itemTitle}
         });
         e.target.dispatchEvent(appMenuChange);
     }
 
-    // events handler
+
+    disconnectedCallback() {
+        // cleanup - reset DOM, removeEventLister(s), garbage collection...
+        this.innerHTML = "";
+    }
 
 }
 
 let mcTable;
 
-if (!customElements.get('mc-table')) {
-    mcTable = customElements.define('mc-table', McTable);
+if (!customElements.get("mc-table")) {
+    mcTable = customElements.define("mc-table", McTable);
 }
 
 export default mcTable;

@@ -5,10 +5,9 @@
  * @Description: mc-datatable: active ui component
  */
 
-import { strToBool } from "../helper";
 import { ActivePropsType } from "../types";
 
-export function ActiveTemplate(props: ActivePropsType) {
+export default function ActiveTemplate(props: ActivePropsType) {
     const yesLabel = props.activeLabel || "yes";
     const noLabel = props.inActiveLabel || "no";
     const isActive = props.isActive || false

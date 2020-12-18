@@ -22,7 +22,7 @@ class DtStore {
     protected currentPage: number;
     protected searchKey: string;
     protected dataTotal: number;
-    protected initialDataTotal: number;
+    protected initialDataTotal: number;     // to limit number of records to process
     protected sortAsc: boolean;
     protected sortDesc: boolean;
 
@@ -167,16 +167,16 @@ class DtStore {
         this.sortDesc = value;
     }
 
-    get DataCount() {
+    get DataItemsCount() {
         return this.dataItems.length;
     }
 
-    get FieldCount(){
+    get DataFieldsCount(){
         return this.DataFields.length;
     }
 
     get RecordTotal() {
-        return this.dataTotal ? this.dataTotal : this.DataCount;
+        return this.dataTotal ? this.dataTotal : this.DataItemsCount;
     }
 
     get InitialDataTotal(): number {

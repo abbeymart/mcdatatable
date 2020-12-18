@@ -54,20 +54,55 @@ export interface SortStyle {
 export interface DataTablePropsType {
     dataFields: Array<object>;
     dataItems: Array<object>;
-    currentPage: string;
-    dataTotal?: number;         // default: 0
-    paging?: boolean;           // default: true
+    currentPage: number;
+    dataTotal: number;         // default: 0
+    recordTotal: number;       // computed from dataTotal or dataItems
+    paging: boolean;           // default: true
     pageStart: number;          // default: 1
-    pageLimits?: Array<number>  // default: [10, 20, 30, 50, 100, 200]
-    tableStyle?: {
+    pageLimits: Array<number>  // default: [10, 20, 30, 50, 100, 200]
+    tableStyle: {
         table: string;      // default: "w3-table w3-striped w3-border w3-bordered w3-hoverable"
         tableHeader: string;    // default: "w3-red"
         tableBody: string;  // default: "w3-hover"
     };
-    sortStyle?: {
+    sortStyle: {
         asc: string;    // default: "fa fa-caret-up"
         desc: string;   // default: "fa fa-caret-down"
     }
+}
+
+export interface TablePropsType {
+    isActive?: boolean;
+    activeLabel?: string;
+    inActiveLabel?: string;
+}
+
+export interface PageLimitPropsType {
+    pageLimit: number;
+    pageLimits: Array<number>;
+    setPageLimit: (e: Event, val: string | number) => void;
+}
+
+export interface PageNavPropsType {
+    currentPage: number;
+    pageList: Array<string>;
+    pageNavFirst: (e: Event) => void;
+    pageNavNext: (e: Event) => void;
+    pageNavPrevious: (e: Event) => void;
+    pageNavLast: (e: Event) => void;
+    pageNavNumber: (e: Event, val: string | number) => void;
+}
+
+export interface TableMessagePropsType {
+    isActive?: boolean;
+    activeLabel?: string;
+    inActiveLabel?: string;
+}
+
+export interface TableSearchPropsType {
+    isActive?: boolean;
+    activeLabel?: string;
+    inActiveLabel?: string;
 }
 
 export interface DataSourceType {
@@ -87,7 +122,11 @@ export interface EventType {
     params?: string[];
 }
 
-export type DataItemsType = Array<object>;
+export interface DataItemType {
+    [key: string]: any;
+}
+
+export type DataItemsType = Array<DataItemType>;
 
 export interface DataFieldType {
     name: string;
@@ -107,21 +146,21 @@ export interface HTMLDataType extends HTMLElement, DataTablePropsType {
 }
 
 export interface DOMType {
-    pageMessage?: HTMLDataType | null;
-    pageLimit?: HTMLDataType | null;
-    pageNav?: HTMLDataType | null;
-    tableSearch?: HTMLDataType | null;
-    table?: HTMLDataType | null;
-    tableMessage?: HTMLDataType | null;
-    pageNavFirst?: HTMLDataType | null;
-    pageNavNext?: HTMLDataType | null;
-    pageNavPrevious?: HTMLDataType | null;
-    pageNavLast?: HTMLDataType | null;
+    pageMessage?: HTMLDataType | HTMLElement | null;
+    pageLimit?: HTMLDataType | HTMLElement | null;
+    pageNav?: HTMLDataType | HTMLElement | null;
+    tableSearch?: HTMLDataType | HTMLElement | null;
+    table?: HTMLDataType | HTMLElement | null;
+    tableMessage?: HTMLDataType | HTMLElement | null;
+    pageNavFirst?: HTMLDataType | HTMLElement | null;
+    pageNavNext?: HTMLDataType | HTMLElement | null;
+    pageNavPrevious?: HTMLDataType | HTMLElement | null;
+    pageNavLast?: HTMLDataType | HTMLElement | null;
     pageNavNumber?: HTMLCollection | null;
-    pageLimitValue?: HTMLDataType | null;
-    tableContent?: HTMLDataType | null;
-    tableHeader?: HTMLDataType | null;
-    tableBody?: HTMLDataType | null;
+    pageLimitValue?: HTMLDataType | HTMLElement | null;
+    tableContent?: HTMLDataType | HTMLElement | null;
+    tableHeader?: HTMLDataType | HTMLElement | null;
+    tableBody?: HTMLDataType | HTMLElement | null;
 }
 
 export type PageNavValueType = string | number | Array<string>;

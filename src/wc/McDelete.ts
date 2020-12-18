@@ -50,16 +50,16 @@ class McDelete extends HTMLElement {
         }
     }
 
-    get mcLabel() {
+    get Label() {
         return this.label;
     }
 
-    set mcLabel(value: string) {
+    set Label(value: string) {
         this.label = value;
         this.setAttribute("label", value);
     }
 
-    get mcAction() {
+    get Action() {
         return this.action;
     }
 

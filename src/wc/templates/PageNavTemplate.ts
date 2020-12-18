@@ -3,58 +3,48 @@
  * @Company: mConnect.biz | @License: MIT
  * @Description: mc-datatable-template
  */
-import {PageNavPropsType} from "../types";
+import { PageNavPropsType } from "../types";
 
 export default (props: PageNavPropsType) => {
-    return `
-        <div class="w3-bar" id="mcPageNav">
-            <span></span>
-            ${(props && props.currentPage > 1 && props.lastPage > 1) ?
-            `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-first">First</a>
-            ` : ``}
-            ${(props && props.currentPage > 1) ?
-            `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-previous">Previous</a>
-            ` : ``}
-            ${props && props.pageList.map(page => {
-                return `
-                     <a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue" id="${page}">
+    const firstPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
+               id="mc-page-nav-first" onclick="props.pageNavFirst()">First</a>`;
+    const previousPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
+               id="mc-page-nav-previous" onclick="props.pageNavPrevious()">Previous</a>`;
+    const middlePagesDom = (page: string) => `
+                     <a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue" id="${page}" onclick="props.pageNavNumber(e, ${page})">
                          ${props.currentPage.toString() === page ?
                         `<span class="mc-current-page">${page}</span>` :
                         `<span>${page}</span>`}           
-                     </a>
-                     `
-                }).join('')
-            }
-            ${(props && props.currentPage < props.lastPage && props.lastPage > 1) ?
-            `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-first">Next</a>
-              ` : ``}
-            ${(props && props.currentPage < props.lastPage) ?
-            `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-first">Last</a>
-            ` : ``}
+                     </a>`;
+    const nextPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
+               id="mc-page-nav-first" onclick="props.pageNavNext()">Next</a>`;
+    const lastPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
+               id="mc-page-nav-first" onclick="props.pageNavLast()">Last</a>`;
+    return `
+        <div class="w3-bar" id="mcPageNav">
+            <span></span>
+            ${(props && props.currentPage > 1 && props.lastPage > 1) ? firstPageDom : ``}
+            ${(props && props.currentPage > 1) ? previousPageDom : ``}
+            ${props && props.pageList.map(page => middlePagesDom(page)).join(" ")}
+            ${(props && props.currentPage < props.lastPage && props.lastPage > 1) ? nextPageDom : ``}
+            ${(props && props.currentPage < props.lastPage) ? lastPageDom : ``}
+            <style>
+                #mcPageNav a {
+                    color: #0D47A1;
+                }
+                #mcPageNav a:hover {
+                    font-weight: bolder;
+                    background-color: #0D47A1;
+                }
+                #mcPageNav a:active {
+                    font-weight: bolder;
+                    background-color: #0c5460;
+                }
+                .mc-current-page {
+                    font-weight: bolder;
+                    text-decoration: underline;
+                }
+            </style>
         </div>
-        <style>
-            #mcPageNav a {
-                color: #0D47A1;
-            }
-        
-            #mcPageNav a:hover {
-                font-weight: bolder;
-                background-color: #0D47A1;
-            }
-        
-            #mcPageNav a:active {
-                font-weight: bolder;
-                background-color: #0c5460;
-            }
-        
-            .mc-current-page {
-                font-weight: bolder;
-                text-decoration: underline;
-            }
-        </style>
     `;
 };

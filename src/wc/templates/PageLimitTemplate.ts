@@ -4,15 +4,24 @@
  * @Description: mc-datatable-template
  */
 
-export default (props = {limits: [10, 20, 30, 50, 100, 200]}) => {
-    props.limits = props && Array.isArray(props.limits) && props.limits.length > 0? props.limits : [10, 20, 30, 50, 100, 200];
+import { PageLimitPropsType } from "../types";
+
+export default function PageLimitTemplate(props: PageLimitPropsType) {
+    // build select-options-DOM
+    let optionDom = props.pageLimits.map((val, ind) => {
+        return ind === 0 ? `<option value="${val}" id="${ind + 1}" selected> ${val}</option>` :
+            `<option value="${val}" id="${ind + 1}"> ${val}</option>`
+    }).join(" ");
+
+    // activate active component
     return `
-        <div>
-            <span>Show</span>
-            <select id="mc-page-limit-value" name="mc-page-limit-value">
-                ${props.limits.map((limit, index) => `<option value="${limit}" id="pageLimit-${index}">${limit}</option>` ).join('')}
-            </select>
-            <span>items</span>
-        </div>
-    `;
-};
+    <div>
+        <label for="mc-page-limit-value" disabled></label>
+        <span>Show </span>
+        <select id="mc-page-limit-value" name="mc-page-limit-value" class="w3-round"
+              value="${props.pageLimit}" onchange="props.setPageLimit(e, this.value)">
+            ${optionDom}
+        </select>
+        <span> items</span>
+    </div>`
+}

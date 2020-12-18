@@ -4,10 +4,10 @@
  * @Description: mc-page-nav, page navigation (numbering, first, last, previous and next)
  */
 
-import mcPageNavTemplate from './templates/PageNavTemplate';
-import TableHelper from './templates/TableHelpers';
-import {dtstore} from "./store/DtStore";
-import {DOMType, PageNavEventType, PageNavValueType} from "./types";
+import PageNavTemplate from "./templates/PageNavTemplate";
+import TableHelper from "./templates/TableHelpers";
+import { dtstore } from "./store/DtStore";
+import { DOMType, PageNavEventType, PageNavValueType } from "./types";
 
 class McPageNav extends HTMLElement {
     #DOM: DOMType = {};
@@ -18,23 +18,19 @@ class McPageNav extends HTMLElement {
         this.renderComponent();
     }
 
-    static get observedAttributes() {
-        // to trigger template re-rendering / updates, from inside/outside the component
-        return ['currentpage', 'pagelimit', 'datatotal', 'lastpage',];
-    }
-
-    attributeChangedCallback(name: string, oldVal: PageNavValueType, newValue: PageNavValueType) {
-        if (oldVal === newValue) {
-            return;
-        }
-        // re-render component for change to any of the observed attributes change
-        this.renderComponent();
-    }
-
     // getters and setters (to trigger re-rendering via observed attributes
-    get pageList(): string[] {
+
+    get pagePositions(): string {
+        return dtstore.PagePosition;
+    }
+
+    get lastPage(): number {
+        return Math.ceil(this.dataTotal / this.pageLimit);
+    }
+
+    get pageList(): Array<string> {
         let lastPage = 1;
-        if (this.dataTotal && this.dataTotal > this.pageLimit) {
+        if (this.dataTotal > this.pageLimit) {
             lastPage = Math.ceil(this.dataTotal / this.pageLimit);
         }
 
@@ -46,7 +42,7 @@ class McPageNav extends HTMLElement {
         // show 1 ... 5 6 7 ... 30
         // for currentPage: lastPage-4, -3, -2, -1, lastPage
         // show: 1 ... 26 27 28 29 30
-        let pageList = [];
+        let pageList: Array<string> = [];
         if (lastPage <= 7) {
             let i = 1;
             while (i <= lastPage) {
@@ -56,192 +52,181 @@ class McPageNav extends HTMLElement {
         }
         if (lastPage > 7) {
             if ([1, 2, 3, 4].includes(this.currentPage)) {
-                pageList = ['1', '2', '3', '4', '5', '....', lastPage.toString()];
+                pageList = ["1", "2", "3", "4", "5", "....", lastPage.toString()];
             } else if (this.currentPage > 4 && this.currentPage < lastPage - 3) {
-                pageList = ['1', '....', (this.currentPage - 1).toString(), (this.currentPage).toString(), (this.currentPage + 1).toString(), '...', lastPage.toString()];
+                pageList = ["1", "....", (this.currentPage - 1).toString(), (this.currentPage).toString(), (this.currentPage + 1).toString(), "...", lastPage.toString()];
             } else if (this.currentPage >= lastPage - 4) {
-                pageList = ['1', '....', (lastPage - 4).toString(), (lastPage - 3).toString(), (lastPage - 2).toString(), (lastPage - 1).toString(), lastPage.toString()];
+                pageList = ["1", "....", (lastPage - 4).toString(), (lastPage - 3).toString(), (lastPage - 2).toString(), (lastPage - 1).toString(), lastPage.toString()];
             }
         }
         return pageList;
     }
 
-    get currentPage(): number {
-        return dtstore.currentPage;
+    get pageLimit(): number {
+        return dtstore.PageLimit;
+    }
+
+    get CurrentPage(): number {
+        return dtstore.CurrentPage;
     }
 
     set currentPage(value: number) {
-        dtstore.currentPage = value;
-        this.setAttribute('currentpage', value.toString());
-    }
-
-    get pageLimit(): number {
-        return dtstore.pageLimit;
-    }
-
-    set pageLimit(value: number) {
-        this.setAttribute('pagelimit', value.toString());
+        dtstore.CurrentPage = value;
     }
 
     get dataTotal(): number {
-        return dtstore.dataTotal;
-    }
-
-    set dataTotal(value: number) {
-        this.setAttribute('datatotal', value.toString());
-    }
-
-    get lastPage(): number {
-        return Math.ceil(this.dataTotal / this.pageLimit);
-    }
-
-    set lastPage(value: number) {
-        this.setAttribute('lastpage', value.toString());
+        return dtstore.DataTotal;
     }
 
     renderComponent() {
-        if (dtstore.dataTotal > 0) {
-            this.innerHTML = mcPageNavTemplate({
-                currentPage: this.currentPage,
-                lastPage: this.lastPage,
-                pageList: this.pageList,
+        if (dtstore.DataTotal > 0) {
+            this.innerHTML = PageNavTemplate({
+                currentPage    : this.currentPage,
+                lastPage       : this.lastPage,
+                pageList       : this.pageList,
+                pageNavFirst   : this.pageNavFirst,
+                pageNavNext    : this.pageNavNext,
+                pageNavPrevious: this.pageNavPrevious,
+                pageNavLast    : this.pageNavLast,
+                pageNavNumber  : this.pageNavNumber,
             });
         }
-        // event's handlers
+        // event"s handlers
         // Component DOM references
-        this.#DOM = TableHelper.getPageNavDOM(this.ownerDocument);
-        const {pageNavFirst, pageNavPrevious, pageNavNext, pageNavLast, pageNavNumber} = this.#DOM;
 
-        // handle & emit events
-        if (pageNavFirst) {
-            pageNavFirst.onclick = (e: any) => {
-                e.preventDefault();
-                // emit event, for other sub-components
-                e.target.itemType = 'page-nav-first';
-                e.target.itemValue = 1;
-                McPageNav.emitPageNavEvent(e);
-                // perform page-action
-                this.pageNavFirst();
-            };
-        }
+        // this.#DOM = TableHelper.getPageNavDOM(this.ownerDocument);
+        // const {pageNavFirst, pageNavPrevious, pageNavNext, pageNavLast, pageNavNumber} = this.#DOM;
 
-        if (pageNavPrevious) {
-            pageNavPrevious.onclick = (e: any) => {
-                e.preventDefault();
-                const currentPageNum = this.currentPage--;
-                // emit event, for other sub-components
-                e.target.itemType = 'page-nav-previous';
-                e.target.itemValue = currentPageNum;
-                McPageNav.emitPageNavEvent(e);
-                // perform page-action
-                this.pageNavPrevious();
-            };
-        }
-
-        if (pageNavNext) {
-            pageNavNext.onclick = (e: any) => {
-                e.preventDefault();
-                const currentPageNum = this.currentPage++;
-                // emit event, for other sub-components
-                e.target.itemType = 'page-nav-next';
-                e.target.itemValue = currentPageNum;
-                McPageNav.emitPageNavEvent(e);
-                // perform page-action
-                this.pageNavNext();
-
-            };
-        }
-
-        if (pageNavLast) {
-            pageNavLast.onclick = (e: any) => {
-                e.preventDefault();
-                if (dtstore.dataTotal && dtstore.dataTotal > this.pageLimit) {
-                    const currentPageNum = Math.ceil((this.dataTotal) / (this.pageLimit));
-                    // emit event, for other sub-components
-                    e.target.itemType = 'page-nav-last';
-                    e.target.itemValue = currentPageNum;
-                    McPageNav.emitPageNavEvent(e);
-                    // perform page-action
-                    this.pageNavLast();
-                }
-            };
-        }
-
-        if (pageNavNumber && pageNavNumber.length > 0) {
-            // @ts-ignore
-            for (let pageItem of pageNavNumber) {
-                pageItem.onclick = (e: any) => {
-                    e.preventDefault();
-                    const currentPageNum = pageItem.innerText;
-                    // emit event, for other sub-components
-                    e.target.itemType = 'page-nav-number';
-                    e.target.itemValue = parseInt(currentPageNum);
-                    McPageNav.emitPageNavEvent(e);
-                    // perform page-action
-                    this.pageNavNumber(currentPageNum);
-                };
-            }
-        }
+        // // handle & emit events
+        // if (pageNavFirst) {
+        //     pageNavFirst.onclick = (e: any) => {
+        //         e.preventDefault();
+        //         // emit event, for other sub-components
+        //         e.target.itemType = "page-nav-first";
+        //         e.target.itemValue = 1;
+        //         McPageNav.emitPageNavEvent(e);
+        //         // perform page-action
+        //         this.pageNavFirst(e);
+        //     };
+        // }
+        // if (pageNavPrevious) {
+        //     pageNavPrevious.onclick = (e: any) => {
+        //         e.preventDefault();
+        //         const currentPageNum = this.currentPage--;
+        //         // emit event, for other sub-components
+        //         e.target.itemType = "page-nav-previous";
+        //         e.target.itemValue = currentPageNum;
+        //         McPageNav.emitPageNavEvent(e);
+        //         // perform page-action
+        //         this.pageNavPrevious(e);
+        //     };
+        // }
+        // if (pageNavNext) {
+        //     pageNavNext.onclick = (e: any) => {
+        //         e.preventDefault();
+        //         const currentPageNum = this.currentPage++;
+        //         // emit event, for other sub-components
+        //         e.target.itemType = "page-nav-next";
+        //         e.target.itemValue = currentPageNum;
+        //         McPageNav.emitPageNavEvent(e);
+        //         // perform page-action
+        //         this.pageNavNext(e);
+        //
+        //     };
+        // }
+        // if (pageNavLast) {
+        //     pageNavLast.onclick = (e: any) => {
+        //         e.preventDefault();
+        //         if (dtstore.DataTotal && dtstore.DataTotal > this.pageLimit) {
+        //             const currentPageNum = Math.ceil((this.dataTotal) / (this.pageLimit));
+        //             // emit event, for other sub-components
+        //             e.target.itemType = "page-nav-last";
+        //             e.target.itemValue = currentPageNum;
+        //             McPageNav.emitPageNavEvent(e);
+        //             // perform page-action
+        //             this.pageNavLast(e);
+        //         }
+        //     };
+        // }
+        // if (pageNavNumber && pageNavNumber.length > 0) {
+        //     // @ts-ignore
+        //     for (let pageItem of pageNavNumber) {
+        //         pageItem.onclick = (e: any) => {
+        //             e.preventDefault();
+        //             const currentPageNum = pageItem.innerText;
+        //             // emit event, for other sub-components
+        //             e.target.itemType = "page-nav-number";
+        //             e.target.itemValue = parseInt(currentPageNum);
+        //             McPageNav.emitPageNavEvent(e);
+        //             // perform page-action
+        //             this.pageNavNumber(e, currentPageNum);
+        //             // store  / emit event, for other sub-components
+        //             // dtstore.PagePosition = "page-number";
+        //             // this.setCurrentPage(currentPageNum);
+        //         };
+        //     }
+        // }
     }
 
     // methods:
-    pageAction(currentPage: number) {
-        dtstore.currentPage = currentPage;
+    setCurrentPage(currentPage: number) {
+        dtstore.CurrentPage = currentPage;
         // this.renderComponent(); // re-render via attribute change =>
-        this.currentPage = currentPage;
     }
 
-    pageNavFirst() {
+    pageNavFirst(e: Event) {
         // store / emit event, for other sub-components
-        dtstore.pagePosition = 'first-page';
-        this.pageAction(1);
+        dtstore.PagePosition = "first-page";
+        this.setCurrentPage(1);
     }
 
-    pageNavPrevious() {
+    pageNavPrevious(e: Event) {
         // store / emit event, for other sub-components
-        dtstore.pagePosition = 'previous-page';
-        this.pageAction(this.currentPage - 1);
+        dtstore.PagePosition = "previous-page";
+        this.setCurrentPage(this.currentPage - 1);
     }
 
-    pageNavNext() {
+    pageNavNext(e: Event) {
         // store / emit event, for other sub-components
-        dtstore.pagePosition = 'next-page';
-        this.pageAction(this.currentPage + 1);
+        dtstore.PagePosition = "next-page";
+        this.setCurrentPage(this.currentPage + 1);
     }
 
-    pageNavLast() {
+    pageNavLast(e: Event) {
+        e.preventDefault();
         // store / emit event, for other sub-components
-        dtstore.pagePosition = 'last-page';
-        this.pageAction(Math.ceil(this.dataTotal / this.pageLimit));
+        dtstore.PagePosition = "last-page";
+        this.setCurrentPage(Math.ceil(this.dataTotal / this.pageLimit));
     }
 
-    pageNavNumber(page: string) {
+    pageNavNumber(e: Event, page: string | number) {
+        e.preventDefault();
         // store  / emit event, for other sub-components
-        dtstore.pagePosition = 'page-number';
-        this.pageAction(parseInt(page));
+        dtstore.PagePosition = "page-number";
+        this.setCurrentPage(Number(page));
     }
 
     static emitPageNavEvent(e: any) {
         e.preventDefault();
         // emit itemType event
         const compChange = new CustomEvent(e.target.itemType, {
-            bubbles: true,
+            bubbles   : true,
             cancelable: true,
-            detail: {type: e.target.itemType, value: e.target.itemValue}
+            detail    : {type: e.target.itemType, value: e.target.itemValue}
         });
         e.target.dispatchEvent(compChange);
     }
 
     disconnectedCallback() {
         // cleanup - reset DOM, removeEventLister(s), garbage collection...
-        this.innerHTML = '';
+        this.innerHTML = "";
     }
 }
 
 let mcPageNav;
 
-if (!customElements.get('mc-page-nav')) {
-    mcPageNav = customElements.define('mc-page-nav', McPageNav);
+if (!customElements.get("mc-page-nav")) {
+    mcPageNav = customElements.define("mc-page-nav", McPageNav);
 }
 
 export default mcPageNav;

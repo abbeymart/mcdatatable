@@ -4,10 +4,10 @@
  * @Description: mc-page-limit, for selecting the # of items/records/rows per page
  */
 
-import mcPageLimitTemplate from './templates/PageLimitTemplate';
-import TableHelper from './templates/TableHelpers';
-import {DOMType} from "./types";
-import {dtstore} from "./store/DtStore";
+import PageLimitTemplate from "./templates/PageLimitTemplate";
+import TableHelper from "./templates/TableHelpers";
+import { DOMType } from "./types";
+import { dtstore } from "./store/DtStore";
 
 class McPageLimit extends HTMLElement {
     protected DOM: DOMType = {};
@@ -18,76 +18,46 @@ class McPageLimit extends HTMLElement {
         this.renderComponent();
     }
 
-    static get observedAttributes() {
-        return ['pagelimits'];
-    }
-
-    attributeChangedCallback(name: string, oldVal: number[], newValue: number[]) {
-        if (oldVal === newValue) {
-            return;
-        }
-        this.renderComponent();
-    }
-
     // getters ands setters
-    set pageLimit(value: number) {
-        dtstore.mcPageLimit = value;
-        // this.setAttribute('pagelimit', value.toString());
+    get PageLimit(): number {
+        return dtstore.PageLimit;
     }
 
-    get pagelimits(): number[] {
-        return dtstore.mcPageLimits;
+    get PageLimits(): Array<number> {
+        return dtstore.PageLimits;
     }
 
-    set pageLimits(value: number[]) {
-        dtstore.mcPageLimits = value;
-        this.setAttribute('pagelimits', value.toString());
+    set PageLimit(value: number) {
+        dtstore.PageLimit = value;
+    }
+
+    // methods
+    setPageLimit(e: Event, value: string | number) {
+        e.preventDefault();
+        // var selectBox = document.getElementById("mc-page-limit-value");
+        // var value = selectBox?.options[selectBox.selectedIndex].value;
+        // alert(selectedValue);
+        this.PageLimit = Number(value);
     }
 
     renderComponent() {
-        this.innerHTML = mcPageLimitTemplate({limits: this.pageLimits});
-        // event's handlers
-        // Component DOM references
-        this.DOM = TableHelper.getPageLimitDOM(this.ownerDocument);
-        const pageLimitValue = this.DOM.pageLimitValue;
-
-        // handle & emit events
-        if (pageLimitValue) {
-            pageLimitValue.onchange = (e: any) => {
-                e.preventDefault();
-                // emit event, for other sub-components
-                e.target.itemType = 'page-limit';
-                e.target.itemValue = e.target.value || 10;
-                McPageLimit.emitPageEvent(e);
-                // update store value(s):
-                if (e.target.value) {
-                    this.pageLimit = e.target.value;
-                }
-            };
-        }
+        this.innerHTML = PageLimitTemplate({
+            pageLimit   : this.PageLimit,
+            pageLimits  : this.PageLimits,
+            setPageLimit: this.setPageLimit,
+        });
     }
 
     disconnectedCallback() {
         // cleanup - reset DOM, removeEventLister(s), garbage collection...
-        this.innerHTML = '';
-    }
-
-    static emitPageEvent(e: any) {
-        e.preventDefault();
-        // emit 'itemType event
-        const compChange = new CustomEvent(e.target.itemType, {
-            bubbles: true,
-            cancelable: true,
-            detail: {type: e.target.itemType, value: e.target.itemValue}
-        });
-        e.target.dispatchEvent(compChange);
+        this.innerHTML = "";
     }
 }
 
 let mcPageLimit;
 
-if (!customElements.get('mc-page-limit')) {
-    mcPageLimit = customElements.define('mc-page-limit', McPageLimit);
+if (!customElements.get("mc-page-limit")) {
+    mcPageLimit = customElements.define("mc-page-limit", McPageLimit);
 }
 
 export default mcPageLimit;
