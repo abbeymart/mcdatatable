@@ -4,102 +4,64 @@
  * @Description: mc-table-no-data: to display when dataItems = []
  */
 
-import mcTableNoDataTemplate from "./templates/TableNoDataTemplate";
+import { dtstore } from "./dtStore";
 
 class McTableNoData extends HTMLElement {
-    connectedCallback() {
-        // attributes, set from parent component
-        this.pageLimit   = parseInt(this.getAttribute("pagelimit"));
-        this.itemTotal   = parseInt(this.getAttribute("itemtotal"));
-        this.currentPage = parseInt(this.getAttribute("currentpage"));
-        // calculate itemFrom and itemTo, for the currentPage
-        this.getPageMessageValues({
-            pageLimit  : this.pageLimit,
-            itemTotal  : this.itemTotal,
-            currentPage: this.currentPage,
-        });
-
-        this.props = {
-            itemFrom : this.itemFrom,
-            itemTo   : this.itemTo,
-            itemTotal: this.itemTotal
-        };
+    constructor() {
+        super();
         // render component
-        this.renderComponent(this.props);
+        this.renderComponent();
     }
 
     static get observedAttributes() {
-        return ["pagelimit", "itemtotal", "currentpage"];
+        return ["dataitemscount"];
     }
 
-    attributeChangedCallback(name, oldVal, newValue) {
+    attributeChangedCallback(name: string, oldVal: string, newValue: string) {
         if (oldVal === newValue) {
             return;
         }
-        switch (name) {
-            case "pagelimit":
-                this.props.pageLimit = this.pageLimit = parseInt(newValue);
-                // re-calculate itemFrom and itemTo, for the currentPage
-                this.renderComponent(this.props);
-                break;
-            case "itemtotal":
-                this.props.itemTotal = this.itemTotal = parseInt(newValue);
-                // re-calculate itemFrom and itemTo, for the currentPage
-                this.renderComponent(this.props);
-                break;
-            case "currentpage":
-                this.props.currentPage = this.currentPage = parseInt(newValue);
-                // re-calculate itemFrom and itemTo, for the currentPage
-                this.renderComponent(this.props);
-                break;
-        }
+        this.renderComponent();
     }
 
-    get pagelimit() {
-        return this.getAttribute("pagelimit");
+    // getters and setters
+    get dataItemsCount(): number {
+        return dtstore.DataItemsCount;
     }
 
-    set pagelimit(value) {
-        this.setAttribute("pagelimit", value);
+    set dataItemsCount(value: number) {
+        // TODO: should be set from dstore or controlling component (mc-data-table) | optional
+        this.setAttribute("dataitemscount", value.toString())
     }
 
-    get itemtotal() {
-        return this.getAttribute("itemtotal");
-    }
-
-    set itemtotal(value) {
-        this.setAttribute("itemtotal", value);
-    }
-
-    get currentpage() {
-        return this.getAttribute("currentpage");
-    }
-
-    set currentpage(value) {
-        this.setAttribute("currentpage", value);
-    }
-
-    renderComponent(props) {
-        if (props && props.itemFrom > 0 && props.itemTo >= props.itemFrom && props.itemTotal >= props.itemTo) {
-            this.innerHTML = mcTableNoDataTemplate(props);
+    renderComponent() {
+        this.innerHTML = ``;
+        if (this.dataItemsCount < 1) {
+            this.innerHTML = `
+                <div class="w3-container w3-yellow">
+                    <h4>... Loading or No data available / Ensure that you're logged in ...</h4>
+                </div>
+            `;
+        } else {
+            this.innerHTML = `
+                <div>
+                    <h4>... Loading or Unable to process data / Ensure that you're logged in ...</h4>
+                </div>          
+            `
         }
     }
 
     disconnectedCallback() {
-
+        // cleanup - removeEventLister(s), garbage collection...
+        this.innerHTML = '';
     }
 
-    getPageMessageValues(props) {
-        // calculate per page itemFrom and itemTo records/items
-        this.itemFrom = (props.pageLimit * (props.currentPage - 1)) + 1;
-        this.itemTo   = (props.pageLimit * (props.currentPage));
-    }
 }
 
 let mcTableNoData;
 
-if (!customElements.get("mc-table-no-data")) {
-    mcTableNoData = customElements.define("mc-table-no-data", McTableNoData);
+if (!customElements.get('mc-table-no-data')) {
+    mcTableNoData = customElements.define('mc-table-no-data', McTableNoData);
 }
 
 export default mcTableNoData;

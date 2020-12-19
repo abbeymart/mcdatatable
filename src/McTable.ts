@@ -5,15 +5,9 @@
  */
 
 import TableTemplate from "./templates/TableTemplate";
-import TableHelper from "./templates/TableHelpers";
 import {
-    DataFieldType,
-    DataFieldsType,
-    DataItemsType,
-    DOMType,
-    TablePropsType,
-    TableStyle,
-    ItemValueType, EventType
+    DataFieldType, DataFieldsType, DataItemsType, DOMType,
+    TablePropsType, TableStyle, ItemValueType, EventType,
 } from "./types";
 import { dtstore } from "./dtStore";
 import { sortBy } from "lodash";
@@ -25,71 +19,81 @@ class McTable extends HTMLElement {
         this.renderComponent();
     }
 
-    renderComponent() {
-        const props: TablePropsType = {
-            tableFields  : dtstore.DataFields,
-            tableItems   : dtstore.DataItems,
-            tableRecords : this.TableRecords,
-            tableStyle   : dtstore.TableStyle,
-            sortStyleAsc : this.SortStyleAsc,
-            sortStyleDesc: this.SortStyleDesc,
+    static get observedAttributes() {
+        return ["currentpage", "pagelimit", "datatotal", "initialdatatotal"];
+    }
+
+    attributeChangedCallback(name: string, oldVal: string, newValue: string) {
+        if (oldVal === newValue) {
+            return;
         }
+        this.renderComponent();
+    }
+
+    renderComponent(props: TablePropsType = {
+        tableFields  : this.dataFields,
+        tableItems   : dtstore.DataItems,
+        tableRecords : this.tableRecords,
+        tableStyle   : dtstore.TableStyle,
+        sortStyleAsc : this.sortStyleAsc,
+        sortStyleDesc: this.sortStyleDesc,
+    }) {
         this.innerHTML = TableTemplate(props);
         // handle / emit events
     }
 
     // computed values (getters)
-    get SortAsc(): boolean {
+    get sortAsc(): boolean {
         return dtstore.SortAsc;
     }
 
-    set SortAsc(value: boolean) {
+    set sortAsc(value: boolean) {
         dtstore.SortAsc = value;
     }
 
-    get SortDesc(): boolean {
+    get sortDesc(): boolean {
         return dtstore.SortDesc;
     }
 
-    set SortDesc(value: boolean) {
+    set sortDesc(value: boolean) {
         dtstore.SortDesc = value;
     }
 
-    get SearchKey(): string {
+    get searchKey(): string {
         return dtstore.SearchKey;
     }
 
-    get PageStart(): number {
+    get pageStart(): number {
         return dtstore.PageStart;
     }
 
-    get PageLimit(): number {
+    get pageLimit(): number {
         return dtstore.PageLimit;
     }
 
-    get DataFields(): DataFieldsType {
+    get dataFields(): DataFieldsType {
         return dtstore.DataFields;
     }
 
-    get DataItems(): DataItemsType {
+    get dataItems(): DataItemsType {
         return dtstore.DataItems;
     }
 
-    set DataItems(value: DataItemsType) {
+    set dataItems(value: DataItemsType) {
         dtstore.DataItems = value;
     }
 
-    set DataTotal(value: number) {
+    set dataTotal(value: number) {
         dtstore.DataTotal = value;
     }
 
-    get dataItems() {
+    get tableDataItems() {
         // transform data-items for complete table-items search
         // console.log("data-items: ", this.dataItemsValue);
-        return this.DataItemsStore.map(item => {
+        return this.dataItemsStore.map(item => {
             // clone the item
             let itemInfo = Object.assign({}, item);
-            this.TableFields.forEach(field => {
+            this.tableFields.forEach(field => {
                 if (field.source.type && field.source.type === "provider") {
                     if (field.source.params) {
                         let fieldParams;
@@ -113,90 +117,90 @@ class McTable extends HTMLElement {
         });
     }
 
-    get SortStyle() {
+    get sortStyle() {
         return dtstore.SortStyle;
     }
 
-    get TableStyle() {
+    get tableStyle() {
         return dtstore.TableStyle;
     }
 
-    get SortStyleAsc() {
+    get sortStyleAsc() {
         return dtstore.SortAsc ? `${dtstore.SortStyle.asc} mc-table-sort-style` : `${dtstore.SortStyle.asc}`;
     }
 
-    get SortStyleDesc(): string {
+    get sortStyleDesc(): string {
         return dtstore.SortDesc ? `${dtstore.SortStyle.desc} mc-table-sort-style` : `${dtstore.SortStyle.desc}`;
     }
 
-    get CurrentPage(): number {
+    get currentPage(): number {
         return dtstore.CurrentPage;
     }
 
-    get ItemsTotal(): number {
+    get itemsTotal(): number {
         return dtstore.DataItems.length;
     }
 
-    get TableFields(): DataFieldsType {
+    get tableFields(): DataFieldsType {
         return sortBy(dtstore.DataFields, ["order"]);
     }
 
-    get DataItemsStore(): DataItemsType {
+    get dataItemsStore(): DataItemsType {
         return dtstore.DataItems;
     }
 
-    get DataItemsSearch() {
+    get dataItemsSearch() {
         // search data-items by search-key
         // const searchKey = this.$store.getters["mcDataTable/getSearchKey"];
-        const itemKeys = this.DataFields.map(item => item.name);
-        return this.DataItems.filter(item => itemKeys.some(key => {
+        const itemKeys = this.dataFields.map(item => item.name);
+        return this.dataItems.filter(item => itemKeys.some(key => {
                 return item[key] ? item[key].toString().toLowerCase().includes(dtstore.SearchKey.toString().toLowerCase()) : false;
             }
         ));
     }
 
-    get TableItems(): DataItemsType {
+    get tableItems(): DataItemsType {
         // determine tableData for the currentPage by pageLimit
         let tableData: DataItemsType = [];
 
         // scenarios for calculating tableData for the currentPage  >> mcTableBody
-        const dataSize = this.DataItemsSearch.length;
+        const dataSize = this.dataItemsSearch.length;
         // 1. if dataSize <= pageLimit: display all items for the currentPage(1)
-        if (dataSize <= this.PageLimit) {
-            tableData = this.DataItemsSearch;
+        if (dataSize <= this.pageLimit) {
+            tableData = this.dataItemsSearch;
         }
         // update dataTotal store-value
-        this.DataTotal = dataSize
+        this.dataTotal = dataSize
         // this.$store.dispatch("mcDataTable/setDataTotal", dataSize);
 
         // 2. if dataSize > pageLimit:
-        if (dataSize > this.PageLimit) {
+        if (dataSize > this.pageLimit) {
             // currentPage === 1
-            if (this.CurrentPage === 1) {
+            if (this.currentPage === 1) {
                 // slice records from the start of currentPage up to pageLimit
-                tableData = this.DataItemsSearch.slice(0, this.PageLimit)
+                tableData = this.dataItemsSearch.slice(0, this.pageLimit)
             }
             // dataSize is less than the total records up to the end of the currentPage
-            else if (dataSize <= this.CurrentPage * this.PageLimit) {
+            else if (dataSize <= this.currentPage * this.pageLimit) {
                 // slice records from the start of the currentPage to end of dataItems
-                tableData = this.DataItemsSearch.slice(((this.CurrentPage - 1) * this.PageLimit));
+                tableData = this.dataItemsSearch.slice(((this.currentPage - 1) * this.pageLimit));
             } else {
                 // slice records from the start of the currentPage to end of currentPage
-                tableData = this.DataItemsSearch.slice(((this.CurrentPage - 1) * this.PageLimit), (this.CurrentPage * this.PageLimit));
+                tableData = this.dataItemsSearch.slice(((this.currentPage - 1) * this.pageLimit), (this.currentPage * this.pageLimit));
             }
         }
         return tableData;
     }
 
-    get TableRecords(): DataItemsType {
+    get tableRecords(): DataItemsType {
         try {
             // transform table-items, by data-fields
-            return this.TableItems.map(item => {
+            return this.tableItems.map(item => {
                 let itemInfo = Object.assign({}, item);
                 // initialise the itemInfo fieldsInfo
                 itemInfo ["fieldsInfo"] = [];
                 // sort by table-field order
-                this.TableFields.forEach((field) => {
+                this.tableFields.forEach((field) => {
                     // compose the table field/column
                     // column/field value
                     let fieldSource = field.source,
@@ -246,19 +250,19 @@ class McTable extends HTMLElement {
     async sortDataByField(field: DataFieldType) {
         // toggle sort order, for dataItems
         if (field.sort) {
-            if (this.SortAsc) {
+            if (this.sortAsc) {
                 // sort in descending order
                 const dataItems = dtstore.DataItems;
                 dtstore.DataItems = sortBy(dataItems, [field.name]).reverse();
-                this.SortAsc = false;
-                this.SortDesc = true;
+                this.sortAsc = false;
+                this.sortDesc = true;
             } else {
                 // sort in ascending order
                 const dataItems = dtstore.DataItems;
                 dtstore.DataItems = sortBy(dataItems, [field.name]);
                 // this.tableItems = this.$lo.sortBy(this.tableItems, [fieldName]);
-                this.SortAsc = true;
-                this.SortDesc = false;
+                this.sortAsc = true;
+                this.sortDesc = false;
             }
         }
     }
@@ -308,35 +312,6 @@ class McTable extends HTMLElement {
         }
         return eventsTask
     }
-
-
-    // events emitter
-    static emitTableEvent(e: any) {
-        e.preventDefault();
-        // emit itemType event | or use observable
-        const compItemChange = new CustomEvent(e.target.itemType, {
-            bubbles   : true,
-            cancelable: true,
-            detail    : {type: e.target.itemType, value: e.target.itemValue}
-        });
-        e.target.dispatchEvent(compItemChange);
-    }
-
-    // @ts-ignore
-    static emitTableHeaderEvent(e) {
-        e.preventDefault();
-        const itemPath = e.target.getAttribute("data-app-top-menu-path");
-        const itemTitle = e.target.getAttribute("data-app-top-menu-title");
-
-        // emit "mc-top-menu-change" event | or use observable
-        const appMenuChange = new CustomEvent("mc-top-menu-change", {
-            bubbles   : true,
-            cancelable: true,
-            detail    : {path: itemPath, title: itemTitle}
-        });
-        e.target.dispatchEvent(appMenuChange);
-    }
-
 
     disconnectedCallback() {
         // cleanup - reset DOM, removeEventLister(s), garbage collection...

@@ -18,11 +18,9 @@ export interface TaskFunctionType {
     (val?: any): any
 }
 
-export interface ItemObjectType{
+export interface ItemValueType{
     [key: string]: any;
 }
-
-export type ItemValueType = ItemObjectType | object;
 
 export interface SetValueType{
     (val: any): void;
