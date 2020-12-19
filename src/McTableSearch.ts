@@ -5,7 +5,7 @@
  */
 
 import {DOMType} from "./types";
-import {dtstore} from "./store/DtStore";
+import {dtstore} from "./dtStore";
 import TableHelper from "./templates/TableHelpers";
 
 class McTableSearch extends HTMLElement {

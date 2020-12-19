@@ -18,8 +18,14 @@ export interface TaskFunctionType {
     (val?: any): any
 }
 
-export interface ItemValueType{
+export interface ItemObjectType{
     [key: string]: any;
+}
+
+export type ItemValueType = ItemObjectType | object;
+
+export interface SetValueType{
+    (val: any): void;
 }
 
 export interface ItemFieldType{
@@ -27,7 +33,7 @@ export interface ItemFieldType{
 }
 
 export interface UpdateTaskFunctionType {
-    (e: Event, item: ItemValueType): any
+    (item: ItemValueType): any
 }
 
 export interface UpdatePropsType {
@@ -37,7 +43,7 @@ export interface UpdatePropsType {
 }
 
 export interface DeleteTaskFunctionType {
-    (e: Event, itemId: string): any
+    (itemId: string): any
 }
 
 export interface DeletePropsType {
@@ -88,17 +94,17 @@ export interface TablePropsType {
 export interface PageLimitPropsType {
     pageLimit: number;
     pageLimits: Array<number>;
-    setPageLimit: (e: Event, val: string | number) => void;
+    setPageLimit: (val: string | number) => void;
 }
 
 export interface PageNavPropsType {
     currentPage: number;
     pageList: Array<string>;
-    pageNavFirst: (e: Event) => void;
-    pageNavNext: (e: Event) => void;
-    pageNavPrevious: (e: Event) => void;
-    pageNavLast: (e: Event) => void;
-    pageNavNumber: (e: Event, val: string | number) => void;
+    pageNavFirst: () => void;
+    pageNavNext: () => void;
+    pageNavPrevious: () => void;
+    pageNavLast: () => void;
+    pageNavNumber: (val: string | number) => void;
 }
 
 export interface DataSourceType {

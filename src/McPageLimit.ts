@@ -6,46 +6,71 @@
 
 import PageLimitTemplate from "./templates/PageLimitTemplate";
 import TableHelper from "./templates/TableHelpers";
-import { DOMType } from "./types";
-import { dtstore } from "./store/DtStore";
+import { PageLimitPropsType, SetValueType } from "./types";
+import { dtstore } from "./dtStore";
+import { isEmptyObject } from "./helper";
 
 class McPageLimit extends HTMLElement {
-    protected DOM: DOMType = {};
-
     constructor() {
         super();
         // render component
         this.renderComponent();
     }
 
+    static get observedAttributes() {
+        return ["pagelimit", "pagelimits"];
+    }
+
+    attributeChangedCallback(name: string, oldVal: string, newValue: string) {
+        if (oldVal === newValue) {
+            return;
+        }
+        this.renderComponent({
+            pageLimit   : this.pageLimit,
+            pageLimits  : this.pageLimits,
+            setPageLimit: this.setPageLimit,
+        });
+    }
+
     // getters ands setters
-    get PageLimit(): number {
+    get pageLimit(): number {
         return dtstore.PageLimit;
     }
 
-    get PageLimits(): Array<number> {
+    set pageLimit(value: number) {
+        dtstore.PageLimit = value;
+        this.setAttribute("pagelimit", value.toString())
+    }
+
+    get pageLimits(): Array<number> {
         return dtstore.PageLimits;
     }
 
-    set PageLimit(value: number) {
-        dtstore.PageLimit = value;
+    set pageLimits(value: Array<number>) {
+        dtstore.PageLimits = value;
+        this.setAttribute("pagelimits", JSON.stringify(value))
     }
 
     // methods
-    setPageLimit(e: Event, value: string | number) {
-        e.preventDefault();
-        // var selectBox = document.getElementById("mc-page-limit-value");
-        // var value = selectBox?.options[selectBox.selectedIndex].value;
-        // alert(selectedValue);
-        this.PageLimit = Number(value);
+    setPageLimit(value: string | number) {
+        this.pageLimit = Number(value);     // will update the dstore value
     }
 
-    renderComponent() {
-        this.innerHTML = PageLimitTemplate({
-            pageLimit   : this.PageLimit,
-            pageLimits  : this.PageLimits,
-            setPageLimit: this.setPageLimit,
-        });
+    renderComponent(props: PageLimitPropsType = {
+        pageLimit   : this.pageLimit,
+        pageLimits  : this.pageLimits,
+        setPageLimit: this.setPageLimit
+    }) {
+        this.innerHTML = PageLimitTemplate(props);
+        // events | mc-page-limit-value
+        const pageLimitDom = document.getElementById("mc-page-limit-value") as HTMLSelectElement;
+        if (pageLimitDom && props.setPageLimit && (typeof props.setPageLimit === "function")) {
+            pageLimitDom.onselectionchange = (e) => {
+                e.preventDefault();
+                const value = pageLimitDom.options[pageLimitDom.selectedIndex].value;
+                props.setPageLimit(value);
+            }
+        }
     }
 
     disconnectedCallback() {

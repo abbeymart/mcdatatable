@@ -4,14 +4,14 @@
  * @Description: mc-table-no-data: to display when dataItems = []
  */
 
-import mcTableNoDataTemplate from './templates/TableNoDataTemplate';
+import mcTableNoDataTemplate from "./templates/TableNoDataTemplate";
 
 class McTableNoData extends HTMLElement {
     connectedCallback() {
         // attributes, set from parent component
-        this.pageLimit   = parseInt(this.getAttribute('pagelimit'));
-        this.itemTotal   = parseInt(this.getAttribute('itemtotal'));
-        this.currentPage = parseInt(this.getAttribute('currentpage'));
+        this.pageLimit   = parseInt(this.getAttribute("pagelimit"));
+        this.itemTotal   = parseInt(this.getAttribute("itemtotal"));
+        this.currentPage = parseInt(this.getAttribute("currentpage"));
         // calculate itemFrom and itemTo, for the currentPage
         this.getPageMessageValues({
             pageLimit  : this.pageLimit,
@@ -29,7 +29,7 @@ class McTableNoData extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['pagelimit', 'itemtotal', 'currentpage'];
+        return ["pagelimit", "itemtotal", "currentpage"];
     }
 
     attributeChangedCallback(name, oldVal, newValue) {
@@ -37,17 +37,17 @@ class McTableNoData extends HTMLElement {
             return;
         }
         switch (name) {
-            case 'pagelimit':
+            case "pagelimit":
                 this.props.pageLimit = this.pageLimit = parseInt(newValue);
                 // re-calculate itemFrom and itemTo, for the currentPage
                 this.renderComponent(this.props);
                 break;
-            case 'itemtotal':
+            case "itemtotal":
                 this.props.itemTotal = this.itemTotal = parseInt(newValue);
                 // re-calculate itemFrom and itemTo, for the currentPage
                 this.renderComponent(this.props);
                 break;
-            case 'currentpage':
+            case "currentpage":
                 this.props.currentPage = this.currentPage = parseInt(newValue);
                 // re-calculate itemFrom and itemTo, for the currentPage
                 this.renderComponent(this.props);
@@ -56,27 +56,27 @@ class McTableNoData extends HTMLElement {
     }
 
     get pagelimit() {
-        return this.getAttribute('pagelimit');
+        return this.getAttribute("pagelimit");
     }
 
     set pagelimit(value) {
-        this.setAttribute('pagelimit', value);
+        this.setAttribute("pagelimit", value);
     }
 
     get itemtotal() {
-        return this.getAttribute('itemtotal');
+        return this.getAttribute("itemtotal");
     }
 
     set itemtotal(value) {
-        this.setAttribute('itemtotal', value);
+        this.setAttribute("itemtotal", value);
     }
 
     get currentpage() {
-        return this.getAttribute('currentpage');
+        return this.getAttribute("currentpage");
     }
 
     set currentpage(value) {
-        this.setAttribute('currentpage', value);
+        this.setAttribute("currentpage", value);
     }
 
     renderComponent(props) {
@@ -98,8 +98,8 @@ class McTableNoData extends HTMLElement {
 
 let mcTableNoData;
 
-if (!customElements.get('mc-table-no-data')) {
-    mcTableNoData = customElements.define('mc-table-no-data', McTableNoData);
+if (!customElements.get("mc-table-no-data")) {
+    mcTableNoData = customElements.define("mc-table-no-data", McTableNoData);
 }
 
 export default mcTableNoData;

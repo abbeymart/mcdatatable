@@ -13,13 +13,12 @@ export default function PageLimitTemplate(props: PageLimitPropsType) {
             `<option value="${val}" id="${ind + 1}"> ${val}</option>`
     }).join(" ");
 
-    // activate active component
+    // activate active component | onchange="props.setPageLimit(e, this.value)
     return `
     <div>
-        <label for="mc-page-limit-value" disabled></label>
         <span>Show </span>
         <select id="mc-page-limit-value" name="mc-page-limit-value" class="w3-round"
-              value="${props.pageLimit}" onchange="props.setPageLimit(e, this.value)">
+              value="${props.pageLimit}">
             ${optionDom}
         </select>
         <span> items</span>

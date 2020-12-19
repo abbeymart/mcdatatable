@@ -6,15 +6,24 @@
 
 import PageNavTemplate from "./templates/PageNavTemplate";
 import TableHelper from "./templates/TableHelpers";
-import { dtstore } from "./store/DtStore";
-import { DOMType, PageNavEventType, PageNavValueType } from "./types";
+import { dtstore } from "./dtStore";
+import { PageNavEventType, PageNavPropsType, PageNavValueType } from "./types";
 
 class McPageNav extends HTMLElement {
-    #DOM: DOMType = {};
-
     constructor() {
         super();
         // render component
+        this.renderComponent();
+    }
+
+    static get observedAttributes() {
+        return ["currentpage", "pagelimit", "datatotal"];
+    }
+
+    attributeChangedCallback(name: string, oldVal: string, newValue: string) {
+        if (oldVal === newValue) {
+            return;
+        }
         this.renderComponent();
     }
 
@@ -66,155 +75,117 @@ class McPageNav extends HTMLElement {
         return dtstore.PageLimit;
     }
 
-    get CurrentPage(): number {
+    set pageLimit(value: number) {
+        // TODO: should be set from dstore or controlling/parent component (mc-data-table)
+        this.setAttribute("pagelimit", value.toString())
+    }
+
+    get currentPage(): number {
         return dtstore.CurrentPage;
     }
 
     set currentPage(value: number) {
+        // should be set from dstore or controlling component (mc-page-nav)
         dtstore.CurrentPage = value;
+        this.setAttribute("currentpage", value.toString())
     }
 
     get dataTotal(): number {
         return dtstore.DataTotal;
     }
 
-    renderComponent() {
+    set dataTotal(value: number) {
+        // TODO: should be set from dstore or controlling component (mc-data-table)
+        this.setAttribute("datatotal", value.toString())
+    }
+
+    renderComponent(props: PageNavPropsType = {
+        currentPage    : this.currentPage,
+        lastPage       : this.lastPage,
+        pageList       : this.pageList,
+        pageNavFirst   : this.pageNavFirst,
+        pageNavNext    : this.pageNavNext,
+        pageNavPrevious: this.pageNavPrevious,
+        pageNavLast    : this.pageNavLast,
+        pageNavNumber  : this.pageNavNumber,
+    }) {
         if (dtstore.DataTotal > 0) {
-            this.innerHTML = PageNavTemplate({
-                currentPage    : this.currentPage,
-                lastPage       : this.lastPage,
-                pageList       : this.pageList,
-                pageNavFirst   : this.pageNavFirst,
-                pageNavNext    : this.pageNavNext,
-                pageNavPrevious: this.pageNavPrevious,
-                pageNavLast    : this.pageNavLast,
-                pageNavNumber  : this.pageNavNumber,
-            });
+            this.innerHTML = PageNavTemplate(props);
         }
-        // event"s handlers
-        // Component DOM references
-
-        // this.#DOM = TableHelper.getPageNavDOM(this.ownerDocument);
-        // const {pageNavFirst, pageNavPrevious, pageNavNext, pageNavLast, pageNavNumber} = this.#DOM;
-
-        // // handle & emit events
-        // if (pageNavFirst) {
-        //     pageNavFirst.onclick = (e: any) => {
-        //         e.preventDefault();
-        //         // emit event, for other sub-components
-        //         e.target.itemType = "page-nav-first";
-        //         e.target.itemValue = 1;
-        //         McPageNav.emitPageNavEvent(e);
-        //         // perform page-action
-        //         this.pageNavFirst(e);
-        //     };
-        // }
-        // if (pageNavPrevious) {
-        //     pageNavPrevious.onclick = (e: any) => {
-        //         e.preventDefault();
-        //         const currentPageNum = this.currentPage--;
-        //         // emit event, for other sub-components
-        //         e.target.itemType = "page-nav-previous";
-        //         e.target.itemValue = currentPageNum;
-        //         McPageNav.emitPageNavEvent(e);
-        //         // perform page-action
-        //         this.pageNavPrevious(e);
-        //     };
-        // }
-        // if (pageNavNext) {
-        //     pageNavNext.onclick = (e: any) => {
-        //         e.preventDefault();
-        //         const currentPageNum = this.currentPage++;
-        //         // emit event, for other sub-components
-        //         e.target.itemType = "page-nav-next";
-        //         e.target.itemValue = currentPageNum;
-        //         McPageNav.emitPageNavEvent(e);
-        //         // perform page-action
-        //         this.pageNavNext(e);
-        //
-        //     };
-        // }
-        // if (pageNavLast) {
-        //     pageNavLast.onclick = (e: any) => {
-        //         e.preventDefault();
-        //         if (dtstore.DataTotal && dtstore.DataTotal > this.pageLimit) {
-        //             const currentPageNum = Math.ceil((this.dataTotal) / (this.pageLimit));
-        //             // emit event, for other sub-components
-        //             e.target.itemType = "page-nav-last";
-        //             e.target.itemValue = currentPageNum;
-        //             McPageNav.emitPageNavEvent(e);
-        //             // perform page-action
-        //             this.pageNavLast(e);
-        //         }
-        //     };
-        // }
-        // if (pageNavNumber && pageNavNumber.length > 0) {
-        //     // @ts-ignore
-        //     for (let pageItem of pageNavNumber) {
-        //         pageItem.onclick = (e: any) => {
-        //             e.preventDefault();
-        //             const currentPageNum = pageItem.innerText;
-        //             // emit event, for other sub-components
-        //             e.target.itemType = "page-nav-number";
-        //             e.target.itemValue = parseInt(currentPageNum);
-        //             McPageNav.emitPageNavEvent(e);
-        //             // perform page-action
-        //             this.pageNavNumber(e, currentPageNum);
-        //             // store  / emit event, for other sub-components
-        //             // dtstore.PagePosition = "page-number";
-        //             // this.setCurrentPage(currentPageNum);
-        //         };
-        //     }
-        // }
+        // event"s handlers | to set the mc-page-limit-value
+        const pageNavFirstDom = document.getElementById("mc-page-nav-first");
+        if (pageNavFirstDom && (typeof props.pageNavFirst === "function")) {
+            pageNavFirstDom.onclick = (e) => {
+                e.preventDefault();
+                // const value = pageLimitDom.options[pageLimitDom.selectedIndex].value;
+                props.pageNavFirst();
+            }
+        }
+        const pageNavNextDom = document.getElementById("mc-page-nav-next");
+        if (pageNavNextDom && (typeof props.pageNavFirst === "function")) {
+            pageNavNextDom.onclick = (e) => {
+                e.preventDefault();
+                props.pageNavNext();
+            }
+        }
+        const pageNavPreviousDom = document.getElementById("mc-page-nav-previous");
+        if (pageNavPreviousDom && (typeof props.pageNavFirst === "function")) {
+            pageNavPreviousDom.onclick = (e) => {
+                e.preventDefault();
+                props.pageNavPrevious();
+            }
+        }
+        const pageNavLastDom = document.getElementById("mc-page-nav-last");
+        if (pageNavLastDom && (typeof props.pageNavFirst === "function")) {
+            pageNavLastDom.onclick = (e) => {
+                e.preventDefault();
+                props.pageNavLast();
+            }
+        }
+        const pageNavNumDom: any = document.getElementsByClassName("mc-current-page-item");
+        if (pageNavNumDom && pageNavNumDom.length > 0) {
+            for (const domItem of pageNavNumDom) {
+                domItem.onclick = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = e.target.getAttribute("data-mc-page-num");
+                    props.pageNavNumber(domItemValue);
+                }
+            }
+        }
     }
 
     // methods:
     setCurrentPage(currentPage: number) {
-        dtstore.CurrentPage = currentPage;
-        // this.renderComponent(); // re-render via attribute change =>
+        this.currentPage = currentPage;
     }
 
-    pageNavFirst(e: Event) {
+    pageNavFirst() {
         // store / emit event, for other sub-components
         dtstore.PagePosition = "first-page";
         this.setCurrentPage(1);
     }
 
-    pageNavPrevious(e: Event) {
+    pageNavPrevious() {
         // store / emit event, for other sub-components
         dtstore.PagePosition = "previous-page";
         this.setCurrentPage(this.currentPage - 1);
     }
 
-    pageNavNext(e: Event) {
+    pageNavNext() {
         // store / emit event, for other sub-components
         dtstore.PagePosition = "next-page";
         this.setCurrentPage(this.currentPage + 1);
     }
 
-    pageNavLast(e: Event) {
-        e.preventDefault();
+    pageNavLast() {
         // store / emit event, for other sub-components
         dtstore.PagePosition = "last-page";
         this.setCurrentPage(Math.ceil(this.dataTotal / this.pageLimit));
     }
 
-    pageNavNumber(e: Event, page: string | number) {
-        e.preventDefault();
-        // store  / emit event, for other sub-components
+    pageNavNumber(page: string | number) {
         dtstore.PagePosition = "page-number";
         this.setCurrentPage(Number(page));
-    }
-
-    static emitPageNavEvent(e: any) {
-        e.preventDefault();
-        // emit itemType event
-        const compChange = new CustomEvent(e.target.itemType, {
-            bubbles   : true,
-            cancelable: true,
-            detail    : {type: e.target.itemType, value: e.target.itemValue}
-        });
-        e.target.dispatchEvent(compChange);
     }
 
     disconnectedCallback() {

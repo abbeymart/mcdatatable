@@ -3,7 +3,7 @@
  * @Company: mConnect.biz | @License: MIT
  * @Description: mc-table-message, to display table-view message(e.g. showing 1 to 10 of 350 records)
  */
-import { dtstore } from "./store/DtStore";
+import { dtstore } from "./dtStore";
 
 class McTableMessage extends HTMLElement {
     constructor() {
@@ -12,23 +12,57 @@ class McTableMessage extends HTMLElement {
         this.renderComponent();
     }
 
+    static get observedAttributes() {
+        return ["currentpage", "pagelimit", "datatotal", "initialdatatotal"];
+    }
+
+    attributeChangedCallback(name: string, oldVal: string, newValue: string) {
+        if (oldVal === newValue) {
+            return;
+        }
+        this.renderComponent();
+    }
+
     // getters and setters
     get initialDataTotal(): number {
         return dtstore.InitialDataTotal;
+    }
+
+    set initialDataTotal(value: number) {
+        // TODO: should be set from dstore or controlling component (mc-data-table)
+        this.setAttribute("initialdatatotal", value.toString())
     }
 
     get dataTotal(): number {
         return dtstore.DataTotal;
     }
 
+    set dataTotal(value: number) {
+        // TODO: should be set from dstore or controlling component (mc-data-table)
+        this.setAttribute("datatotal", value.toString())
+    }
+
     get pageLimit(): number {
         return dtstore.PageLimit;
+    }
+
+    set pageLimit(value: number) {
+        // TODO: should be set from dstore or controlling component (mc-data-table)
+        dtstore.CurrentPage = value;
+        this.setAttribute("pagelimit", value.toString())
     }
 
     get currentPage(): number {
         return dtstore.CurrentPage;
     }
 
+    set currentPage(value: number) {
+        // TODO: should be set from dstore or controlling component (mc-data-table)
+        dtstore.CurrentPage = value;
+        this.setAttribute("currentpage", value.toString())
+    }
+
+    // computed values
     get itemFrom(): number {
         // calculate per page itemFrom and itemTo records/items
         return this.pageLimit * (this.currentPage - 1) + 1;

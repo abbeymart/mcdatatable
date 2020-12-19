@@ -9,12 +9,12 @@ export default (props: PageNavPropsType) => {
     const firstPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
                id="mc-page-nav-first" onclick="props.pageNavFirst()">First</a>`;
     const previousPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-previous" onclick="props.pageNavPrevious()">Previous</a>`;
+               id="mc-page-nav-previous">Previous</a>`;
     const middlePagesDom = (page: string) => `
-                     <a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue" id="${page}" onclick="props.pageNavNumber(e, ${page})">
+                     <a href="#" class="mc-current-page-item w3-button w3-border w3-round-medium w3-hover-blue" id="${page}" data-mc-page-num="${page}">
                          ${props.currentPage.toString() === page ?
-                        `<span class="mc-current-page">${page}</span>` :
-                        `<span>${page}</span>`}           
+        `<span class="mc-current-page">${page}</span>` :
+        `<span>${page}</span>`}           
                      </a>`;
     const nextPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
                id="mc-page-nav-first" onclick="props.pageNavNext()">Next</a>`;

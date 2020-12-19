@@ -4,46 +4,49 @@
  * @Description: mcUpdate
  */
 
-// types
-import { UpdateTaskFunctionType } from "./types";
+// imports
+import { ItemValueType, UpdateTaskFunctionType } from "./types";
+import { isEmptyObject } from "./helper";
 
 class McUpdate extends HTMLElement {
     protected action: UpdateTaskFunctionType;
-    protected item: object;
-    protected label: string = '';
+    protected item: ItemValueType;
+    protected label: string;
 
     constructor() {
         super();
         // set the required attributes/props
-        this.label = this.getAttribute('label') || 'Update';
-        this.action = () => null;
+        this.label = this.getAttribute("label") || "Update";
+        this.action = (val: ItemValueType) => null;
         this.item = {};
         // validate attributes
         this.renderComponent();
     }
 
     static get observedAttributes() {
-        return ['label'];
+        return ["label", "action", "item"];
     }
 
-    attributeChangedCallback(name: string, oldVal: any, newValue: any) {
-        if (JSON.stringify(oldVal) === JSON.stringify(newValue)) {
+    attributeChangedCallback(name: string, oldVal: string, newValue: string) {
+        if (name === "action") {
+            this.renderComponent({label: this.Label, action: this.Action, item: this.Item});
+        }
+
+        if (oldVal === newValue) {
             return;
         }
-        if (name === 'label') {
-            this.renderComponent({label: newValue as string, action: this.action, item: this.item});
-        }
+        this.renderComponent({label: this.Label, action: this.Action, item: this.Item});
     }
 
-    renderComponent(props = {label: this.label, action: this.action, item: this.item}) {
+    renderComponent(props = {label: this.Label, action: this.Action, item: this.Item}) {
         this.innerHTML = `
         <a href="#" id="mc-update-action">
             ${props.label}<i class="fa fa-edit"></i>
         </a>`;
 
         // event action (itemAction(itemId))
-        const itemDomRef = document.getElementById('mc-update-action');
-        if (itemDomRef && props.action && (typeof props.action === 'function') && Object.keys(props.item).length) {
+        const itemDomRef = document.getElementById("mc-update-action");
+        if (itemDomRef && props.action && (typeof props.action === "function") && !isEmptyObject(props.item)) {
             itemDomRef.onclick = (e) => {
                 e.preventDefault();
                 props.action(props.item);
@@ -51,38 +54,43 @@ class McUpdate extends HTMLElement {
         }
     }
 
-    get mcLabel() {
+    disconnectedCallback() {
+        // cleanup - reset DOM, removeEventLister(s), garbage collection...
+        this.innerHTML = "";
+    }
+
+    get Label() {
         return this.label;
     }
 
-    set mcLabel(value: string) {
+    set Label(value: string) {
         this.label = value;
-        this.setAttribute('label', value);
+        this.setAttribute("label", value);
     }
 
-    get mcAction() {
+    get Action() {
         return this.action;
     }
 
-    set mcAction(value: UpdateTaskFunctionType) {
+    set Action(value: UpdateTaskFunctionType) {
         this.action = value;
-        this.setAttribute('action', 'new-action-value');
+        this.setAttribute("action", "new-action-value");
     }
 
-    get mcItem() {
+    get Item() {
         return this.item;
     }
 
-    set mcItem(value: object) {
+    set Item(value: object) {
         this.item = value;
-        this.setAttribute('item', 'new-item-value');
+        this.setAttribute("item", JSON.stringify(value));
     }
 }
 
 let mcUpdate;
 
-if (!customElements.get('mc-update')) {
-    mcUpdate = customElements.define('mc-update', McUpdate);
+if (!customElements.get("mc-update")) {
+    mcUpdate = customElements.define("mc-update", McUpdate);
 }
 
-module.exports = mcUpdate;
+export default mcUpdate;

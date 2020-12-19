@@ -21,21 +21,14 @@ class McActive extends HTMLElement {
         return ["active", "label"];
     }
 
-    attributeChangedCallback(name: string, oldVal: string | boolean, newValue: string | boolean) {
+    attributeChangedCallback(name: string, oldVal: string, newValue: string) {
         if (oldVal === newValue) {
             return;
         }
-        switch (name) {
-            case "label":
-                this.renderComponent({label: newValue as string, active: this.active});
-                break;
-            case "active":
-                this.renderComponent({label: this.label, active: Boolean(newValue)});
-                break;
-        }
+        this.renderComponent({label: this.Label, active: this.Active});
     }
 
-    renderComponent(props = {label: this.label, active: this.active}) {
+    renderComponent(props = {label: this.Label, active: this.Active}) {
         let activeLabel;
         if (props.active) {
             activeLabel = `<span>${props.label} <i class="fa fa-check"></i></span>`;
@@ -46,20 +39,25 @@ class McActive extends HTMLElement {
         this.innerHTML = activeLabel;
     }
 
-    get mcActive() {
+    disconnectedCallback() {
+        // cleanup - reset DOM, removeEventLister(s), garbage collection...
+        this.innerHTML = "";
+    }
+
+    get Active() {
         return this.active;
     }
 
-    set mcActive(value: boolean) {
+    set Active(value: boolean) {
         this.active = value;
         this.setAttribute("active", value.toString());
     }
 
-    get mcLabel() {
+    get Label() {
         return this.label;
     }
 
-    set mcLabel(value: string) {
+    set Label(value: string) {
         this.label = value;
         this.setAttribute("label", value);
     }

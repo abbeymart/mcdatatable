@@ -15,7 +15,7 @@ import {
     TableStyle,
     ItemValueType, EventType
 } from "./types";
-import { dtstore } from "./store/DtStore";
+import { dtstore } from "./dtStore";
 import { sortBy } from "lodash";
 
 class McTable extends HTMLElement {

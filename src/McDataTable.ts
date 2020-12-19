@@ -21,7 +21,7 @@ import TableNoDataTemplate from './templates/TableNoDataTemplate';
 import TableHelper from './templates/TableHelpers';
 
 import {DataItemsType, DataFieldsType, TableStyle, SortStyle, DOMType} from "./types";
-import {dtstore} from "./store/DtStore";
+import {dtstore} from "./dtStore";
 
 type ObValueType = number | DataItemsType | DataFieldsType | TableStyle | SortStyle;
 

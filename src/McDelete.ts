@@ -4,17 +4,18 @@
  * @Description: mcDelete
  */
 
-// types
-import {DeleteTaskFunctionType} from "./types";
+// imports
+import { DeleteTaskFunctionType } from "./types";
 
 class McDelete extends HTMLElement {
     protected action: DeleteTaskFunctionType;
     protected itemId: string;
-    protected label: string = "";
+    protected label: string;
+
     constructor() {
         super();
         // set the required attributes/props
-        this.label = this.getAttribute("label") || "Update";
+        this.label = this.getAttribute("label") || "Delete";
         this.action = () => null;
         this.itemId = this.getAttribute("itemid") || "";
         // validate attributes
@@ -22,19 +23,21 @@ class McDelete extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ["label"];
+        return ["label", "action", "itemid"];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
+        if (name === "action") {
+            this.renderComponent({label: this.Label, action: this.Action, itemId: this.ItemId});
+        }
+
         if (oldVal === newValue) {
             return;
         }
-        if (name === "label") {
-            this.renderComponent({label: newValue, action: this.action, itemId: this.itemId});
-        }
+        this.renderComponent({label: this.Label, action: this.Action, itemId: this.ItemId});
     }
 
-    renderComponent(props = {label: this.label, action: this.action, itemId: this.itemId}) {
+    renderComponent(props = {label: this.Label, action: this.Action, itemId: this.ItemId}) {
         this.innerHTML = `
         <a href="#" id="mc-delete-action">
             ${props.label}<i class="fa fa-times-circle"></i>
@@ -45,9 +48,14 @@ class McDelete extends HTMLElement {
         if (itemDomRef && props.action && (typeof props.action === "function") && props.itemId) {
             itemDomRef.onclick = (e) => {
                 e.preventDefault();
-                props.action(e, props.itemId);
+                props.action(props.itemId);
             }
         }
+    }
+
+    disconnectedCallback() {
+        // cleanup - reset DOM, removeEventLister(s), garbage collection...
+        this.innerHTML = "";
     }
 
     get Label() {
@@ -63,16 +71,16 @@ class McDelete extends HTMLElement {
         return this.action;
     }
 
-    set mcAction(value: DeleteTaskFunctionType) {
+    set Action(value: DeleteTaskFunctionType) {
         this.action = value;
         this.setAttribute("action", "new-action-value");
     }
 
-    get mcItemId() {
+    get ItemId() {
         return this.itemId;
     }
 
-    set mcItemId(value: string) {
+    set ItemId(value: string) {
         this.itemId = value;
         this.setAttribute("itemid", value);
     }
@@ -84,4 +92,4 @@ if (!customElements.get("mc-delete")) {
     mcDelete = customElements.define("mc-delete", McDelete);
 }
 
-module.exports = mcDelete;
+export default mcDelete;
