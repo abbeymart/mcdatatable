@@ -18,15 +18,17 @@ export interface TaskFunctionType {
     (val?: any): any
 }
 
-export interface ItemValueType{
+export interface ItemValueType {
     [key: string]: any;
+
+    fieldsInfo?: Array<ItemFieldsInfoType>;
 }
 
-export interface SetValueType{
+export interface SetValueType {
     (val: any): void;
 }
 
-export interface ItemFieldType{
+export interface ItemFieldType {
     [key: string]: any;
 }
 
@@ -133,6 +135,16 @@ export interface DataFieldType {
     sort?: boolean;
     source: DataSourceType;
     events?: Array<EventType>;
+}
+
+export interface ItemFieldsInfoType {
+    fieldValue: any;
+    fieldSource: DataSourceType;
+    fieldType: any;
+    fieldName: string;
+    fieldTask?: TaskFunctionType | null;
+    fieldParams?: string | ItemValueType;
+    fieldLabel: string;
 }
 
 export type DataFieldsType = Array<DataFieldType>;

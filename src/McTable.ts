@@ -7,7 +7,7 @@
 import TableTemplate from "./templates/TableTemplate";
 import {
     DataFieldType, DataFieldsType, DataItemsType, DOMType,
-    TablePropsType, TableStyle, ItemValueType, EventType,
+    TablePropsType, TableStyle, ItemValueType, EventType, ItemFieldsInfoType, TaskFunctionType,
 } from "./types";
 import { dtstore } from "./dtStore";
 import { sortBy } from "lodash";
@@ -40,6 +40,43 @@ class McTable extends HTMLElement {
     }) {
         this.innerHTML = TableTemplate(props);
         // handle / emit events
+        const tableInputCheckDom: any = document.getElementsByClassName("mc-table-input-check");
+        if (tableInputCheckDom && tableInputCheckDom.length > 0) {
+            for (const domItem of tableInputCheckDom) {
+                domItem.onchange = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = e.target.getAttribute("data-input-check");
+                    // get fieldTask from tableFields, by fieldName(itemId)
+                    const itemFieldName = e.target.getAttribute("data-input-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
+            }
+        }
+
+        const tableUpdateDom: any = document.getElementsByClassName("mc-table-update");
+        if (tableInputCheckDom && tableInputCheckDom.length > 0) {
+            for (const domItem of tableInputCheckDom) {
+                domItem.onchange = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = e.target.getAttribute("data-input-check");
+                    // get fieldTask from tableFields, by fieldName(itemId)
+                    const itemFieldName = e.target.getAttribute("data-input-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
+            }
+        }
     }
 
     // computed values (getters)
@@ -206,8 +243,8 @@ class McTable extends HTMLElement {
                     let fieldSource = field.source,
                         fieldName = field.name,
                         fieldType = field.source.type,
-                        fieldTask = null,
-                        fieldParams = null,
+                        fieldTask,
+                        fieldParams,
                         fieldLabel = field["label"],
                         fieldValue = "N/A";
 
@@ -215,7 +252,7 @@ class McTable extends HTMLElement {
                         // field-value already transformed from dataItems computed values
                         fieldValue = item[fieldName];
                     } else {
-                        fieldTask = field.source.task ? field.source.task : "";
+                        fieldTask = field.source.task ? field.source.task : null;
                         const fieldSourceParams = field.source.params;
                         if (fieldSourceParams && Array.isArray(fieldSourceParams) && fieldSourceParams.length > 0) {
                             if (fieldSourceParams.includes("all") || fieldSourceParams.includes("item")) {
@@ -226,7 +263,7 @@ class McTable extends HTMLElement {
                         }
                     }
 
-                    itemInfo ["fieldsInfo"].push({
+                    itemInfo ["fieldsInfo"]?.push({
                         fieldValue : fieldValue,
                         fieldSource: fieldSource,
                         fieldType  : fieldType,
