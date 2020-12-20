@@ -18,7 +18,7 @@ class McPageLimit extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ["pagelimit", "pagelimits"];
+        return ["pagelimits"];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
@@ -28,7 +28,6 @@ class McPageLimit extends HTMLElement {
         this.renderComponent({
             pageLimit   : this.pageLimit,
             pageLimits  : this.pageLimits,
-            setPageLimit: this.setPageLimit,
         });
     }
 
@@ -39,7 +38,7 @@ class McPageLimit extends HTMLElement {
 
     set pageLimit(value: number) {
         dtstore.PageLimit = value;
-        this.setAttribute("pagelimit", value.toString())
+        // this.setAttribute("pagelimit", value.toString())
     }
 
     get pageLimits(): Array<number> {
@@ -59,16 +58,15 @@ class McPageLimit extends HTMLElement {
     renderComponent(props: PageLimitPropsType = {
         pageLimit   : this.pageLimit,
         pageLimits  : this.pageLimits,
-        setPageLimit: this.setPageLimit
     }) {
         this.innerHTML = PageLimitTemplate(props);
         // events | mc-page-limit-value
         const pageLimitDom = document.getElementById("mc-page-limit-value") as HTMLSelectElement;
-        if (pageLimitDom && props.setPageLimit && (typeof props.setPageLimit === "function")) {
+        if (pageLimitDom && this.setPageLimit && (typeof this.setPageLimit === "function")) {
             pageLimitDom.onselectionchange = (e) => {
                 e.preventDefault();
                 const value = pageLimitDom.options[pageLimitDom.selectedIndex].value;
-                props.setPageLimit(value);
+                this.setPageLimit(value);
             }
         }
     }

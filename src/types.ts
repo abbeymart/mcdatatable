@@ -65,7 +65,7 @@ export interface SortStyle {
     desc: string;
 }
 
-export interface DataTablePropsType {
+export interface DataTablePropsType extends HTMLElement{
     dataFields: Array<DataFieldType>;
     dataItems: Array<ItemValueType>;
     currentPage: number;
@@ -94,7 +94,6 @@ export interface TablePropsType {
 export interface PageLimitPropsType {
     pageLimit: number;
     pageLimits: Array<number>;
-    setPageLimit: (val: string | number) => void;
 }
 
 export interface PageNavPropsType {
@@ -149,8 +148,26 @@ export interface ItemFieldsInfoType {
 
 export type DataFieldsType = Array<DataFieldType>;
 
-export interface HTMLDataType extends HTMLElement, DataTablePropsType {
+export interface HTMLDataType extends DataTablePropsType {
     // currentPage: string;
+}
+
+export interface DataStoreType extends HTMLElement {
+    tableStyle: TableStyle;
+    sortStyle: SortStyle;
+    dataFields: DataFieldsType;
+    dataItems: DataItemsType;
+    paging: boolean;
+    pageStart: number;
+    pageLimit: number;
+    pagePosition: PagePositionType;
+    pageLimits: Array<number>;
+    currentPage: number;
+    searchKey: string;
+    dataTotal: number;
+    initialDataTotal: number;     // to limit number of records to process
+    sortAsc: boolean;
+    sortDesc: boolean;
 }
 
 export interface DOMType {

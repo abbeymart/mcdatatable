@@ -291,10 +291,9 @@ class McTable extends HTMLElement {
 
     get dataItemsSearch() {
         // search data-items by search-key
-        // const searchKey = this.$store.getters["mcDataTable/getSearchKey"];
         const itemKeys = this.dataFields.map(item => item.name);
         return this.dataItems.filter(item => itemKeys.some(key => {
-                return item[key] ? item[key].toString().toLowerCase().includes(dtstore.SearchKey.toString().toLowerCase()) : false;
+                return item[key] ? item[key].toString().toLowerCase().includes(this.searchKey.toString().toLowerCase()) : false;
             }
         ));
     }
