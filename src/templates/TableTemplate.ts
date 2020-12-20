@@ -6,10 +6,23 @@
 
 import '../McUpdate';
 import '../McDelete';
-import { TablePropsType } from "../types";
+import { ItemFieldsInfoType, ItemValueType, TablePropsType } from "../types";
 import { dtStore } from "../dtStore";
+import { FieldValueTypes } from "../../../mc-crud-mg";
 
 export default (props: TablePropsType): string => {
+    const checkBoxDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
+        return `<input type="checkbox" class="w3-check mc-table-input-check" data-input-field="${fieldItem.fieldName}" data-input-value="${item._id || item.id}" id="${fieldItem.fieldName}_${item._id || item.id}">`;
+    }
+    const updateDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
+        return `<update class="mc-table-update" label="${fieldItem.fieldLabel}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}" id="${fieldItem.fieldName}_${item._id || item.id}></update>`;
+    }
+    const deleteDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
+        return `<delete class="mc-table-delete" label="${fieldItem.fieldLabel}" data-delete-field="${fieldItem.fieldName}" data-delete-itemid="${item._id || item.id}" id="${fieldItem.fieldName}_${item._id || item.id}></delete>`;
+    }
+    const customEventDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
+        return `<span class="mc-table-event" data-event-field="${fieldItem.fieldName}" data-event-item="${JSON.stringify(item)}" id="${fieldItem.fieldName}_${item._id || item.id}>${fieldItem.fieldValue}</span>`
+    }
     return `
     <div>
             <table class="${props.tableStyle.table}" id="mc-table-content">
@@ -34,12 +47,12 @@ export default (props: TablePropsType): string => {
                             <td id="${fieldItem.fieldName + item._id}">
                             ${
         fieldItem.fieldType === 'checkbox' && typeof fieldItem.fieldTask === "function"
-            ? `<input type="checkbox" class="w3-check mc-table-input-check" data-input-field="${fieldItem.fieldName}" data-input-value="${item._id || item.id}">`
-            : fieldItem.fieldType === 'custom' ? `<update class="mc-table-update" label="${fieldItem.fieldLabel}" action="${fieldItem.fieldTask}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}"></update>`
-            : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Update' ? `<update class="mc-table-update" label="${fieldItem.fieldLabel}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}"></update>`
-                : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Delete' ? `<delete class="mc-table-delete" label="${fieldItem.fieldLabel}" data-delete-field="${fieldItem.fieldName}" data-delete-itemid="${item._id || item.id}"></delete>`
+            ? checkBoxDom(fieldItem, item)
+            : fieldItem.fieldType === 'custom' ? updateDom(fieldItem, item)
+            : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Update' ? updateDom(fieldItem, item)
+                : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Delete' ? deleteDom(fieldItem, item)
                     : fieldItem.fieldSource.domComp ? `<span>${fieldItem.fieldValue}</span>`
-                        : `<span class="mc-table-event" data-event-field="${fieldItem.fieldName}" data-event-item="${JSON.stringify(item)}">${fieldItem.fieldValue}</span>`
+                        : customEventDom(fieldItem, item)
     }
                             </td>
                         `)}

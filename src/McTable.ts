@@ -7,7 +7,7 @@
 import TableTemplate from "./templates/TableTemplate";
 import {
     DataFieldType, DataFieldsType, DataItemsType, DOMType,
-    TablePropsType, TableStyle, ItemValueType, EventType, ItemFieldsInfoType, TaskFunctionType,
+    TablePropsType, TableStyle, ItemValueType, EventType, ItemFieldsInfoType, TaskFunctionType, DataTablePropsType,
 } from "./types";
 import { dtstore } from "./dtStore";
 import { sortBy } from "lodash";
