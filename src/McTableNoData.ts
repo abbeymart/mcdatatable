@@ -30,7 +30,7 @@ class McTableNoData extends HTMLElement {
     }
 
     set dataItemsCount(value: number) {
-        // TODO: should be set from dstore or controlling component (mc-data-table) | optional
+        // TODO: should be set from dstore or controlling component (mc-table / mc-data-table) | optional
         this.setAttribute("dataitemscount", value.toString())
     }
 

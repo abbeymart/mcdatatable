@@ -100,83 +100,92 @@ class McTable extends HTMLElement {
             }
         }
 
-        // custom actions by field-specs
         const tableEventDom: any = document.getElementsByClassName("mc-table-event");
         if (tableEventDom && tableEventDom.length > 0) {
             for (const domItem of tableEventDom) {
-                const domItemValue = JSON.parse(domItem.getAttribute("data-event-value"));
-                const domItemField = domItem.getAttribute("data-event-field");
-                const itemField = props.tableFields.find(it => it.name === domItemField)
-                const fieldEvents = itemField?.events;
-                if (fieldEvents && fieldEvents.length > 0) {
-                    let fieldParams = ""
-                    fieldEvents.forEach(ev => {
-                        // params
-                        if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
-                            if (ev.params.includes("all") || ev.params.includes("item")) {
-                                fieldParams = domItemValue
-                            } else {
-                                fieldParams = ev.params.map(param => domItemValue[param]).join(", ");
+                const itVal = JSON.parse(domItem.getAttribute("data-event-value"));
+                const domField = domItem.getAttribute("data-event-field");
+                domItem.onclick = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = JSON.parse(e.target.getAttribute("data-event-value"));
+                    // get fieldTask & params from tableFields, by fieldName
+                    const itemFieldName = e.target.getAttribute("data-event-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const fieldEvents = itemField?.events;
+                    if (fieldEvents && fieldEvents.length > 0) {
+                        let fieldParams = ""
+                        fieldEvents.forEach(ev => {
+                            // params
+                            if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                                if (ev.params.includes("all") || ev.params.includes("item")) {
+                                    fieldParams = domItemValue
+                                } else {
+                                    fieldParams = ev.params.map(param => domItemValue[param]).join(", ");
+                                }
                             }
-                        }
-                        // activate field-events
-                        switch (ev.type) {
-                            case "click":
-                                domItem.onclick = (e: any) => {
-                                    e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
-                                    } else {
-                                        throw  new Error(`undefined task-function for event-type: ${ev.type}`);
-                                    }
+                        });
+                    }
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
+                domItem.onchange = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = JSON.parse(e.target.getAttribute("data-event-value"));
+                    // get fieldTask & params from tableFields, by fieldName
+                    const itemFieldName = e.target.getAttribute("data-event-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const fieldEvents = itemField?.events;
+                    if (fieldEvents && fieldEvents.length > 0) {
+                        let fieldParams = ""
+                        fieldEvents.forEach(ev => {
+                            // params
+                            if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                                if (ev.params.includes("all") || ev.params.includes("item")) {
+                                    fieldParams = domItemValue
+                                } else {
+                                    fieldParams = ev.params.map(param => domItemValue[param]).join(", ");
                                 }
-                            case "change":
-                                domItem.onchange = (e: any) => {
-                                    e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
-                                    } else {
-                                        throw  new Error(`undefined task-function for event-type: ${ev.type}`);
-                                    }
+                            }
+                        });
+                    }
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
+                domItem.onmouseover = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = JSON.parse(e.target.getAttribute("data-event-value"));
+                    // get fieldTask & params from tableFields, by fieldName
+                    const itemFieldName = e.target.getAttribute("data-event-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const fieldEvents = itemField?.events;
+                    if (fieldEvents && fieldEvents.length > 0) {
+                        let fieldParams = ""
+                        fieldEvents.forEach(ev => {
+                            // params
+                            if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                                if (ev.params.includes("all") || ev.params.includes("item")) {
+                                    fieldParams = domItemValue
+                                } else {
+                                    fieldParams = ev.params.map(param => domItemValue[param]).join(", ");
                                 }
-                            case "keyup":
-                                domItem.onkeyup = (e: any) => {
-                                    e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
-                                    } else {
-                                        throw  new Error(`undefined task-function for event-type: ${ev.type}`);
-                                    }
-                                }
-                            case "keydown":
-                                domItem.onkeydown = (e: any) => {
-                                    e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
-                                    } else {
-                                        throw  new Error(`undefined task-function for event-type: ${ev.type}`);
-                                    }
-                                }
-                            case "mouseover":
-                                domItem.onmouseover = (e: any) => {
-                                    e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
-                                    } else {
-                                        throw  new Error(`undefined task-function for event-type: ${ev.type}`);
-                                    }
-                                }
-                                break;
-                            default:
-                                throw  new Error(`unsupported event-type: ${ev.type}`);
-                                break;
-                        }
-                    });
+                            }
+                        });
+                    }
+
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
                 }
             }
         }

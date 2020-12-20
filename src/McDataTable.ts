@@ -5,10 +5,13 @@
  */
 
 // TODO:
+//  web-component observed-attributes option:
+//  1. activate observed attributes,
+//  2. set observed attributes from parent/controlling component to reload the component
 //  events option:
 //  1. for change/other component(s)-trigger event, update store & create custom event
 //  2. listen to triggered custom-event, update store & perform necessary action(s)/re-render
-//  pub-sub option (preferred / cleaner):
+//  pub-sub option:
 //  1. set prop to store value via component event/action/observed attrs/props
 //  2. on/from-set store value(s), re-publish the observable(s)
 //  3. subscribe to published observable(s) from the store & re-render affected component(s)
