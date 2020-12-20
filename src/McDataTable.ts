@@ -161,7 +161,8 @@ class McDataTable extends HTMLElement {
         // child-components' activation via data-setting | events
         const pageLimitDom = document.querySelector("mc-page-limit") as DataStoreType;
         if (pageLimitDom) {
-            pageLimitDom.pageLimit = dtstore.PageLimit;
+            // pageLimitDom.pageLimit = dtstore.PageLimit;
+            pageLimitDom.pageLimits = dtstore.PageLimits;
         }
         const tableSearchDom = document.querySelector("mc-table-search") as DataStoreType;
         const tableDom = document.querySelector("mc-table") as DataStoreType;

@@ -5,7 +5,6 @@
  */
 
 import {dtstore} from "./dtStore";
-import TableHelper from "./templates/TableHelpers";
 
 class McTableSearch extends HTMLElement {
     constructor() {
@@ -25,7 +24,6 @@ class McTableSearch extends HTMLElement {
 
     // methods
     setSearchKey(value: string) {
-        this.searchKey = value;
         dtstore.SearchKey = value;
     }
 
@@ -44,14 +42,12 @@ class McTableSearch extends HTMLElement {
                 this.setSearchKey(searchKeyDom.value);
             }
         }
-
     }
 
     disconnectedCallback() {
         // cleanup - reset DOM, removeEventLister(s), garbage collection...
         this.innerHTML = '';
     }
-
 }
 
 let mcTableSearch;

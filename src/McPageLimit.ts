@@ -5,10 +5,8 @@
  */
 
 import PageLimitTemplate from "./templates/PageLimitTemplate";
-import TableHelper from "./templates/TableHelpers";
-import { PageLimitPropsType, SetValueType } from "./types";
+import { PageLimitPropsType } from "./types";
 import { dtstore } from "./dtStore";
-import { isEmptyObject } from "./helper";
 
 class McPageLimit extends HTMLElement {
     constructor() {
@@ -25,10 +23,7 @@ class McPageLimit extends HTMLElement {
         if (oldVal === newValue) {
             return;
         }
-        this.renderComponent({
-            pageLimit   : this.pageLimit,
-            pageLimits  : this.pageLimits,
-        });
+        this.renderComponent();
     }
 
     // getters ands setters
@@ -38,7 +33,7 @@ class McPageLimit extends HTMLElement {
 
     set pageLimit(value: number) {
         dtstore.PageLimit = value;
-        // this.setAttribute("pagelimit", value.toString())
+        // this.setAttribute("pagelimit", value.toString());
     }
 
     get pageLimits(): Array<number> {
@@ -46,8 +41,8 @@ class McPageLimit extends HTMLElement {
     }
 
     set pageLimits(value: Array<number>) {
-        dtstore.PageLimits = value;
-        this.setAttribute("pagelimits", JSON.stringify(value))
+        // dtstore.PageLimits = value;
+        this.setAttribute("pagelimits", JSON.stringify(value));
     }
 
     // methods
@@ -56,8 +51,8 @@ class McPageLimit extends HTMLElement {
     }
 
     renderComponent(props: PageLimitPropsType = {
-        pageLimit   : this.pageLimit,
-        pageLimits  : this.pageLimits,
+        pageLimit : this.pageLimit,
+        pageLimits: this.pageLimits,
     }) {
         this.innerHTML = PageLimitTemplate(props);
         // events | mc-page-limit-value
