@@ -45,7 +45,7 @@ class McTable extends HTMLElement {
             for (const domItem of tableInputCheckDom) {
                 domItem.onchange = (e: any) => {
                     e.preventDefault();
-                    const domItemValue = e.target.getAttribute("data-input-check");
+                    const domItemValue = e.target.getAttribute("data-input-value");
                     // get fieldTask from tableFields, by fieldName(itemId)
                     const itemFieldName = e.target.getAttribute("data-input-field");
                     const itemField = props.tableFields.find(it => it.name === itemFieldName)
@@ -60,14 +60,129 @@ class McTable extends HTMLElement {
         }
 
         const tableUpdateDom: any = document.getElementsByClassName("mc-table-update");
-        if (tableInputCheckDom && tableInputCheckDom.length > 0) {
-            for (const domItem of tableInputCheckDom) {
+        if (tableUpdateDom && tableUpdateDom.length > 0) {
+            for (const domItem of tableUpdateDom) {
+                domItem.onclick = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = JSON.parse(e.target.getAttribute("data-update-item"));
+                    // get fieldTask from tableFields, by fieldName (update)
+                    const itemFieldName = e.target.getAttribute("data-update-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
+            }
+        }
+
+        const tableDeleteDom: any = document.getElementsByClassName("mc-table-delete");
+        if (tableUpdateDom && tableUpdateDom.length > 0) {
+            for (const domItem of tableUpdateDom) {
+                domItem.onclick = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = e.target.getAttribute("data-delete-itemid");
+                    // get fieldTask from tableFields, by fieldName(delete)
+                    const itemFieldName = e.target.getAttribute("data-delete-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
+            }
+        }
+
+        const tableEventDom: any = document.getElementsByClassName("mc-table-event");
+        if (tableEventDom && tableEventDom.length > 0) {
+            for (const domItem of tableEventDom) {
+                domItem.onclick = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = JSON.parse(e.target.getAttribute("data-event-value"));
+                    // get fieldTask & params from tableFields, by fieldName
+                    const itemFieldName = e.target.getAttribute("data-event-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const fieldEvents = itemField?.events;
+                    if (fieldEvents && fieldEvents.length > 0) {
+                        let fieldParams = ""
+                        fieldEvents.forEach(ev => {
+                            // params
+                            if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                                if (ev.params.includes("all") || ev.params.includes("item")) {
+                                    fieldParams = domItemValue
+                                } else {
+                                    fieldParams = ev.params.map(param => domItemValue[param]).join(", ");
+                                }
+                            }
+                        });
+                    }
+
+
+
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
                 domItem.onchange = (e: any) => {
                     e.preventDefault();
-                    const domItemValue = e.target.getAttribute("data-input-check");
-                    // get fieldTask from tableFields, by fieldName(itemId)
-                    const itemFieldName = e.target.getAttribute("data-input-field");
+                    const domItemValue = JSON.parse(e.target.getAttribute("data-event-value"));
+                    // get fieldTask & params from tableFields, by fieldName
+                    const itemFieldName = e.target.getAttribute("data-event-field");
                     const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const fieldEvents = itemField?.events;
+                    if (fieldEvents && fieldEvents.length > 0) {
+                        let fieldParams = ""
+                        fieldEvents.forEach(ev => {
+                            // params
+                            if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                                if (ev.params.includes("all") || ev.params.includes("item")) {
+                                    fieldParams = domItemValue
+                                } else {
+                                    fieldParams = ev.params.map(param => domItemValue[param]).join(", ");
+                                }
+                            }
+                        });
+                    }
+
+
+
+                    const itemFunc = itemField?.source.task;
+                    if (itemFunc && typeof itemFunc === "function") {
+                        itemFunc(domItemValue);
+                    } else {
+                        throw  new Error("undefined task-function");
+                    }
+                }
+                domItem.onmouseover = (e: any) => {
+                    e.preventDefault();
+                    const domItemValue = JSON.parse(e.target.getAttribute("data-event-value"));
+                    // get fieldTask & params from tableFields, by fieldName
+                    const itemFieldName = e.target.getAttribute("data-event-field");
+                    const itemField = props.tableFields.find(it => it.name === itemFieldName)
+                    const fieldEvents = itemField?.events;
+                    if (fieldEvents && fieldEvents.length > 0) {
+                        let fieldParams = ""
+                        fieldEvents.forEach(ev => {
+                            // params
+                            if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
+                                if (ev.params.includes("all") || ev.params.includes("item")) {
+                                    fieldParams = domItemValue
+                                } else {
+                                    fieldParams = ev.params.map(param => domItemValue[param]).join(", ");
+                                }
+                            }
+                        });
+                    }
+
+
+
                     const itemFunc = itemField?.source.task;
                     if (itemFunc && typeof itemFunc === "function") {
                         itemFunc(domItemValue);

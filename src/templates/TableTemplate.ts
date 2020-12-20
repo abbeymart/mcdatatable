@@ -36,12 +36,12 @@ export default (props: TablePropsType) => {
                             <td id="${fieldItem.fieldName + item._id}">
                             ${
             fieldItem.fieldType === 'checkbox' && typeof fieldItem.fieldTask === "function" ?
-                `<input type="checkbox" class="w3-check mc-table-input-check" data-input-field="${fieldItem.fieldName}" data-input-check="${item._id || item.id}">`
-                : fieldItem.fieldType === 'custom' ? `<update class="mc-table-update" label="${fieldItem.fieldLabel}" action="${fieldItem.fieldTask}" item="${item}"></update>`
-                : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Update' ? `<update class="mc-table-update" label="${fieldItem.fieldLabel}" action="${fieldItem.fieldTask}" item="${item}"></update>`
-                    : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Delete' ? `<delete class="mc-table-delete" label="${fieldItem.fieldLabel}" action="${fieldItem.fieldTask}" itemid="${item._id || item.id}"></delete>`
+                `<input type="checkbox" class="w3-check mc-table-input-check" data-input-field="${fieldItem.fieldName}" data-input-value="${item._id || item.id}">`
+                : fieldItem.fieldType === 'custom' ? `<update class="mc-table-update" label="${fieldItem.fieldLabel}" action="${fieldItem.fieldTask}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}"></update>`
+                : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Update' ? `<update class="mc-table-update" label="${fieldItem.fieldLabel}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}"></update>`
+                    : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Delete' ? `<delete class="mc-table-delete" label="${fieldItem.fieldLabel}" data-delete-field="${fieldItem.fieldName}" data-delete-itemid="${item._id || item.id}"></delete>`
                         : fieldItem.fieldSource.domComp ? `<span>${fieldItem.fieldValue}</span>`
-                            : `<span class="mc-table-event" onclick="">${fieldItem.fieldValue}</span>`
+                            : `<span class="mc-table-event" data-event-field="${fieldItem.fieldName}" data-event-item="${JSON.stringify(item)}">${fieldItem.fieldValue}</span>`
         }
                             </td>
                         `)}
@@ -54,7 +54,6 @@ export default (props: TablePropsType) => {
         return `
         <div>
             <mc-table-no-data></mc-table-no-data>
-        </div>
-        `;
+        </div>`;
     }
 };
