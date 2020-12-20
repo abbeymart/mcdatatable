@@ -28,27 +28,27 @@ class McDelete extends HTMLElement {
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
         if (name === "action") {
-            this.renderComponent({label: this.Label, action: this.Action, itemId: this.ItemId});
+            this.renderComponent();
         }
 
         if (oldVal === newValue) {
             return;
         }
-        this.renderComponent({label: this.Label, action: this.Action, itemId: this.ItemId});
+        this.renderComponent();
     }
 
-    renderComponent(props = {label: this.Label, action: this.Action, itemId: this.ItemId}) {
+    renderComponent(props = {label: this.Label}) {
         this.innerHTML = `
         <a href="#" id="mc-delete-action">
-            ${props.label}<i class="fa fa-times-circle"></i>
+            ${this.label}<i class="fa fa-times-circle"></i>
         </a>`;
 
         // event action (itemAction(itemId))
         const itemDomRef = document.getElementById("mc-delete-action");
-        if (itemDomRef && props.action && (typeof props.action === "function") && props.itemId) {
+        if (itemDomRef && this.Action && (typeof this.Action === "function") && this.ItemId) {
             itemDomRef.onclick = (e) => {
                 e.preventDefault();
-                props.action(props.itemId);
+                this.Action(this.ItemId);
             }
         }
     }

@@ -166,8 +166,19 @@ class McDataTable extends HTMLElement {
         }
         const tableSearchDom = document.querySelector("mc-table-search") as DataStoreType;
         const tableDom = document.querySelector("mc-table") as DataStoreType;
+
         const tableMessageDom = document.querySelector("mc-table-message") as DataStoreType;
+        if (tableMessageDom) {
+            tableMessageDom.currentPage = dtstore.CurrentPage;
+            tableMessageDom.pageLimit = dtstore.PageLimit;
+            tableMessageDom.dataTotal = dtstore.DataTotal;
+            tableMessageDom.initialDataTotal = dtstore.InitialDataTotal;
+        }
         const pageNavDom = document.querySelector("mc-page-nav") as DataStoreType;
+        if (pageNavDom) {
+            pageNavDom.pageLimit = dtstore.PageLimit;
+            pageNavDom.dataTotal = dtstore.DataTotal;
+        }
     }
 
     disconnectedCallback() {

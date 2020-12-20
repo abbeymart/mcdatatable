@@ -29,27 +29,27 @@ class McUpdate extends HTMLElement {
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
         if (name === "action") {
-            this.renderComponent({label: this.Label, action: this.Action, item: this.Item});
+            this.renderComponent();
         }
 
         if (oldVal === newValue) {
             return;
         }
-        this.renderComponent({label: this.Label, action: this.Action, item: this.Item});
+        this.renderComponent();
     }
 
-    renderComponent(props = {label: this.Label, action: this.Action, item: this.Item}) {
+    renderComponent(props = {label: this.Label}) {
         this.innerHTML = `
         <a href="#" id="mc-update-action">
-            ${props.label}<i class="fa fa-edit"></i>
+            ${this.label}<i class="fa fa-edit"></i>
         </a>`;
 
         // event action (itemAction(itemId))
         const itemDomRef = document.getElementById("mc-update-action");
-        if (itemDomRef && props.action && (typeof props.action === "function") && !isEmptyObject(props.item)) {
+        if (itemDomRef && this.Action && (typeof this.Action === "function") && !isEmptyObject(this.Item)) {
             itemDomRef.onclick = (e) => {
                 e.preventDefault();
-                props.action(props.item);
+                this.Action(this.Item);
             }
         }
     }

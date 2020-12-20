@@ -29,8 +29,8 @@ class McTableMessage extends HTMLElement {
     }
 
     set initialDataTotal(value: number) {
-        // TODO: should be set from dstore or controlling component (mc-data-table)
-        this.setAttribute("initialdatatotal", value.toString())
+        // set from the controlling/parent component (mc-data-table)
+        this.setAttribute("initialdatatotal", value.toString());
     }
 
     get dataTotal(): number {
@@ -38,8 +38,8 @@ class McTableMessage extends HTMLElement {
     }
 
     set dataTotal(value: number) {
-        // TODO: should be set from dstore or controlling component (mc-data-table)
-        this.setAttribute("datatotal", value.toString())
+        // set from the controlling/parent component (mc-data-table)
+        this.setAttribute("datatotal", value.toString());
     }
 
     get pageLimit(): number {
@@ -47,9 +47,8 @@ class McTableMessage extends HTMLElement {
     }
 
     set pageLimit(value: number) {
-        // TODO: should be set from dstore or controlling component (mc-data-table)
-        dtstore.CurrentPage = value;
-        this.setAttribute("pagelimit", value.toString())
+        // set from the controlling/parent component (mc-data-table)
+        this.setAttribute("pagelimit", value.toString());
     }
 
     get currentPage(): number {
@@ -57,9 +56,8 @@ class McTableMessage extends HTMLElement {
     }
 
     set currentPage(value: number) {
-        // TODO: should be set from dstore or controlling component (mc-data-table)
-        dtstore.CurrentPage = value;
-        this.setAttribute("currentpage", value.toString())
+        // set from the controlling/parent component (mc-data-table)
+        this.setAttribute("currentpage", value.toString());
     }
 
     // computed values

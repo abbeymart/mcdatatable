@@ -7,19 +7,17 @@ import { PageNavPropsType } from "../types";
 
 export default (props: PageNavPropsType) => {
     const firstPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-first" onclick="props.pageNavFirst()">First</a>`;
+               id="mc-page-nav-first">First</a>`;
     const previousPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
                id="mc-page-nav-previous">Previous</a>`;
     const middlePagesDom = (page: string) => `
-                     <a href="#" class="mc-current-page-item w3-button w3-border w3-round-medium w3-hover-blue" id="${page}" data-mc-page-num="${page}">
-                         ${props.currentPage.toString() === page ?
-        `<span class="mc-current-page">${page}</span>` :
-        `<span>${page}</span>`}           
+                     <a href="#" class="mc-page-nav-current w3-button w3-border w3-round-medium w3-hover-blue" id="${page}" data-mc-page-num="${page}">
+                         ${props.currentPage.toString() === page ? `<span class="mc-current-page">${page}</span>` : `<span>${page}</span>`}           
                      </a>`;
     const nextPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-first" onclick="props.pageNavNext()">Next</a>`;
+               id="mc-page-nav-first">Next</a>`;
     const lastPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"
-               id="mc-page-nav-first" onclick="props.pageNavLast()">Last</a>`;
+               id="mc-page-nav-first">Last</a>`;
     return `
         <div class="w3-bar" id="mcPageNav">
             <span></span>

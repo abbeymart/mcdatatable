@@ -5,9 +5,8 @@
  */
 
 import PageNavTemplate from "./templates/PageNavTemplate";
-import TableHelper from "./templates/TableHelpers";
 import { dtstore } from "./dtStore";
-import { PageNavEventType, PageNavPropsType, PageNavValueType } from "./types";
+import { PageNavPropsType } from "./types";
 
 class McPageNav extends HTMLElement {
     constructor() {
@@ -29,7 +28,7 @@ class McPageNav extends HTMLElement {
 
     // getters and setters (to trigger re-rendering via observed attributes
 
-    get pagePositions(): string {
+    get pagePosition(): string {
         return dtstore.PagePosition;
     }
 
@@ -76,8 +75,8 @@ class McPageNav extends HTMLElement {
     }
 
     set pageLimit(value: number) {
-        // TODO: should be set from dstore or controlling/parent component (mc-data-table)
-        this.setAttribute("pagelimit", value.toString())
+        // set from the controlling/parent component (mc-data-table)
+        this.setAttribute("pagelimit", value.toString());
     }
 
     get currentPage(): number {
@@ -85,9 +84,9 @@ class McPageNav extends HTMLElement {
     }
 
     set currentPage(value: number) {
-        // should be set from dstore or controlling component (mc-page-nav)
+        // set from the controlling component (mc-page-nav)
         dtstore.CurrentPage = value;
-        this.setAttribute("currentpage", value.toString())
+        this.setAttribute("currentpage", value.toString());
     }
 
     get dataTotal(): number {
@@ -95,68 +94,63 @@ class McPageNav extends HTMLElement {
     }
 
     set dataTotal(value: number) {
-        // TODO: should be set from dstore or controlling component (mc-data-table)
-        this.setAttribute("datatotal", value.toString())
+        // set from the controlling/parent component (mc-data-table)
+        this.setAttribute("datatotal", value.toString());
     }
 
     renderComponent(props: PageNavPropsType = {
         currentPage    : this.currentPage,
         lastPage       : this.lastPage,
         pageList       : this.pageList,
-        pageNavFirst   : this.pageNavFirst,
-        pageNavNext    : this.pageNavNext,
-        pageNavPrevious: this.pageNavPrevious,
-        pageNavLast    : this.pageNavLast,
-        pageNavNumber  : this.pageNavNumber,
     }) {
         if (dtstore.DataTotal > 0) {
             this.innerHTML = PageNavTemplate(props);
         }
         // event"s handlers | to set the mc-page-limit-value
         const pageNavFirstDom = document.getElementById("mc-page-nav-first");
-        if (pageNavFirstDom && (typeof props.pageNavFirst === "function")) {
+        if (pageNavFirstDom && (typeof this.pageNavFirst === "function")) {
             pageNavFirstDom.onclick = (e) => {
                 e.preventDefault();
                 // const value = pageLimitDom.options[pageLimitDom.selectedIndex].value;
-                props.pageNavFirst();
+                this.pageNavFirst();
             }
         }
         const pageNavNextDom = document.getElementById("mc-page-nav-next");
-        if (pageNavNextDom && (typeof props.pageNavFirst === "function")) {
+        if (pageNavNextDom && (typeof this.pageNavNext === "function")) {
             pageNavNextDom.onclick = (e) => {
                 e.preventDefault();
-                props.pageNavNext();
+                this.pageNavNext();
             }
         }
         const pageNavPreviousDom = document.getElementById("mc-page-nav-previous");
-        if (pageNavPreviousDom && (typeof props.pageNavFirst === "function")) {
+        if (pageNavPreviousDom && (typeof this.pageNavPrevious === "function")) {
             pageNavPreviousDom.onclick = (e) => {
                 e.preventDefault();
-                props.pageNavPrevious();
+                this.pageNavPrevious();
             }
         }
         const pageNavLastDom = document.getElementById("mc-page-nav-last");
-        if (pageNavLastDom && (typeof props.pageNavFirst === "function")) {
+        if (pageNavLastDom && (typeof this.pageNavLast === "function")) {
             pageNavLastDom.onclick = (e) => {
                 e.preventDefault();
-                props.pageNavLast();
+                this.pageNavLast();
             }
         }
-        const pageNavNumDom: any = document.getElementsByClassName("mc-current-page-item");
+        const pageNavNumDom: any = document.getElementsByClassName("mc-page-nav-current");
         if (pageNavNumDom && pageNavNumDom.length > 0) {
             for (const domItem of pageNavNumDom) {
                 domItem.onclick = (e: any) => {
                     e.preventDefault();
                     const domItemValue = e.target.getAttribute("data-mc-page-num");
-                    props.pageNavNumber(domItemValue);
+                    this.pageNavNumber(domItemValue);
                 }
             }
         }
     }
 
     // methods:
-    setCurrentPage(currentPage: number) {
-        this.currentPage = currentPage;
+    setCurrentPage(value: number) {
+        this.currentPage = value;
     }
 
     pageNavFirst() {

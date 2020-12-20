@@ -98,12 +98,8 @@ export interface PageLimitPropsType {
 
 export interface PageNavPropsType {
     currentPage: number;
+    lastPage: number;
     pageList: Array<string>;
-    pageNavFirst: () => void;
-    pageNavNext: () => void;
-    pageNavPrevious: () => void;
-    pageNavLast: () => void;
-    pageNavNumber: (val: string | number) => void;
 }
 
 export interface DataSourceType {

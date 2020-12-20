@@ -4,7 +4,7 @@
  * @Description: mc-table-search, simple auto search/filtering of the table data/records
  */
 
-import {dtstore} from "./dtStore";
+import { dtstore } from "./dtStore";
 
 class McTableSearch extends HTMLElement {
     constructor() {
