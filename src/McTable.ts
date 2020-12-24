@@ -46,6 +46,7 @@ class McTable extends HTMLElement {
             for (const domItem of tableInputCheckDom) {
                 domItem.onchange = (e: any) => {
                     e.preventDefault();
+                    const checkValue = e.target.value;
                     const domItemValue = e.target.getAttribute("data-input-value");
                     // get fieldTask from tableFields, by fieldName(itemId)
                     const itemFieldName = e.target.getAttribute("data-input-field");
@@ -110,7 +111,11 @@ class McTable extends HTMLElement {
                 const fieldEvents = itemField?.events;
                 if (fieldEvents && fieldEvents.length > 0) {
                     let fieldParams = ""
-                    fieldEvents.forEach(ev => {
+                    for (const ev of fieldEvents) {
+                        // check permitted events
+                        if (!dtstore.PermittedEvents.includes(ev.type)) {
+                            continue;
+                        }
                         // params
                         if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
                             if (ev.params.includes("all") || ev.params.includes("item")) {
@@ -176,7 +181,7 @@ class McTable extends HTMLElement {
                                 throw  new Error(`unsupported event-type: ${ev.type}`);
                                 break;
                         }
-                    });
+                    }
                 }
             }
         }
@@ -422,7 +427,7 @@ class McTable extends HTMLElement {
                                 fieldParams = ev.params.map(param => item[param]).join(", ");
                             }
                         }
-                        eventsTask += `click=${ev.task? ev.task(fieldParams) : null} `
+                        eventsTask += `click=${ev.task ? ev.task(fieldParams) : null} `
                         break
                     case "change":
                         if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
@@ -432,7 +437,7 @@ class McTable extends HTMLElement {
                                 fieldParams = ev.params.map(param => item[param]).join(", ");
                             }
                         }
-                        eventsTask += `change=${ev.task? ev.task(fieldParams) : null} `
+                        eventsTask += `change=${ev.task ? ev.task(fieldParams) : null} `
                         break
                     case "mouseover":
                         if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
@@ -442,7 +447,7 @@ class McTable extends HTMLElement {
                                 fieldParams = ev.params.map(param => item[param]).join(", ");
                             }
                         }
-                        eventsTask += `mouseover=${ev.task? ev.task(fieldParams) : null} `
+                        eventsTask += `mouseover=${ev.task ? ev.task(fieldParams) : null} `
                         break
                     default:
                         break

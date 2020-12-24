@@ -28,6 +28,7 @@ class DtStore {
     protected initialDataTotal: number;     // to limit number of records to process
     protected sortAsc: boolean;
     protected sortDesc: boolean;
+    protected permittedEvents: Array<string>;
 
     constructor() {
         // required attributes | default values
@@ -55,6 +56,7 @@ class DtStore {
         this.dataTotal = 0;
         this.sortAsc = false;
         this.sortDesc = false;
+        this.permittedEvents = ["click", "mouseover", "mouseleave", "mouseenter"];
     }
 
     // getters & setters
@@ -189,6 +191,14 @@ class DtStore {
 
     set InitialDataTotal(value: number) {
         this.initialDataTotal = this.RecordTotal;
+    }
+
+    get PermittedEvents(): Array<string>{
+        return this.permittedEvents;
+    }
+
+    set PermittedEvents(value: Array<string>) {
+        this.permittedEvents = value;
     }
 }
 

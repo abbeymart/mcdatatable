@@ -151,6 +151,14 @@ class McDataTable extends HTMLElement {
         this.setAttribute("initialdatatotal", value.toString());
     }
 
+    get permittedEvents(): Array<string> {
+        return dtstore.PermittedEvents;
+    }
+
+    set permittedEvents(value: Array<string>) {
+        dtstore.PermittedEvents = value;
+    }
+
     renderComponent() {
         // render template,
         if (dtstore.RecordTotal > 0 && dtstore.DataFieldsCount > 0 && dtstore.DataItemsCount > 0) {
