@@ -9,6 +9,7 @@ import {
     PagePositionType, DataFieldType, ItemValueType,
 } from "./types";
 import { sortBy } from "lodash"
+
 // import { Observable, Subscriber } from "rxjs";
 
 class DtStore {
@@ -56,7 +57,7 @@ class DtStore {
         this.dataTotal = 0;
         this.sortAsc = false;
         this.sortDesc = false;
-        this.permittedEvents = ["click", "mouseover", "mouseleave", "mouseenter"];
+        this.permittedEvents = ["click", "change", "mouseover", "keyup", "keydown", "mouseleave", "mouseenter"];
     }
 
     // getters & setters
@@ -154,7 +155,6 @@ class DtStore {
 
     set DataTotal(value: number) {
         this.dataTotal = value;
-        // set in the affected components (pageNav,...)??
     }
 
     get SortAsc(): boolean {
@@ -174,7 +174,7 @@ class DtStore {
     }
 
     get DataItemsCount() {
-        return this.dataItems.length;
+        return this.DataItems.length;
     }
 
     get DataFieldsCount() {
@@ -182,7 +182,7 @@ class DtStore {
     }
 
     get RecordTotal() {
-        return this.dataTotal ? this.dataTotal : this.DataItemsCount;
+        return this.DataTotal ? this.DataTotal : this.DataItemsCount;
     }
 
     get InitialDataTotal(): number {
@@ -190,10 +190,10 @@ class DtStore {
     }
 
     set InitialDataTotal(value: number) {
-        this.initialDataTotal = this.RecordTotal;
+        this.initialDataTotal = value || this.RecordTotal;
     }
 
-    get PermittedEvents(): Array<string>{
+    get PermittedEvents(): Array<string> {
         return this.permittedEvents;
     }
 

@@ -172,9 +172,20 @@ class McDataTable extends HTMLElement {
             // pageLimitDom.pageLimit = dtstore.PageLimit;
             pageLimitDom.pageLimits = dtstore.PageLimits;
         }
-        const tableSearchDom = document.querySelector("mc-table-search") as DataStoreType;
-        const tableDom = document.querySelector("mc-table") as DataStoreType;
 
+        // const tableSearchDom = document.querySelector("mc-table-search") as DataStoreType;
+        // no prop-change re-rendering required for McTablesSearch component
+
+        const tableDom = document.querySelector("mc-table") as DataStoreType;
+        if (tableDom) {
+            tableDom.currentPage = dtstore.CurrentPage;
+            tableDom.pageLimit = dtstore.PageLimit;
+            tableDom.searchKey = dtstore.SearchKey;
+            tableDom.dataFields = dtstore.DataFields;
+            tableDom.dataItems = dtstore.DataItems;
+            tableDom.tableStyle = dtstore.TableStyle;
+            tableDom.sortStyle = dtstore.SortStyle;
+        }
         const tableMessageDom = document.querySelector("mc-table-message") as DataStoreType;
         if (tableMessageDom) {
             tableMessageDom.currentPage = dtstore.CurrentPage;

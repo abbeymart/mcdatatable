@@ -6,24 +6,48 @@
 
 import TableTemplate from "./templates/TableTemplate";
 import {
-    DataFieldType, DataFieldsType, DataItemsType, DOMType,
-    TablePropsType, TableStyle, ItemValueType, EventType, ItemFieldsInfoType, TaskFunctionType, DataTablePropsType,
+    DataFieldType,
+    DataFieldsType,
+    DataItemsType,
+    DOMType,
+    TablePropsType,
+    TableStyle,
+    ItemValueType,
+    EventType,
+    ItemFieldsInfoType,
+    TaskFunctionType,
+    DataTablePropsType,
+    SortStyle,
 } from "./types";
 import { dtstore } from "./dtStore";
 import { sortBy } from "lodash";
+import { fromArray } from "rxjs/internal/observable/fromArray";
 
 class McTable extends HTMLElement {
+    protected itemIds: Set<string>;
+    // protected sortAsc: boolean;
+    // protected sortDesc: boolean;
+
     constructor() {
         super()
         // attributes
+        this.itemIds = new Set<string>()
+        // this.sortAsc = false
+        // this.sortDesc = false
         this.renderComponent();
     }
 
     static get observedAttributes() {
-        return ["currentpage", "pagelimit", "datatotal", "initialdatatotal"];
+        return ["currentpage", "pagelimit", "tablestyle", "sortstyle",
+            "searchkey", "dataitems", "datafields"];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
+        // considering the potentially large size of data-items, reload on change/set
+        if (name === "dataitems") {
+            this.renderComponent();
+            return;
+        }
         if (oldVal === newValue) {
             return;
         }
@@ -32,28 +56,35 @@ class McTable extends HTMLElement {
 
     renderComponent(props: TablePropsType = {
         tableFields  : this.dataFields,
-        tableItems   : dtstore.DataItems,
+        tableItems   : this.dataItems,
         tableRecords : this.tableRecords,
-        tableStyle   : dtstore.TableStyle,
+        tableStyle   : this.tableStyle,
         sortStyleAsc : this.sortStyleAsc,
         sortStyleDesc: this.sortStyleDesc,
     }) {
         this.innerHTML = TableTemplate(props);
         // handle / emit events
         // select-checkbox action
-        const tableInputCheckDom: any = document.getElementsByClassName("mc-table-input-check");
-        if (tableInputCheckDom && tableInputCheckDom.length > 0) {
-            for (const domItem of tableInputCheckDom) {
+        const tableCheckboxDom: any = document.getElementsByClassName("mc-table-checkbox");
+        if (tableCheckboxDom && tableCheckboxDom.length > 0) {
+            for (const domItem of tableCheckboxDom) {
                 domItem.onchange = (e: any) => {
                     e.preventDefault();
-                    const checkValue = e.target.value;
                     const domItemValue = e.target.getAttribute("data-input-value");
+                    if (domItem.checked) {
+                        // add itemId to the itemIds set
+                        this.itemIds.add(domItemValue);
+                    } else {
+                        if (this.itemIds.has(domItemValue)) {
+                            this.itemIds.delete(domItemValue);
+                        }
+                    }
                     // get fieldTask from tableFields, by fieldName(itemId)
                     const itemFieldName = e.target.getAttribute("data-input-field");
                     const itemField = props.tableFields.find(it => it.name === itemFieldName)
                     const itemFunc = itemField?.source.task;
                     if (itemFunc && typeof itemFunc === "function") {
-                        itemFunc(domItemValue);
+                        itemFunc([...this.itemIds]);     // convert set to array: Array.from() or ...spread
                     } else {
                         throw  new Error("undefined task-function");
                     }
@@ -129,7 +160,7 @@ class McTable extends HTMLElement {
                             case "click":
                                 domItem.onclick = (e: any) => {
                                     e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
+                                    const itemFunc = ev.task;
                                     if (itemFunc && typeof itemFunc === "function") {
                                         itemFunc(domItemValue);
                                     } else {
@@ -139,9 +170,8 @@ class McTable extends HTMLElement {
                             case "change":
                                 domItem.onchange = (e: any) => {
                                     e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
+                                    if (ev.task && typeof ev.task === "function") {
+                                        ev.task(domItemValue);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -149,9 +179,8 @@ class McTable extends HTMLElement {
                             case "keyup":
                                 domItem.onkeyup = (e: any) => {
                                     e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
+                                    if (ev.task && typeof ev.task === "function") {
+                                        ev.task(domItemValue);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -159,9 +188,8 @@ class McTable extends HTMLElement {
                             case "keydown":
                                 domItem.onkeydown = (e: any) => {
                                     e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
+                                    if (ev.task && typeof ev.task === "function") {
+                                        ev.task(domItemValue);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -169,9 +197,28 @@ class McTable extends HTMLElement {
                             case "mouseover":
                                 domItem.onmouseover = (e: any) => {
                                     e.preventDefault();
-                                    const itemFunc = itemField?.source.task;
-                                    if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
+                                    if (ev.task && typeof ev.task === "function") {
+                                        ev.task(domItemValue);
+                                    } else {
+                                        throw  new Error(`undefined task-function for event-type: ${ev.type}`);
+                                    }
+                                }
+                                break;
+                            case "mouseleave":
+                                domItem.onmouseleave = (e: any) => {
+                                    e.preventDefault();
+                                    if (ev.task && typeof ev.task === "function") {
+                                        ev.task(domItemValue);
+                                    } else {
+                                        throw  new Error(`undefined task-function for event-type: ${ev.type}`);
+                                    }
+                                }
+                                break;
+                            case "mouseenter":
+                                domItem.onmouseenter = (e: any) => {
+                                    e.preventDefault();
+                                    if (ev.task && typeof ev.task === "function") {
+                                        ev.task(domItemValue);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -208,6 +255,10 @@ class McTable extends HTMLElement {
         return dtstore.SearchKey;
     }
 
+    set searchKey(value: string){
+        this.setAttribute("searchkey", value);
+    }
+
     get pageStart(): number {
         return dtstore.PageStart;
     }
@@ -216,8 +267,16 @@ class McTable extends HTMLElement {
         return dtstore.PageLimit;
     }
 
+    set pageLimit(value: number) {
+        this.setAttribute("pagelimit", value.toString());
+    }
+
     get dataFields(): DataFieldsType {
         return dtstore.DataFields;
+    }
+
+    set dataFields(value: DataFieldsType) {
+        this.setAttribute("datafields", JSON.stringify(value));
     }
 
     get dataItems(): DataItemsType {
@@ -225,7 +284,7 @@ class McTable extends HTMLElement {
     }
 
     set dataItems(value: DataItemsType) {
-        dtstore.DataItems = value;
+        this.setAttribute("dataitems", "new-dataitems");
     }
 
     set dataTotal(value: number) {
@@ -266,8 +325,16 @@ class McTable extends HTMLElement {
         return dtstore.SortStyle;
     }
 
+    set sortStyle(value: SortStyle){
+        this.setAttribute("sortstyle", JSON.stringify(value));
+    }
+
     get tableStyle() {
         return dtstore.TableStyle;
+    }
+
+    set tableStyle(value: TableStyle) {
+        this.setAttribute("tablestyle", JSON.stringify(value));
     }
 
     get sortStyleAsc() {
@@ -280,6 +347,10 @@ class McTable extends HTMLElement {
 
     get currentPage(): number {
         return dtstore.CurrentPage;
+    }
+
+    set currentPage(value: number){
+        this.setAttribute("currentpage", value.toString());
     }
 
     get itemsTotal(): number {

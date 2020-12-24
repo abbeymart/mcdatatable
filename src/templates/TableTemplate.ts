@@ -12,7 +12,7 @@ import { FieldValueTypes } from "../../../mc-crud-mg";
 
 export default (props: TablePropsType): string => {
     const checkBoxDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
-        return `<input type="checkbox" class="w3-check mc-table-input-check" data-input-field="${fieldItem.fieldName}" data-input-value="${item._id || item.id}" id="${fieldItem.fieldName}_${item._id || item.id}">`;
+        return `<input type="checkbox" class="w3-check mc-table-checkbox" data-input-field="${fieldItem.fieldName}" data-input-value="${item._id || item.id}" id="${fieldItem.fieldName}_${item._id || item.id}">`;
     }
     const updateDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
         return `<update class="mc-table-update" label="${fieldItem.fieldLabel}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}" id="${fieldItem.fieldName}_${item._id || item.id}></update>`;
@@ -55,9 +55,9 @@ export default (props: TablePropsType): string => {
                         : customEventDom(fieldItem, item)
     }
                             </td>
-                        `)}
+                        `).join("")}
                         </tr>
-                    `)}
+                    `).join("")}
                 </tbody>    
             </table> 
         </div>`;
