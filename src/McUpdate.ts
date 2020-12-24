@@ -30,6 +30,7 @@ class McUpdate extends HTMLElement {
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
         if (name === "action") {
             this.renderComponent();
+            return;
         }
 
         if (oldVal === newValue) {

@@ -25,7 +25,7 @@ class McActive extends HTMLElement {
         if (oldVal === newValue) {
             return;
         }
-        this.renderComponent({label: this.Label, active: this.Active});
+        this.renderComponent();
     }
 
     renderComponent(props = {label: this.Label, active: this.Active}) {
