@@ -6,7 +6,7 @@
 
 import {
     TableStyle, SortStyle, DataFieldsType, DataItemsType,
-    PagePositionType, DataFieldType, ItemValueType,
+    PagePositionType, DataFieldType, ItemValueType, DOMType, DataElementType,
 } from "./types";
 import { sortBy } from "lodash"
 
@@ -30,6 +30,7 @@ class DtStore {
     protected sortAsc: boolean;
     protected sortDesc: boolean;
     protected permittedEvents: Array<string>;
+    protected DOM: DOMType;
 
     constructor() {
         // required attributes | default values
@@ -58,15 +59,28 @@ class DtStore {
         this.sortAsc = false;
         this.sortDesc = false;
         this.permittedEvents = ["click", "change", "mouseover", "keyup", "keydown", "mouseleave", "mouseenter"];
+        this.DOM = {};
     }
 
     // getters & setters
+    // TODO: activate dom-elements' values from the setters:
+    //  pageLimit, tableSearch, table, pageNav, tableMessage
+    get Dom(): DOMType {
+        return this.DOM;
+    }
+
+    set Dom(value: DOMType) {
+        this.DOM = value;
+    }
+
     get TableStyle(): TableStyle {
         return this.tableStyle;
     }
 
     set TableStyle(value: TableStyle) {
         this.tableStyle = value;
+        // activate component re-rendering
+
     }
 
     get SortStyle(): SortStyle {
@@ -75,6 +89,8 @@ class DtStore {
 
     set SortStyle(value: SortStyle) {
         this.sortStyle = value;
+        // activate component re-rendering
+
     }
 
     get DataFields(): DataFieldsType {
@@ -83,6 +99,8 @@ class DtStore {
 
     set DataFields(value: DataFieldsType) {
         this.dataFields = value;
+        // activate component re-rendering
+
     }
 
     get DataItems(): DataItemsType {
@@ -91,6 +109,8 @@ class DtStore {
 
     set DataItems(value: DataItemsType) {
         this.dataItems = value;
+        // activate component re-rendering
+
     }
 
     get Paging(): boolean {
@@ -115,6 +135,8 @@ class DtStore {
 
     set PageLimit(value: number) {
         this.pageLimit = value;
+        // activate component re-rendering
+
     }
 
     get PagePosition(): PagePositionType {
@@ -131,6 +153,11 @@ class DtStore {
 
     set PageLimits(value: number[]) {
         this.pageLimits = value;
+        // activate component re-rendering
+        if (this.DOM.pageLimit) {
+            // pageLimitDom.pageLimit = dtstore.PageLimit;
+            this.DOM.pageLimit.pageLimits = dtstore.PageLimits;
+        }
     }
 
     get CurrentPage(): number {
@@ -139,6 +166,8 @@ class DtStore {
 
     set CurrentPage(value: number) {
         this.currentPage = value;
+        // activate component re-rendering
+
     }
 
     get SearchKey(): string {
@@ -147,6 +176,8 @@ class DtStore {
 
     set SearchKey(value: string) {
         this.searchKey = value;
+        // activate component re-rendering
+
     }
 
     get DataTotal(): number {
@@ -155,6 +186,8 @@ class DtStore {
 
     set DataTotal(value: number) {
         this.dataTotal = value;
+        // activate component re-rendering
+
     }
 
     get SortAsc(): boolean {
@@ -191,6 +224,8 @@ class DtStore {
 
     set InitialDataTotal(value: number) {
         this.initialDataTotal = value || this.RecordTotal;
+        // activate component re-rendering
+
     }
 
     get PermittedEvents(): Array<string> {

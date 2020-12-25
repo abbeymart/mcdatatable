@@ -38,10 +38,10 @@ class McDelete extends HTMLElement {
         this.renderComponent();
     }
 
-    renderComponent(props = {label: this.Label}) {
+    renderComponent() {
         this.innerHTML = `
         <a href="#" id="mc-delete-action">
-            ${this.label}<i class="fa fa-times-circle"></i>
+            ${this.Label}<i class="fa fa-times-circle"></i>
         </a>`;
 
         // event action (itemAction(itemId))

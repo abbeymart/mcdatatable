@@ -12,14 +12,17 @@
 // templates
 import DataTableTemplate from "./templates/DataTableTemplate";
 import TableNoDataTemplate from "./templates/TableNoDataTemplate";
-import { DataItemsType, DataFieldsType, TableStyle, SortStyle, DOMType, DataStoreType } from "./types";
+import { DataItemsType, DataFieldsType, TableStyle, SortStyle, DOMType, DataElementType } from "./types";
 import { dtstore } from "./dtStore";
 
 type ObValueType = number | DataItemsType | DataFieldsType | TableStyle | SortStyle;
 
 class McDataTable extends HTMLElement {
+    protected DOM: DOMType;
+
     constructor() {
         super();
+        this.DOM = {};
         // TODO: paging(fetch/set dataitems by skip/limit), optional feature?
         // if paging === true, pass currentPage, pageLimit, searchKey and order...
         // to determine dataitems (by skip && limit)
@@ -167,36 +170,41 @@ class McDataTable extends HTMLElement {
             this.innerHTML = TableNoDataTemplate();
         }
         // child-components' activation via data-setting | events
-        const pageLimitDom = document.querySelector("mc-page-limit") as DataStoreType;
-        if (pageLimitDom) {
+        this.DOM.pageLimit = document.querySelector("mc-page-limit") as DataElementType;
+        if (this.DOM.pageLimit) {
             // pageLimitDom.pageLimit = dtstore.PageLimit;
-            pageLimitDom.pageLimits = dtstore.PageLimits;
+            this.DOM.pageLimit.pageLimits = dtstore.PageLimits;
         }
 
-        // const tableSearchDom = document.querySelector("mc-table-search") as DataStoreType;
+        // const tableSearchDom = document.querySelector("mc-table-search") as DataElementType;
         // no prop-change re-rendering required for McTablesSearch component
 
-        const tableDom = document.querySelector("mc-table") as DataStoreType;
-        if (tableDom) {
-            tableDom.currentPage = dtstore.CurrentPage;
-            tableDom.pageLimit = dtstore.PageLimit;
-            tableDom.searchKey = dtstore.SearchKey;
-            tableDom.dataFields = dtstore.DataFields;
-            tableDom.dataItems = dtstore.DataItems;
-            tableDom.tableStyle = dtstore.TableStyle;
-            tableDom.sortStyle = dtstore.SortStyle;
+        this.DOM.table = document.querySelector("mc-table") as DataElementType;
+        if (this.DOM.table) {
+            this.DOM.table.currentPage = dtstore.CurrentPage;
+            this.DOM.table.pageLimit = dtstore.PageLimit;
+            this.DOM.table.searchKey = dtstore.SearchKey;
+            this.DOM.table.dataFields = dtstore.DataFields;
+            this.DOM.table.dataItems = dtstore.DataItems;
+            this.DOM.table.tableStyle = dtstore.TableStyle;
+            this.DOM.table.sortStyle = dtstore.SortStyle;
         }
-        const tableMessageDom = document.querySelector("mc-table-message") as DataStoreType;
-        if (tableMessageDom) {
-            tableMessageDom.currentPage = dtstore.CurrentPage;
-            tableMessageDom.pageLimit = dtstore.PageLimit;
-            tableMessageDom.dataTotal = dtstore.DataTotal;
-            tableMessageDom.initialDataTotal = dtstore.InitialDataTotal;
+        this.DOM.tableMessage = document.querySelector("mc-table-message") as DataElementType;
+        if (this.DOM.tableMessage) {
+            this.DOM.tableMessage.currentPage = dtstore.CurrentPage;
+            this.DOM.tableMessage.pageLimit = dtstore.PageLimit;
+            this.DOM.tableMessage.dataTotal = dtstore.DataTotal;
+            this.DOM.tableMessage.initialDataTotal = dtstore.InitialDataTotal;
         }
-        const pageNavDom = document.querySelector("mc-page-nav") as DataStoreType;
-        if (pageNavDom) {
-            pageNavDom.pageLimit = dtstore.PageLimit;
-            pageNavDom.dataTotal = dtstore.DataTotal;
+        this.DOM.pageNav = document.querySelector("mc-page-nav") as DataElementType;
+        if (this.DOM.pageNav) {
+            this.DOM.pageNav.currentPage = dtstore.CurrentPage;
+            this.DOM.pageNav.pageLimit = dtstore.PageLimit;
+            this.DOM.pageNav.dataTotal = dtstore.DataTotal;
+        }
+        // update dtstore
+        if (Object.keys(this.DOM).length > 0) {
+            dtstore.Dom = {...dtstore.Dom, ...this.DOM}
         }
     }
 

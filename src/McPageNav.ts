@@ -6,7 +6,7 @@
 
 import PageNavTemplate from "./templates/PageNavTemplate";
 import { dtstore } from "./dtStore";
-import { PageNavPropsType } from "./types";
+import { DataElementType, DOMType, PageNavPropsType } from "./types";
 
 class McPageNav extends HTMLElement {
     constructor() {
@@ -27,7 +27,6 @@ class McPageNav extends HTMLElement {
     }
 
     // getters and setters (to trigger re-rendering via observed attributes
-
     get pagePosition(): string {
         return dtstore.PagePosition;
     }
@@ -107,38 +106,38 @@ class McPageNav extends HTMLElement {
             this.innerHTML = PageNavTemplate(props);
         }
         // event"s handlers | to set the mc-page-limit-value
-        const pageNavFirstDom = document.getElementById("mc-page-nav-first");
-        if (pageNavFirstDom && (typeof this.pageNavFirst === "function")) {
-            pageNavFirstDom.onclick = (e) => {
+        const pageNavFirst  = document.getElementById("mc-page-nav-first");
+        if (pageNavFirst  && (typeof this.pageNavFirst === "function")) {
+            pageNavFirst .onclick = (e) => {
                 e.preventDefault();
                 // const value = pageLimitDom.options[pageLimitDom.selectedIndex].value;
                 this.pageNavFirst();
             }
         }
-        const pageNavNextDom = document.getElementById("mc-page-nav-next");
-        if (pageNavNextDom && (typeof this.pageNavNext === "function")) {
-            pageNavNextDom.onclick = (e) => {
+        const pageNavNext = document.getElementById("mc-page-nav-next");
+        if (pageNavNext && (typeof this.pageNavNext === "function")) {
+            pageNavNext.onclick = (e) => {
                 e.preventDefault();
                 this.pageNavNext();
             }
         }
-        const pageNavPreviousDom = document.getElementById("mc-page-nav-previous");
-        if (pageNavPreviousDom && (typeof this.pageNavPrevious === "function")) {
-            pageNavPreviousDom.onclick = (e) => {
+        const pageNavPrevious = document.getElementById("mc-page-nav-previous");
+        if (pageNavPrevious && (typeof this.pageNavPrevious === "function")) {
+            pageNavPrevious.onclick = (e) => {
                 e.preventDefault();
                 this.pageNavPrevious();
             }
         }
-        const pageNavLastDom = document.getElementById("mc-page-nav-last");
-        if (pageNavLastDom && (typeof this.pageNavLast === "function")) {
-            pageNavLastDom.onclick = (e) => {
+        const pageNavLast = document.getElementById("mc-page-nav-last");
+        if (pageNavLast && (typeof this.pageNavLast === "function")) {
+            pageNavLast.onclick = (e) => {
                 e.preventDefault();
                 this.pageNavLast();
             }
         }
-        const pageNavNumDom: any = document.getElementsByClassName("mc-page-nav-current");
-        if (pageNavNumDom && pageNavNumDom.length > 0) {
-            for (const domItem of pageNavNumDom) {
+        const pageNavNumber: any = document.getElementsByClassName("mc-page-nav-current");
+        if (pageNavNumber && pageNavNumber.length > 0) {
+            for (const domItem of pageNavNumber) {
                 domItem.onclick = (e: any) => {
                     e.preventDefault();
                     const domItemValue = e.target.getAttribute("data-mc-page-num");

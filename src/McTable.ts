@@ -482,52 +482,6 @@ class McTable extends HTMLElement {
         }
     }
 
-    // TODO: events implementation for item/record-fields
-    async eventAction(item: ItemValueType, fieldEvents: Array<EventType>) {
-        let eventsTask = ""
-        if (fieldEvents && fieldEvents.length > 0) {
-            let fieldParams: ItemValueType | string = {}
-            fieldEvents.forEach(ev => {
-                switch (ev.type) {
-                    case "click":
-                        // params
-                        if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
-                            if (ev.params.includes("all") || ev.params.includes("item")) {
-                                fieldParams = item
-                            } else {
-                                fieldParams = ev.params.map(param => item[param]).join(", ");
-                            }
-                        }
-                        eventsTask += `click=${ev.task ? ev.task(fieldParams) : null} `
-                        break
-                    case "change":
-                        if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
-                            if (ev.params.includes("all") || ev.params.includes("item")) {
-                                fieldParams = item
-                            } else {
-                                fieldParams = ev.params.map(param => item[param]).join(", ");
-                            }
-                        }
-                        eventsTask += `change=${ev.task ? ev.task(fieldParams) : null} `
-                        break
-                    case "mouseover":
-                        if (ev.params && Array.isArray(ev.params) && ev.params.length > 0) {
-                            if (ev.params.includes("all") || ev.params.includes("item")) {
-                                fieldParams = item
-                            } else {
-                                fieldParams = ev.params.map(param => item[param]).join(", ");
-                            }
-                        }
-                        eventsTask += `mouseover=${ev.task ? ev.task(fieldParams) : null} `
-                        break
-                    default:
-                        break
-                }
-            })
-        }
-        return eventsTask
-    }
-
     disconnectedCallback() {
         // cleanup - reset DOM, removeEventLister(s), garbage collection...
         this.innerHTML = "";

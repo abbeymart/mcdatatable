@@ -148,7 +148,7 @@ export interface HTMLDataType extends DataTablePropsType {
     // currentPage: string;
 }
 
-export interface DataStoreType extends HTMLElement {
+export interface DataElementType extends HTMLElement {
     tableStyle: TableStyle;
     sortStyle: SortStyle;
     dataFields: DataFieldsType;
@@ -166,22 +166,26 @@ export interface DataStoreType extends HTMLElement {
     sortDesc: boolean;
 }
 
+export interface DataSelectElementType extends HTMLSelectElement {
+    pageLimits: Array<number>;
+}
+
 export interface DOMType {
-    pageMessage?: HTMLDataType | HTMLElement | null;
-    pageLimit?: HTMLDataType | HTMLElement | null;
-    pageNav?: HTMLDataType | HTMLElement | null;
-    tableSearch?: HTMLDataType | HTMLElement | null;
-    table?: HTMLDataType | HTMLElement | null;
-    tableMessage?: HTMLDataType | HTMLElement | null;
-    pageNavFirst?: HTMLDataType | HTMLElement | null;
-    pageNavNext?: HTMLDataType | HTMLElement | null;
-    pageNavPrevious?: HTMLDataType | HTMLElement | null;
-    pageNavLast?: HTMLDataType | HTMLElement | null;
+    pageMessage?: DataElementType;
+    pageLimit?: DataElementType | DataSelectElementType;
+    pageNav?: DataElementType;
+    tableSearch?: DataElementType;
+    table?: DataElementType;
+    tableMessage?: DataElementType;
+    pageNavFirst?: DataElementType;
+    pageNavNext?: DataElementType;
+    pageNavPrevious?: DataElementType;
+    pageNavLast?: DataElementType;
     pageNavNumber?: HTMLCollection | null;
-    pageLimitValue?: HTMLDataType | HTMLElement | null;
-    tableContent?: HTMLDataType | HTMLElement | null;
-    tableHeader?: HTMLDataType | HTMLElement | null;
-    tableBody?: HTMLDataType | HTMLElement | null;
+    pageLimitValue?: DataElementType;
+    tableContent?: DataElementType;
+    tableHeader?: DataElementType;
+    tableBody?: DataElementType;
 }
 
 export type PageNavValueType = string | number | Array<string>;

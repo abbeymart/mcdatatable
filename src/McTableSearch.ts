@@ -23,10 +23,6 @@ class McTableSearch extends HTMLElement {
     }
 
     // methods
-    setSearchKey(value: string) {
-        dtstore.SearchKey = value;
-    }
-
     renderComponent() {
         this.innerHTML = `
             <div>
@@ -39,7 +35,7 @@ class McTableSearch extends HTMLElement {
         if (searchKeyDom) {
             searchKeyDom.onkeyup = (e) => {
                 e.preventDefault();
-                this.setSearchKey(searchKeyDom.value);
+                this.searchKey = searchKeyDom.value;
             }
         }
     }

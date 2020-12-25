@@ -5,7 +5,7 @@
  */
 
 import PageLimitTemplate from "./templates/PageLimitTemplate";
-import { PageLimitPropsType } from "./types";
+import { DataElementType, DOMType, PageLimitPropsType } from "./types";
 import { dtstore } from "./dtStore";
 
 class McPageLimit extends HTMLElement {
@@ -56,7 +56,7 @@ class McPageLimit extends HTMLElement {
     }) {
         this.innerHTML = PageLimitTemplate(props);
         // events | mc-page-limit-value
-        const pageLimitDom = document.getElementById("mc-page-limit-value") as HTMLSelectElement;
+        const pageLimitDom = document.getElementById("mc-page-limit-value") as HTMLSelectElement
         if (pageLimitDom && this.setPageLimit && (typeof this.setPageLimit === "function")) {
             pageLimitDom.onselectionchange = (e) => {
                 e.preventDefault();

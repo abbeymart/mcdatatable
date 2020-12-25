@@ -39,10 +39,10 @@ class McUpdate extends HTMLElement {
         this.renderComponent();
     }
 
-    renderComponent(props = {label: this.Label}) {
+    renderComponent() {
         this.innerHTML = `
         <a href="#" id="mc-update-action">
-            ${this.label}<i class="fa fa-edit"></i>
+            ${this.Label}<i class="fa fa-edit"></i>
         </a>`;
 
         // event action (itemAction(itemId))
