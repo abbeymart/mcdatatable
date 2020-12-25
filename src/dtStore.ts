@@ -80,6 +80,9 @@ class DtStore {
     set TableStyle(value: TableStyle) {
         this.tableStyle = value;
         // activate component re-rendering
+        if (this.DOM.table) {
+            this.DOM.table.tableStyle = dtstore.TableStyle;
+        }
 
     }
 
@@ -90,6 +93,9 @@ class DtStore {
     set SortStyle(value: SortStyle) {
         this.sortStyle = value;
         // activate component re-rendering
+        if (this.DOM.table) {
+            this.DOM.table.sortStyle = dtstore.SortStyle;
+        }
 
     }
 
@@ -100,6 +106,9 @@ class DtStore {
     set DataFields(value: DataFieldsType) {
         this.dataFields = value;
         // activate component re-rendering
+        if (this.DOM.table) {
+            this.DOM.table.dataFields = dtstore.DataFields;
+        }
 
     }
 
@@ -110,7 +119,9 @@ class DtStore {
     set DataItems(value: DataItemsType) {
         this.dataItems = value;
         // activate component re-rendering
-
+        if (this.DOM.table) {
+            this.DOM.table.dataItems = dtstore.DataItems;
+        }
     }
 
     get Paging(): boolean {
@@ -136,7 +147,15 @@ class DtStore {
     set PageLimit(value: number) {
         this.pageLimit = value;
         // activate component re-rendering
-
+        if (this.DOM.table) {
+            this.DOM.table.pageLimit = dtstore.PageLimit;
+        }
+        if (this.DOM.tableMessage) {
+            this.DOM.tableMessage.pageLimit = dtstore.PageLimit;
+        }
+        if (this.DOM.pageNav) {
+            this.DOM.pageNav.pageLimit = dtstore.PageLimit;
+        }
     }
 
     get PagePosition(): PagePositionType {
@@ -167,7 +186,15 @@ class DtStore {
     set CurrentPage(value: number) {
         this.currentPage = value;
         // activate component re-rendering
-
+        if (this.DOM.table) {
+            this.DOM.table.currentPage = dtstore.CurrentPage;
+        }
+        if (this.DOM.tableMessage) {
+            this.DOM.tableMessage.currentPage = dtstore.CurrentPage;
+        }
+        if (this.DOM.pageNav) {
+            this.DOM.pageNav.currentPage = dtstore.CurrentPage;
+        }
     }
 
     get SearchKey(): string {
@@ -177,7 +204,9 @@ class DtStore {
     set SearchKey(value: string) {
         this.searchKey = value;
         // activate component re-rendering
-
+        if (this.DOM.table) {
+            this.DOM.table.searchKey = dtstore.SearchKey;
+        }
     }
 
     get DataTotal(): number {
@@ -187,7 +216,12 @@ class DtStore {
     set DataTotal(value: number) {
         this.dataTotal = value;
         // activate component re-rendering
-
+        if (this.DOM.tableMessage) {
+            this.DOM.tableMessage.dataTotal = dtstore.DataTotal;
+        }
+        if (this.DOM.pageNav) {
+            this.DOM.pageNav.dataTotal = dtstore.DataTotal;
+        }
     }
 
     get SortAsc(): boolean {
@@ -225,6 +259,9 @@ class DtStore {
     set InitialDataTotal(value: number) {
         this.initialDataTotal = value || this.RecordTotal;
         // activate component re-rendering
+        if (this.DOM.tableMessage) {
+            this.DOM.tableMessage.initialDataTotal = dtstore.InitialDataTotal;
+        }
 
     }
 

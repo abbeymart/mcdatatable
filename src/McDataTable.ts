@@ -6,8 +6,8 @@
 
 // TODO:
 //  web-component observed-attributes option:
-//  1. activate observed attributes,
-//  2. set observed attributes from parent/controlling component to reload the controlled/child component(s)
+//  1. set/activate the observed attributes,
+//  2. set observed attributes from parent component and store to reload the controlled/child component(s)
 
 // templates
 import DataTableTemplate from "./templates/DataTableTemplate";
@@ -175,9 +175,6 @@ class McDataTable extends HTMLElement {
             // pageLimitDom.pageLimit = dtstore.PageLimit;
             this.DOM.pageLimit.pageLimits = dtstore.PageLimits;
         }
-
-        // const tableSearchDom = document.querySelector("mc-table-search") as DataElementType;
-        // no prop-change re-rendering required for McTablesSearch component
 
         this.DOM.table = document.querySelector("mc-table") as DataElementType;
         if (this.DOM.table) {

@@ -6,18 +6,9 @@
 
 import TableTemplate from "./templates/TableTemplate";
 import {
-    DataFieldType,
-    DataFieldsType,
-    DataItemsType,
-    DOMType,
-    TablePropsType,
-    TableStyle,
-    ItemValueType,
-    EventType,
-    ItemFieldsInfoType,
-    TaskFunctionType,
-    DataTablePropsType,
-    SortStyle,
+    DataFieldType, DataFieldsType, DataItemsType, DOMType,
+    TablePropsType, TableStyle, ItemValueType, EventType,
+    ItemFieldsInfoType, TaskFunctionType, DataTablePropsType, SortStyle,
 } from "./types";
 import { dtstore } from "./dtStore";
 import { sortBy } from "lodash";
@@ -255,7 +246,7 @@ class McTable extends HTMLElement {
         return dtstore.SearchKey;
     }
 
-    set searchKey(value: string){
+    set searchKey(value: string) {
         this.setAttribute("searchkey", value);
     }
 
@@ -325,7 +316,7 @@ class McTable extends HTMLElement {
         return dtstore.SortStyle;
     }
 
-    set sortStyle(value: SortStyle){
+    set sortStyle(value: SortStyle) {
         this.setAttribute("sortstyle", JSON.stringify(value));
     }
 
@@ -349,7 +340,7 @@ class McTable extends HTMLElement {
         return dtstore.CurrentPage;
     }
 
-    set currentPage(value: number){
+    set currentPage(value: number) {
         this.setAttribute("currentpage", value.toString());
     }
 
