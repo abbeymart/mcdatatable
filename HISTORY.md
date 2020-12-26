@@ -1,5 +1,10 @@
 # Historical logs
 
+## Version 0.1.5
+
+- Release date: Dec 26, 2020
+- Refactored dependencies
+
 ## Version 0.1.4
 
 - Release date: Dec 26, 2020
