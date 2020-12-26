@@ -1,5 +1,10 @@
 # Historical logs
 
+## Version 0.1.3
+
+- Release date: Dec 26, 2020
+- Resolved imports .ts extension issue
+
 ## Version 0.1.2
 
 - Release date: Dec 26, 2020

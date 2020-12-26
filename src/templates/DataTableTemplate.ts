@@ -5,11 +5,11 @@
  */
 
 // sub-components
-import '../McPageLimit.ts';
-import '../McTableSearch.ts';
-import '../McTable.ts';
-import '../McTableMessage.ts';
-import '../McPageNav.ts';
+import '../McPageLimit';
+import '../McTableSearch';
+import '../McTable';
+import '../McTableMessage';
+import '../McPageNav';
 
 export default () => {
     const mcData = `
