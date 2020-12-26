@@ -6,11 +6,8 @@
 
 import {
     TableStyle, SortStyle, DataFieldsType, DataItemsType,
-    PagePositionType, DataFieldType, ItemValueType, DOMType, DataElementType,
+    PagePositionType, DOMType,
 } from "./types";
-import { sortBy } from "lodash"
-
-// import { Observable, Subscriber } from "rxjs";
 
 class DtStore {
     // properties
@@ -63,8 +60,7 @@ class DtStore {
     }
 
     // getters & setters
-    // TODO: activate dom-elements' values from the setters:
-    //  pageLimit, tableSearch, table, pageNav, tableMessage
+    // activate dom-elements' values from the setters: pageLimit, tableSearch, table, pageNav, tableMessage
     get Dom(): DOMType {
         return this.DOM;
     }
@@ -83,7 +79,6 @@ class DtStore {
         if (this.DOM.table) {
             this.DOM.table.tableStyle = dtstore.TableStyle;
         }
-
     }
 
     get SortStyle(): SortStyle {
@@ -96,7 +91,6 @@ class DtStore {
         if (this.DOM.table) {
             this.DOM.table.sortStyle = dtstore.SortStyle;
         }
-
     }
 
     get DataFields(): DataFieldsType {
@@ -109,7 +103,6 @@ class DtStore {
         if (this.DOM.table) {
             this.DOM.table.dataFields = dtstore.DataFields;
         }
-
     }
 
     get DataItems(): DataItemsType {
@@ -174,7 +167,6 @@ class DtStore {
         this.pageLimits = value;
         // activate component re-rendering
         if (this.DOM.pageLimit) {
-            // pageLimitDom.pageLimit = dtstore.PageLimit;
             this.DOM.pageLimit.pageLimits = dtstore.PageLimits;
         }
     }
@@ -191,9 +183,6 @@ class DtStore {
         }
         if (this.DOM.tableMessage) {
             this.DOM.tableMessage.currentPage = dtstore.CurrentPage;
-        }
-        if (this.DOM.pageNav) {
-            this.DOM.pageNav.currentPage = dtstore.CurrentPage;
         }
     }
 
@@ -262,7 +251,6 @@ class DtStore {
         if (this.DOM.tableMessage) {
             this.DOM.tableMessage.initialDataTotal = dtstore.InitialDataTotal;
         }
-
     }
 
     get PermittedEvents(): Array<string> {

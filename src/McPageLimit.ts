@@ -5,7 +5,7 @@
  */
 
 import PageLimitTemplate from "./templates/PageLimitTemplate";
-import { DataElementType, DOMType, PageLimitPropsType } from "./types";
+import { PageLimitPropsType } from "./types";
 import { dtstore } from "./dtStore";
 
 class McPageLimit extends HTMLElement {
@@ -33,7 +33,6 @@ class McPageLimit extends HTMLElement {
 
     set pageLimit(value: number) {
         dtstore.PageLimit = value;
-        // this.setAttribute("pagelimit", value.toString());
     }
 
     get pageLimits(): Array<number> {
@@ -41,13 +40,13 @@ class McPageLimit extends HTMLElement {
     }
 
     set pageLimits(value: Array<number>) {
-        // dtstore.PageLimits = value;
+        // set from parent component (mc-data-table) & dtstore
         this.setAttribute("pagelimits", JSON.stringify(value));
     }
 
     // methods
     setPageLimit(value: string | number) {
-        this.pageLimit = Number(value);     // will update the dstore value
+        this.pageLimit = Number(value);     // will update the dtstore value
     }
 
     renderComponent(props: PageLimitPropsType = {

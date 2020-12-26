@@ -1,7 +1,7 @@
 /**
  * @Author: abbeymart | Abi Akindele | @Created: 2019-06-24 | @Updated: 2020-07-01
  * @Company: mConnect.biz | @License: MIT
- * @Description: mc-datatable-template
+ * @Description: mc-page-limit template
  */
 
 import { PageLimitPropsType } from "../types";
@@ -11,7 +11,7 @@ export default function PageLimitTemplate(props: PageLimitPropsType) {
     let optionDom = props.pageLimits.map((val, ind) => {
         return ind === 0 ? `<option value="${val}" id="${ind + 1}" selected> ${val}</option>` :
             `<option value="${val}" id="${ind + 1}"> ${val}</option>`
-    }).join(" ");
+    }).join("");
 
     // activate active component | onchange="props.setPageLimit(e, this.value)
     return `

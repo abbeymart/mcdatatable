@@ -6,7 +6,7 @@
 
 import PageNavTemplate from "./templates/PageNavTemplate";
 import { dtstore } from "./dtStore";
-import { DataElementType, DOMType, PageNavPropsType } from "./types";
+import { PageNavPropsType } from "./types";
 
 class McPageNav extends HTMLElement {
     constructor() {
@@ -26,7 +26,7 @@ class McPageNav extends HTMLElement {
         this.renderComponent();
     }
 
-    // getters and setters (to trigger re-rendering via observed attributes
+    // getters and setters
     get pagePosition(): string {
         return dtstore.PagePosition;
     }
@@ -74,7 +74,7 @@ class McPageNav extends HTMLElement {
     }
 
     set pageLimit(value: number) {
-        // set from the controlling/parent component (mc-data-table)
+        // set from the parent component (mc-data-table) & dtstore
         this.setAttribute("pagelimit", value.toString());
     }
 
@@ -93,7 +93,7 @@ class McPageNav extends HTMLElement {
     }
 
     set dataTotal(value: number) {
-        // set from the controlling/parent component (mc-data-table)
+        // set from the parent component (mc-data-table) & dtstore
         this.setAttribute("datatotal", value.toString());
     }
 

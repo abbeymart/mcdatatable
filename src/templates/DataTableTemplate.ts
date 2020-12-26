@@ -1,7 +1,7 @@
 /**
  * @Author: abbeymart | Abi Akindele | @Created: 2019-06-24 | @Updated: 2019-07-01
  * @Company: mConnect.biz | @License: MIT
- * @Description: mc-datatable-template
+ * @Description: mc-data-table template
  */
 
 // sub-components

@@ -1,7 +1,7 @@
 /**
  * @Author: abbeymart | Abi Akindele | @Created: 2019-06-27 | @Updated: 2019-06-27
  * @Company: mConnect.biz | @License: MIT
- * @Description: mc-data-not-available
+ * @Description: mc-table-no-data template
  */
 
 export default () => {

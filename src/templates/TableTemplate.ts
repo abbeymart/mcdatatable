@@ -1,14 +1,12 @@
 /**
  * @Author: abbeymart | Abi Akindele | @Created: 2019-06-29 | @Updated: 2020-07-01
  * @Company: mConnect.biz | @License: MIT
- * @Description: mc-datatable-template
+ * @Description: mc-table template
  */
 
 import '../McUpdate';
 import '../McDelete';
 import { ItemFieldsInfoType, ItemValueType, TablePropsType } from "../types";
-import { dtStore } from "../dtStore";
-import { FieldValueTypes } from "../../../mc-crud-mg";
 
 export default (props: TablePropsType): string => {
     const checkBoxDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {

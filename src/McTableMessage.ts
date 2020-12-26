@@ -29,7 +29,7 @@ class McTableMessage extends HTMLElement {
     }
 
     set initialDataTotal(value: number) {
-        // set from the controlling/parent component (mc-data-table)
+        // set from the controlling/parent component (mc-data-table) & dtstore
         this.setAttribute("initialdatatotal", value.toString());
     }
 
@@ -38,7 +38,7 @@ class McTableMessage extends HTMLElement {
     }
 
     set dataTotal(value: number) {
-        // set from the controlling/parent component (mc-data-table)
+        // set from the controlling/parent component (mc-data-table) & dtstore
         this.setAttribute("datatotal", value.toString());
     }
 
@@ -47,7 +47,7 @@ class McTableMessage extends HTMLElement {
     }
 
     set pageLimit(value: number) {
-        // set from the controlling/parent component (mc-data-table)
+        // set from the controlling/parent component (mc-data-table) & dtstore
         this.setAttribute("pagelimit", value.toString());
     }
 
@@ -56,7 +56,7 @@ class McTableMessage extends HTMLElement {
     }
 
     set currentPage(value: number) {
-        // set from the controlling/parent component (mc-data-table)
+        // set from the controlling/parent component (mc-data-table) & dtstore
         this.setAttribute("currentpage", value.toString());
     }
 

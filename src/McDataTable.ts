@@ -4,10 +4,9 @@
  * @Description: mc-data-table web component
  */
 
-// TODO:
-//  web-component observed-attributes option:
-//  1. set/activate the observed attributes,
-//  2. set observed attributes from parent component and store to reload the controlled/child component(s)
+//  web-component observed-attributes actions:
+//  1. set/activate the observed attributes at components-level
+//  2. set observed attributes from parent component and dtstore to reload/re-render the controlled/child component(s)
 
 // templates
 import DataTableTemplate from "./templates/DataTableTemplate";
@@ -15,15 +14,13 @@ import TableNoDataTemplate from "./templates/TableNoDataTemplate";
 import { DataItemsType, DataFieldsType, TableStyle, SortStyle, DOMType, DataElementType } from "./types";
 import { dtstore } from "./dtStore";
 
-type ObValueType = number | DataItemsType | DataFieldsType | TableStyle | SortStyle;
-
 class McDataTable extends HTMLElement {
     protected DOM: DOMType;
 
     constructor() {
         super();
         this.DOM = {};
-        // TODO: paging(fetch/set dataitems by skip/limit), optional feature?
+        // TODO: paging(fetch/set dataitems by skip/limit), optional feature
         // if paging === true, pass currentPage, pageLimit, searchKey and order...
         // to determine dataitems (by skip && limit)
         // issue/concerns/considerations: performance with fetch-action for every page
@@ -56,7 +53,6 @@ class McDataTable extends HTMLElement {
 
     set pageLimit(value: number) {
         dtstore.PageLimit = value;
-        // TODO: reload affected component(s) - PageNav and PageLimit
     }
 
     get currentPage(): number {
@@ -172,7 +168,6 @@ class McDataTable extends HTMLElement {
         // child-components' activation via data-setting | events
         this.DOM.pageLimit = document.querySelector("mc-page-limit") as DataElementType;
         if (this.DOM.pageLimit) {
-            // pageLimitDom.pageLimit = dtstore.PageLimit;
             this.DOM.pageLimit.pageLimits = dtstore.PageLimits;
         }
 
@@ -195,7 +190,7 @@ class McDataTable extends HTMLElement {
         }
         this.DOM.pageNav = document.querySelector("mc-page-nav") as DataElementType;
         if (this.DOM.pageNav) {
-            this.DOM.pageNav.currentPage = dtstore.CurrentPage;
+            // this.DOM.pageNav.currentPage = dtstore.CurrentPage; // set at mc-page-nav
             this.DOM.pageNav.pageLimit = dtstore.PageLimit;
             this.DOM.pageNav.dataTotal = dtstore.DataTotal;
         }

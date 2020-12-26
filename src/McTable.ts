@@ -6,13 +6,11 @@
 
 import TableTemplate from "./templates/TableTemplate";
 import {
-    DataFieldType, DataFieldsType, DataItemsType, DOMType,
-    TablePropsType, TableStyle, ItemValueType, EventType,
-    ItemFieldsInfoType, TaskFunctionType, DataTablePropsType, SortStyle,
+    DataFieldType, DataFieldsType, DataItemsType,
+    TablePropsType, TableStyle, SortStyle,
 } from "./types";
 import { dtstore } from "./dtStore";
 import { sortBy } from "lodash";
-import { fromArray } from "rxjs/internal/observable/fromArray";
 
 class McTable extends HTMLElement {
     protected itemIds: Set<string>;
@@ -22,9 +20,7 @@ class McTable extends HTMLElement {
     constructor() {
         super()
         // attributes
-        this.itemIds = new Set<string>()
-        // this.sortAsc = false
-        // this.sortDesc = false
+        this.itemIds = new Set<string>();
         this.renderComponent();
     }
 
@@ -66,11 +62,12 @@ class McTable extends HTMLElement {
                         // add itemId to the itemIds set
                         this.itemIds.add(domItemValue);
                     } else {
+                        // if itemId exists, remove from itemIds set
                         if (this.itemIds.has(domItemValue)) {
                             this.itemIds.delete(domItemValue);
                         }
                     }
-                    // get fieldTask from tableFields, by fieldName(itemId)
+                    // get fieldTask from tableFields, by itemFieldName
                     const itemFieldName = e.target.getAttribute("data-input-field");
                     const itemField = props.tableFields.find(it => it.name === itemFieldName)
                     const itemFunc = itemField?.source.task;
@@ -153,7 +150,7 @@ class McTable extends HTMLElement {
                                     e.preventDefault();
                                     const itemFunc = ev.task;
                                     if (itemFunc && typeof itemFunc === "function") {
-                                        itemFunc(domItemValue);
+                                        itemFunc(fieldParams);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -162,7 +159,7 @@ class McTable extends HTMLElement {
                                 domItem.onchange = (e: any) => {
                                     e.preventDefault();
                                     if (ev.task && typeof ev.task === "function") {
-                                        ev.task(domItemValue);
+                                        ev.task(fieldParams);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -171,7 +168,7 @@ class McTable extends HTMLElement {
                                 domItem.onkeyup = (e: any) => {
                                     e.preventDefault();
                                     if (ev.task && typeof ev.task === "function") {
-                                        ev.task(domItemValue);
+                                        ev.task(fieldParams);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -180,7 +177,7 @@ class McTable extends HTMLElement {
                                 domItem.onkeydown = (e: any) => {
                                     e.preventDefault();
                                     if (ev.task && typeof ev.task === "function") {
-                                        ev.task(domItemValue);
+                                        ev.task(fieldParams);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -189,7 +186,7 @@ class McTable extends HTMLElement {
                                 domItem.onmouseover = (e: any) => {
                                     e.preventDefault();
                                     if (ev.task && typeof ev.task === "function") {
-                                        ev.task(domItemValue);
+                                        ev.task(fieldParams);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -199,7 +196,7 @@ class McTable extends HTMLElement {
                                 domItem.onmouseleave = (e: any) => {
                                     e.preventDefault();
                                     if (ev.task && typeof ev.task === "function") {
-                                        ev.task(domItemValue);
+                                        ev.task(fieldParams);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
@@ -209,7 +206,7 @@ class McTable extends HTMLElement {
                                 domItem.onmouseenter = (e: any) => {
                                     e.preventDefault();
                                     if (ev.task && typeof ev.task === "function") {
-                                        ev.task(domItemValue);
+                                        ev.task(fieldParams);
                                     } else {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
