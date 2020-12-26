@@ -72,7 +72,7 @@ class McTable extends HTMLElement {
                     const itemField = props.tableFields.find(it => it.name === itemFieldName)
                     const itemFunc = itemField?.source.task;
                     if (itemFunc && typeof itemFunc === "function") {
-                        itemFunc([...this.itemIds]);     // convert set to array: Array.from() or ...spread
+                        itemFunc(Array.from(this.itemIds));     // convert set to array: Array.from() or ...spread?
                     } else {
                         throw  new Error("undefined task-function");
                     }
