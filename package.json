@@ -1,6 +1,6 @@
 {
   "name": "@mconnect/mcdatatable",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "mConnect Datatable UI Component",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",

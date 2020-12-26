@@ -1,6 +1,6 @@
 # Historical logs
 
-## Version 0.1.1
+## Version 0.1.2
 
 - Release date: Dec 26, 2020
 - Added an index / entry point
