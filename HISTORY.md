@@ -2,6 +2,5 @@
 
 ## Version 0.1.0
 
-- Release date: TBD
+- Release date: Dec 26, 2020
 - Datatable UI Component
-- See test folder and other packages' test folders for test cases / scenarios and usage
