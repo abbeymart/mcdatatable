@@ -1,5 +1,10 @@
 # Historical logs
 
+## Version 0.1.4
+
+- Release date: Dec 26, 2020
+- Compiled to ES5
+
 ## Version 0.1.3
 
 - Release date: Dec 26, 2020
