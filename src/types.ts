@@ -8,12 +8,6 @@
 // export type TaskUpdateType = (item?: object) => any;
 // export type TaskDeleteType = (itemId?: string) => any;
 
-export interface ActivePropsType {
-    isActive?: boolean;
-    activeLabel?: string;
-    inActiveLabel?: string;
-}
-
 export interface TaskFunctionType {
     (val?: any): any
 }
@@ -34,6 +28,12 @@ export interface ItemFieldType {
 
 export interface UpdateTaskFunctionType {
     (item: ItemValueType): any
+}
+
+export interface ActivePropsType {
+    isActive?: boolean;
+    activeLabel?: string;
+    inActiveLabel?: string;
 }
 
 export interface UpdatePropsType {
@@ -144,9 +144,9 @@ export interface ItemFieldsInfoType {
 
 export type DataFieldsType = Array<DataFieldType>;
 
-export interface HTMLDataType extends DataTablePropsType {
-    // currentPage: string;
-}
+// export interface HTMLDataType extends DataTablePropsType {
+//     // currentPage: string;
+// }
 
 export interface DataElementType extends HTMLElement {
     tableStyle: TableStyle;

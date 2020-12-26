@@ -4,11 +4,7 @@
  * @Description: mcDelete
  */
 
-// imports
-import { DeleteTaskFunctionType } from "./types";
-
 class McDelete extends HTMLElement {
-    protected action: DeleteTaskFunctionType;
     protected itemId: string;
     protected label: string;
 
@@ -16,22 +12,16 @@ class McDelete extends HTMLElement {
         super();
         // set the required attributes/props
         this.label = this.getAttribute("label") || "Delete";
-        this.action = () => null;
         this.itemId = this.getAttribute("itemid") || "";
         // validate attributes
         this.renderComponent();
     }
 
     static get observedAttributes() {
-        return ["label", "action", "itemid"];
+        return ["label", "itemid"];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
-        if (name === "action") {
-            this.renderComponent();
-            return;
-        }
-
         if (oldVal === newValue) {
             return;
         }
@@ -44,14 +34,8 @@ class McDelete extends HTMLElement {
             ${this.Label}<i class="fa fa-times-circle"></i>
         </a>`;
 
-        // event action (itemAction(itemId))
-        const itemDomRef = document.getElementById("mc-delete-action");
-        if (itemDomRef && this.Action && (typeof this.Action === "function") && this.ItemId) {
-            itemDomRef.onclick = (e) => {
-                e.preventDefault();
-                this.Action(this.ItemId);
-            }
-        }
+        // event action (itemAction(itemId)) | set from parent component(mc-table)
+
     }
 
     disconnectedCallback() {
@@ -59,7 +43,7 @@ class McDelete extends HTMLElement {
         this.innerHTML = "";
     }
 
-    get Label() {
+    get Label(): string {
         return this.label;
     }
 
@@ -68,16 +52,7 @@ class McDelete extends HTMLElement {
         this.setAttribute("label", value);
     }
 
-    get Action() {
-        return this.action;
-    }
-
-    set Action(value: DeleteTaskFunctionType) {
-        this.action = value;
-        this.setAttribute("action", "new-action-value");
-    }
-
-    get ItemId() {
+    get ItemId(): string {
         return this.itemId;
     }
 

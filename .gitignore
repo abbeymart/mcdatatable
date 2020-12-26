@@ -12,6 +12,7 @@ node_modules
 
 # Secured configuration directories
 src/config/secure
+src/backup
 test/config/secure
 
 # test report

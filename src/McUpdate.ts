@@ -5,11 +5,11 @@
  */
 
 // imports
-import { ItemValueType, UpdateTaskFunctionType } from "./types";
+import { ItemValueType } from "./types";
 import { isEmptyObject } from "./helper";
+import { ValueParamsType } from "../../mc-crud-mg";
 
 class McUpdate extends HTMLElement {
-    protected action: UpdateTaskFunctionType;
     protected item: ItemValueType;
     protected label: string;
 
@@ -17,22 +17,16 @@ class McUpdate extends HTMLElement {
         super();
         // set the required attributes/props
         this.label = this.getAttribute("label") || "Update";
-        this.action = (val: ItemValueType) => null;
         this.item = {};
         // validate attributes
         this.renderComponent();
     }
 
     static get observedAttributes() {
-        return ["label", "action", "item"];
+        return ["label", "item"];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
-        if (name === "action") {
-            this.renderComponent();
-            return;
-        }
-
         if (oldVal === newValue) {
             return;
         }
@@ -45,14 +39,15 @@ class McUpdate extends HTMLElement {
             ${this.Label}<i class="fa fa-edit"></i>
         </a>`;
 
-        // event action (itemAction(itemId))
-        const itemDomRef = document.getElementById("mc-update-action");
-        if (itemDomRef && this.Action && (typeof this.Action === "function") && !isEmptyObject(this.Item)) {
-            itemDomRef.onclick = (e) => {
-                e.preventDefault();
-                this.Action(this.Item);
-            }
-        }
+        // event action (itemAction(itemId)) | set from parent component(mc-table)
+
+        // const itemDomRef = document.getElementById("mc-update-action");
+        // if (itemDomRef && this.Action && (typeof this.Action === "function") && !isEmptyObject(this.Item)) {
+        //     itemDomRef.onclick = (e) => {
+        //         e.preventDefault();
+        //         this.Action(this.Item);
+        //     }
+        // }
     }
 
     disconnectedCallback() {
@@ -60,7 +55,7 @@ class McUpdate extends HTMLElement {
         this.innerHTML = "";
     }
 
-    get Label() {
+    get Label(): string {
         return this.label;
     }
 
@@ -69,20 +64,12 @@ class McUpdate extends HTMLElement {
         this.setAttribute("label", value);
     }
 
-    get Action() {
-        return this.action;
-    }
 
-    set Action(value: UpdateTaskFunctionType) {
-        this.action = value;
-        this.setAttribute("action", "new-action-value");
-    }
-
-    get Item() {
+    get Item(): ItemValueType {
         return this.item;
     }
 
-    set Item(value: object) {
+    set Item(value: ItemValueType) {
         this.item = value;
         this.setAttribute("item", JSON.stringify(value));
     }
