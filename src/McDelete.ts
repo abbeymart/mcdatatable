@@ -62,10 +62,6 @@ class McDelete extends HTMLElement {
     }
 }
 
-let mcDelete;
-
 if (!customElements.get("mc-delete")) {
-    mcDelete = customElements.define("mc-delete", McDelete);
+    customElements.define("mc-delete", McDelete);
 }
-
-export default mcDelete;

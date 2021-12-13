@@ -46,10 +46,6 @@ class McTableSearch extends HTMLElement {
     }
 }
 
-let mcTableSearch;
-
 if (!customElements.get('mc-table-search')) {
-    mcTableSearch = customElements.define('mc-table-search', McTableSearch);
+    customElements.define('mc-table-search', McTableSearch);
 }
-
-export default mcTableSearch;

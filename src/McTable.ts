@@ -155,6 +155,7 @@ class McTable extends HTMLElement {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
                                 }
+                                break
                             case "change":
                                 domItem.onchange = (e: any) => {
                                     e.preventDefault();
@@ -164,6 +165,7 @@ class McTable extends HTMLElement {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
                                 }
+                                break
                             case "keyup":
                                 domItem.onkeyup = (e: any) => {
                                     e.preventDefault();
@@ -173,6 +175,7 @@ class McTable extends HTMLElement {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
                                 }
+                                break
                             case "keydown":
                                 domItem.onkeydown = (e: any) => {
                                     e.preventDefault();
@@ -182,6 +185,7 @@ class McTable extends HTMLElement {
                                         throw  new Error(`undefined task-function for event-type: ${ev.type}`);
                                     }
                                 }
+                                break
                             case "mouseover":
                                 domItem.onmouseover = (e: any) => {
                                     e.preventDefault();
@@ -214,7 +218,6 @@ class McTable extends HTMLElement {
                                 break;
                             default:
                                 throw  new Error(`unsupported event-type: ${ev.type}`);
-                                break;
                         }
                     }
                 }
@@ -477,10 +480,6 @@ class McTable extends HTMLElement {
 
 }
 
-let mcTable;
-
 if (!customElements.get("mc-table")) {
-    mcTable = customElements.define("mc-table", McTable);
+    customElements.define("mc-table", McTable);
 }
-
-export default mcTable;

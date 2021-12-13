@@ -5,16 +5,23 @@
  */
 
 import {
-    TableStyle, SortStyle, DataFieldsType, DataItemsType,
-    PagePositionType, DOMType,
+    TableStyle, SortStyle, DataField, PagePositionType, DOMType, DataStats,
+    DataFetchAlert, DataFetchAlertResult, DataTableProps, ObjectType,
 } from "./types";
+import { ObjectRefType } from "./mcTypes";
+import { GetRequestType } from "./dtTypes";
 
 class DtStore {
     // properties
     protected tableStyle: TableStyle;
     protected sortStyle: SortStyle;
-    protected dataFields: DataFieldsType;
-    protected dataItems: DataItemsType;
+    protected dataFields: Array<DataField>;
+    protected dataItems: Array<ObjectRefType>;
+    protected dataStats: DataStats;
+    protected dataFetchAlert?: DataFetchAlert | null;
+    protected fetchAlertResult: DataFetchAlertResult;
+    protected dataItemsCount: number;
+    protected searchItemsCount: number;
     protected paging: boolean;
     protected pageStart: number;
     protected pageLimit: number;
@@ -22,41 +29,62 @@ class DtStore {
     protected pageLimits: Array<number>;
     protected currentPage: number;
     protected searchKey: string;
+    protected dataCount: number;
     protected dataTotal: number;
-    protected initialDataTotal: number;     // to limit number of records to process
+    protected totalRecordsCount: number; // to limit number of records to process
     protected sortAsc: boolean;
     protected sortDesc: boolean;
     protected permittedEvents: Array<string>;
     protected DOM: DOMType;
 
-    constructor() {
+    constructor(props?: DataTableProps) {
         // required attributes | default values
-        this.pageLimit = 10;
+        this.pageLimit = props?.pageLimit || 10;
         this.currentPage = 1;
-        this.dataFields = [];
-        this.dataItems = [];
+        this.dataFields = props?.dataFields || [];
+        this.dataItems = props?.dataItems || [];
+        this.dataStats = props?.dataStats || {};
+        this.dataCount = 0;
         this.dataTotal = 0;
-        this.initialDataTotal = 0;
-        this.paging = true;
-        this.pageStart = 1;
-        this.pageLimit = 10;
+        this.totalRecordsCount = 0;
+        this.paging = props?.paging || true;
+        this.pageStart = props?.pageStart || 1;
+        this.pageLimit = props?.pageLimit || 10;
         this.pagePosition = "first-page";
-        this.pageLimits = [10, 20, 30, 50, 100, 200];
-        this.tableStyle = {
-            table      : "w3-table w3-striped w3-border w3-hoverable",
+        this.pageLimits = props?.pageLimits || [10, 20, 30, 50, 100, 200];
+        this.tableStyle = props?.tableStyle || {
+            table      : "w3-table w3-striped w3-border w3-bordered w3-hoverable",
             tableHeader: "w3-red",
             tableBody  : "w3-hover w3-hover-grey",
         };
-        this.sortStyle = {
+        this.sortStyle = props?.sortStyle || {
             asc : "fa fa-caret-up",
             desc: "fa fa-caret-down",
         };
         this.searchKey = "";
         this.dataTotal = 0;
+        this.dataItemsCount = 0;
+        this.searchItemsCount = 0;
+        this.dataFetchAlert = props?.dataFetchAlert || null;
+        this.fetchAlertResult = {skip: 0,}
         this.sortAsc = false;
         this.sortDesc = false;
         this.permittedEvents = ["click", "change", "mouseover", "keyup", "keydown", "mouseleave", "mouseenter"];
         this.DOM = {};
+
+        if (!this.dataFetchAlert) {
+            this.dataFetchAlert = async (val: DataFetchAlertResult, getRequest?: GetRequestType) => {
+                // store fetchAlertResult
+                this.fetchAlertResult = val
+                // perform the required crud-action/task
+                if (val.fetchAlert && getRequest) {
+                    await getRequest({
+                        skip : val.skip,
+                        limit: val.limit,
+                    })
+                }
+            }
+        }
     }
 
     // getters & setters
@@ -93,11 +121,11 @@ class DtStore {
         }
     }
 
-    get DataFields(): DataFieldsType {
+    get DataFields(): Array<DataField> {
         return this.dataFields;
     }
 
-    set DataFields(value: DataFieldsType) {
+    set DataFields(value: Array<DataField>) {
         this.dataFields = value;
         // activate component re-rendering
         if (this.DOM.table) {
@@ -105,12 +133,14 @@ class DtStore {
         }
     }
 
-    get DataItems(): DataItemsType {
+    get DataItems(): Array<ObjectType> {
         return this.dataItems;
     }
 
-    set DataItems(value: DataItemsType) {
+    set DataItems(value: Array<ObjectType>) {
         this.dataItems = value;
+        this.dataItemsCount = value.length
+
         // activate component re-rendering
         if (this.DOM.table) {
             this.DOM.table.dataItems = dtstore.DataItems;
@@ -237,19 +267,27 @@ class DtStore {
         return this.DataFields.length;
     }
 
+    set SearchItemsCount(value: number){
+        this.searchItemsCount = value;
+    }
+
+    set DataItemsTotal(value: number) {
+        this.dataTotal = value;
+    }
+
     get RecordTotal() {
         return this.DataTotal ? this.DataTotal : this.DataItemsCount;
     }
 
-    get InitialDataTotal(): number {
-        return this.RecordTotal
+    get TotalRecordsCount(): number {
+        return this.totalRecordsCount
     }
 
-    set InitialDataTotal(value: number) {
-        this.initialDataTotal = value || this.RecordTotal;
+    set TotalRecordsCount(value: number) {
+        this.totalRecordsCount = value || this.RecordTotal;
         // activate component re-rendering
         if (this.DOM.tableMessage) {
-            this.DOM.tableMessage.initialDataTotal = dtstore.InitialDataTotal;
+            this.DOM.tableMessage.totalRecordsCount = dtstore.TotalRecordsCount;
         }
     }
 
@@ -263,8 +301,8 @@ class DtStore {
 }
 
 // constructor/instance function
-function dtStore(options = {}) {
-    return new DtStore();
+function dtStore(props?: DataTableProps) {
+    return new DtStore(props);
 }
 
 // singleton

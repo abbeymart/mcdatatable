@@ -71,10 +71,6 @@ class McPageLimit extends HTMLElement {
     }
 }
 
-let mcPageLimit;
-
 if (!customElements.get("mc-page-limit")) {
-    mcPageLimit = customElements.define("mc-page-limit", McPageLimit);
+    customElements.define("mc-page-limit", McPageLimit);
 }
-
-export default mcPageLimit;

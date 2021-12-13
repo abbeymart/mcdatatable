@@ -100,10 +100,7 @@ class McTableMessage extends HTMLElement {
 
 }
 
-let mcTableMessage;
-
 if (!customElements.get('mc-table-message')) {
-    mcTableMessage = customElements.define('mc-table-message', McTableMessage);
+    customElements.define('mc-table-message', McTableMessage);
 }
 
-export default mcTableMessage;

@@ -187,10 +187,10 @@ class McPageNav extends HTMLElement {
     }
 }
 
-let mcPageNav;
+// let mcPageNav;
 
 if (!customElements.get("mc-page-nav")) {
-    mcPageNav = customElements.define("mc-page-nav", McPageNav);
+    customElements.define("mc-page-nav", McPageNav);
 }
 
-export default mcPageNav;
+// export default mcPageNav;

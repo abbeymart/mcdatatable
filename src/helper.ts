@@ -15,8 +15,6 @@ export function strToBool(val = "n"): boolean {
 }
 
 export function isEmptyObject(val: object): boolean {
-    if (Object.keys(val).length > 0 && Object.values(val).length > 0) {
-        return false
-    }
-    return true;
+    return !(Object.keys(val).length > 0 && Object.values(val).length > 0);
+
 }

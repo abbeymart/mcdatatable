@@ -6,8 +6,6 @@
 
 // imports
 import { ItemValueType } from "./types";
-import { isEmptyObject } from "./helper";
-import { ValueParamsType } from "../../mc-crud-mg";
 
 class McUpdate extends HTMLElement {
     protected item: ItemValueType;
@@ -75,10 +73,6 @@ class McUpdate extends HTMLElement {
     }
 }
 
-let mcUpdate;
-
 if (!customElements.get("mc-update")) {
-    mcUpdate = customElements.define("mc-update", McUpdate);
+    customElements.define("mc-update", McUpdate);
 }
-
-export default mcUpdate;

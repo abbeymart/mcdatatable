@@ -11,7 +11,7 @@
 // templates
 import DataTableTemplate from "./templates/DataTableTemplate";
 import TableNoDataTemplate from "./templates/TableNoDataTemplate";
-import { DataItemsType, DataFieldsType, TableStyle, SortStyle, DOMType, DataElementType } from "./types";
+import { DataItemsType, DataField, TableStyle, SortStyle, DOMType, DataElementType } from "./types";
 import { dtstore } from "./dtStore";
 
 class McDataTable extends HTMLElement {
@@ -31,7 +31,7 @@ class McDataTable extends HTMLElement {
 
     // observed attributes to re-render mc-data-table
     static get observedAttributes() {
-        return ["paging", "pagelimits", "datafields", "dataitems", "initialdatatotal", "tablestyle", "sortstyle",];
+        return ["paging", "pagelimits", "datafields", "dataitems", "totalrecordscount", "tablestyle", "sortstyle",];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
@@ -107,11 +107,11 @@ class McDataTable extends HTMLElement {
         this.setAttribute("sortstyle", JSON.stringify(value));
     }
 
-    get dataFields(): DataFieldsType {
+    get dataFields(): Array<DataField> {
         return dtstore.DataFields;
     }
 
-    set dataFields(value: DataFieldsType) {
+    set dataFields(value: Array<DataField>) {
         dtstore.DataFields = value;
         this.setAttribute("datafields", JSON.stringify(value));
     }
@@ -141,13 +141,13 @@ class McDataTable extends HTMLElement {
         return dtstore.RecordTotal;
     }
 
-    get initialDataTotal(): number {
-        return dtstore.InitialDataTotal;
+    get TotalRecordsCount(): number {
+        return dtstore.TotalRecordsCount;
     }
 
-    set initialDataTotal(value: number) {
-        dtstore.InitialDataTotal = value;
-        this.setAttribute("initialdatatotal", value.toString());
+    set TotalRecordsCount(value: number) {
+        dtstore.TotalRecordsCount = value;
+        this.setAttribute("totalrecordscount", value.toString());
     }
 
     get permittedEvents(): Array<string> {
@@ -186,7 +186,7 @@ class McDataTable extends HTMLElement {
             this.DOM.tableMessage.currentPage = dtstore.CurrentPage;
             this.DOM.tableMessage.pageLimit = dtstore.PageLimit;
             this.DOM.tableMessage.dataTotal = dtstore.DataTotal;
-            this.DOM.tableMessage.initialDataTotal = dtstore.InitialDataTotal;
+            this.DOM.tableMessage.totalRecordsCount = dtstore.TotalRecordsCount;
         }
         this.DOM.pageNav = document.querySelector("mc-page-nav") as DataElementType;
         if (this.DOM.pageNav) {
@@ -207,10 +207,9 @@ class McDataTable extends HTMLElement {
 
 }
 
-let mcDataTable;
+// let mcDataTable;
 
 if (!customElements.get("mc-data-table")) {
-    mcDataTable = customElements.define("mc-data-table", McDataTable);
+    // mcDataTable = customElements.define("mc-data-table", McDataTable);
+    customElements.define("mc-data-table", McDataTable);
 }
-
-export default mcDataTable;
