@@ -12,7 +12,7 @@
 import DataTableTemplate from "./templates/DataTableTemplate";
 import TableNoDataTemplate from "./templates/TableNoDataTemplate";
 import { DataItemsType, DataField, TableStyle, SortStyle, DOMType, DataElementType } from "./types";
-import { DtStore, dtstore } from "./dtStore";
+import { dtStore, DtStore } from "./dtStore";
 
 class McDataTable extends HTMLElement {
     protected DOM: DOMType;
@@ -21,7 +21,7 @@ class McDataTable extends HTMLElement {
     constructor() {
         super();
         this.DOM = {};
-        this.dtstore = dtstore
+        this.dtstore = dtStore()
         // TODO: paging(fetch/set dataitems by skip/limit), optional feature
         // if paging === true, pass currentPage, pageLimit, searchKey and order...
         // to determine dataitems (by skip && limit)
