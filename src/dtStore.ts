@@ -6,12 +6,13 @@
 
 import {
     TableStyle, SortStyle, DataField, PagePositionType, DOMType, DataStats,
-    DataFetchAlert, DataFetchAlertResult, DataTableProps, ObjectType,
+    DataFetchAlert, DataFetchAlertResult, DataTableProps, ObjectType, ObjectRefType,
+    GetRequestType,
 } from "./types";
-import { ObjectRefType } from "./mcTypes";
-import { GetRequestType } from "./dtTypes";
 
 class DtStore {
+    // singleton variable
+    private static _mcStore: DtStore
     // properties
     protected tableStyle: TableStyle;
     protected sortStyle: SortStyle;
@@ -85,6 +86,10 @@ class DtStore {
                 }
             }
         }
+    }
+
+    public static get DtStoreInstance(): DtStore {
+        return this._mcStore || (this._mcStore = new this())
     }
 
     // getters & setters
@@ -267,7 +272,7 @@ class DtStore {
         return this.DataFields.length;
     }
 
-    set SearchItemsCount(value: number){
+    set SearchItemsCount(value: number) {
         this.searchItemsCount = value;
     }
 
@@ -306,6 +311,6 @@ function dtStore(props?: DataTableProps) {
 }
 
 // singleton
-const dtstore = dtStore();
+const dtstore = DtStore.DtStoreInstance
 
 export { DtStore, dtStore, dtstore };

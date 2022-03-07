@@ -12,14 +12,16 @@
 import DataTableTemplate from "./templates/DataTableTemplate";
 import TableNoDataTemplate from "./templates/TableNoDataTemplate";
 import { DataItemsType, DataField, TableStyle, SortStyle, DOMType, DataElementType } from "./types";
-import { dtstore } from "./dtStore";
+import { DtStore, dtstore } from "./dtStore";
 
 class McDataTable extends HTMLElement {
     protected DOM: DOMType;
+    protected dtstore: DtStore
 
     constructor() {
         super();
         this.DOM = {};
+        this.dtstore = dtstore
         // TODO: paging(fetch/set dataitems by skip/limit), optional feature
         // if paging === true, pass currentPage, pageLimit, searchKey and order...
         // to determine dataitems (by skip && limit)
@@ -48,119 +50,119 @@ class McDataTable extends HTMLElement {
 
     // getters and setters (props) for mcDatatable component
     get pageLimit(): number {
-        return dtstore.PageLimit;
+        return this.dtstore.PageLimit;
     }
 
     set pageLimit(value: number) {
-        dtstore.PageLimit = value;
+        this.dtstore.PageLimit = value;
     }
 
     get currentPage(): number {
-        return dtstore.CurrentPage;
+        return this.dtstore.CurrentPage;
     }
 
     set currentPage(value: number) {
-        dtstore.CurrentPage = value;
+        this.dtstore.CurrentPage = value;
     }
 
     get paging(): boolean {
-        return dtstore.Paging;
+        return this.dtstore.Paging;
     }
 
     set paging(value: boolean) {
-        dtstore.Paging = value;
+        this.dtstore.Paging = value;
         this.setAttribute("paging", value.toString());
     }
 
     get pageStart(): number {
-        return dtstore.PageStart;
+        return this.dtstore.PageStart;
     }
 
     set pageStart(value: number) {
-        dtstore.PageStart = value;
+        this.dtstore.PageStart = value;
     }
 
     get pageLimits(): number[] {
-        return dtstore.PageLimits;
+        return this.dtstore.PageLimits;
     }
 
     set pageLimits(value: number[]) {
-        dtstore.PageLimits = value;
+        this.dtstore.PageLimits = value;
         this.setAttribute("pagelimits", JSON.stringify(value))
     }
 
     get tableStyle(): TableStyle {
-        return dtstore.TableStyle;
+        return this.dtstore.TableStyle;
     }
 
     set tableStyle(value: TableStyle) {
-        dtstore.TableStyle = value;
+        this.dtstore.TableStyle = value;
         this.setAttribute("tablestyle", JSON.stringify(value));
     }
 
     get sortStyle(): SortStyle {
-        return dtstore.SortStyle;
+        return this.dtstore.SortStyle;
     }
 
     set sortStyle(value: SortStyle) {
-        dtstore.SortStyle = value;
+        this.dtstore.SortStyle = value;
         this.setAttribute("sortstyle", JSON.stringify(value));
     }
 
     get dataFields(): Array<DataField> {
-        return dtstore.DataFields;
+        return this.dtstore.DataFields;
     }
 
     set dataFields(value: Array<DataField>) {
-        dtstore.DataFields = value;
+        this.dtstore.DataFields = value;
         this.setAttribute("datafields", JSON.stringify(value));
     }
 
     get dataTotal(): number {
-        return dtstore.DataTotal;
+        return this.dtstore.DataTotal;
     }
 
     set dataTotal(value: number) {
-        dtstore.DataTotal = value;
+        this.dtstore.DataTotal = value;
     }
 
     get dataItems(): DataItemsType {
-        return dtstore.DataItems;
+        return this.dtstore.DataItems;
     }
 
     set dataItems(value: DataItemsType) {
-        dtstore.DataItems = value;
+        this.dtstore.DataItems = value;
         this.setAttribute("dataitems", "new-data-items");
     }
 
     get dataItemsCount() {
-        return dtstore.DataItemsCount;
+        return this.dtstore.DataItemsCount;
     }
 
     get recordTotal() {
-        return dtstore.RecordTotal;
+        return this.dtstore.RecordTotal;
     }
 
     get TotalRecordsCount(): number {
-        return dtstore.TotalRecordsCount;
+        return this.dtstore.TotalRecordsCount;
     }
 
     set TotalRecordsCount(value: number) {
-        dtstore.TotalRecordsCount = value;
+        this.dtstore.TotalRecordsCount = value;
         this.setAttribute("totalrecordscount", value.toString());
     }
 
     get permittedEvents(): Array<string> {
-        return dtstore.PermittedEvents;
+        return this.dtstore.PermittedEvents;
     }
 
     set permittedEvents(value: Array<string>) {
-        dtstore.PermittedEvents = value;
+        this.dtstore.PermittedEvents = value;
     }
 
     renderComponent() {
         // render template,
-        if (dtstore.RecordTotal > 0 && dtstore.DataFieldsCount > 0 && dtstore.DataItemsCount > 0) {
+        if (this.dtstore.RecordTotal > 0 && this.dtstore.DataFieldsCount > 0 && this.dtstore.DataItemsCount > 0) {
             this.innerHTML = DataTableTemplate();
         } else {
             this.innerHTML = TableNoDataTemplate();
@@ -168,35 +170,35 @@ class McDataTable extends HTMLElement {
         // child-components' activation via data-setting | events
         this.DOM.pageLimit = document.querySelector("mc-page-limit") as DataElementType;
         if (this.DOM.pageLimit) {
-            this.DOM.pageLimit.pageLimits = dtstore.PageLimits;
+            this.DOM.pageLimit.pageLimits = this.dtstore.PageLimits;
         }
 
         this.DOM.table = document.querySelector("mc-table") as DataElementType;
         if (this.DOM.table) {
-            this.DOM.table.currentPage = dtstore.CurrentPage;
-            this.DOM.table.pageLimit = dtstore.PageLimit;
-            this.DOM.table.searchKey = dtstore.SearchKey;
-            this.DOM.table.dataFields = dtstore.DataFields;
-            this.DOM.table.dataItems = dtstore.DataItems;
-            this.DOM.table.tableStyle = dtstore.TableStyle;
-            this.DOM.table.sortStyle = dtstore.SortStyle;
+            this.DOM.table.currentPage = this.dtstore.CurrentPage;
+            this.DOM.table.pageLimit = this.dtstore.PageLimit;
+            this.DOM.table.searchKey = this.dtstore.SearchKey;
+            this.DOM.table.dataFields = this.dtstore.DataFields;
+            this.DOM.table.dataItems = this.dtstore.DataItems;
+            this.DOM.table.tableStyle = this.dtstore.TableStyle;
+            this.DOM.table.sortStyle = this.dtstore.SortStyle;
         }
         this.DOM.tableMessage = document.querySelector("mc-table-message") as DataElementType;
         if (this.DOM.tableMessage) {
-            this.DOM.tableMessage.currentPage = dtstore.CurrentPage;
-            this.DOM.tableMessage.pageLimit = dtstore.PageLimit;
-            this.DOM.tableMessage.dataTotal = dtstore.DataTotal;
-            this.DOM.tableMessage.totalRecordsCount = dtstore.TotalRecordsCount;
+            this.DOM.tableMessage.currentPage = this.dtstore.CurrentPage;
+            this.DOM.tableMessage.pageLimit = this.dtstore.PageLimit;
+            this.DOM.tableMessage.dataTotal = this.dtstore.DataTotal;
+            this.DOM.tableMessage.totalRecordsCount = this.dtstore.TotalRecordsCount;
         }
         this.DOM.pageNav = document.querySelector("mc-page-nav") as DataElementType;
         if (this.DOM.pageNav) {
-            // this.DOM.pageNav.currentPage = dtstore.CurrentPage; // set at mc-page-nav
-            this.DOM.pageNav.pageLimit = dtstore.PageLimit;
-            this.DOM.pageNav.dataTotal = dtstore.DataTotal;
+            // this.DOM.pageNav.currentPage = this.dtstore.CurrentPage; // set at mc-page-nav
+            this.DOM.pageNav.pageLimit = this.dtstore.PageLimit;
+            this.DOM.pageNav.dataTotal = this.dtstore.DataTotal;
         }
         // update dtstore
         if (Object.keys(this.DOM).length > 0) {
-            dtstore.Dom = {...dtstore.Dom, ...this.DOM}
+            this.dtstore.Dom = {...this.dtstore.Dom, ...this.DOM}
         }
     }
 

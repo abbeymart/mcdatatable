@@ -3,7 +3,7 @@
  * @Company: mConnect.biz | @License: MIT
  * @Description: datatable types
  */
-import { CrudParamsType } from "./mcTypes";
+import { CrudParamsType } from "./types";
 
 export interface ObjectType {
     [key: string]: any;
