@@ -303,6 +303,14 @@ class DtStore {
     set PermittedEvents(value: Array<string>) {
         this.permittedEvents = value;
     }
+
+    get DataFetchAlert(): DataFetchAlert | null {
+        return this.dataFetchAlert || null
+    }
+
+    set DataFetchAlert(value: DataFetchAlert | null) {
+        this.dataFetchAlert = value
+    }
 }
 
 // constructor/instance function

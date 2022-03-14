@@ -11,7 +11,7 @@
 // templates
 import DataTableTemplate from "./templates/DataTableTemplate";
 import TableNoDataTemplate from "./templates/TableNoDataTemplate";
-import { DataItemsType, DataField, TableStyle, SortStyle, DOMType, DataElementType } from "./types";
+import { DataItemsType, DataField, TableStyle, SortStyle, DOMType, DataElementType, DataFetchAlert } from "./types";
 import { dtStore, DtStore } from "./dtStore";
 
 class McDataTable extends HTMLElement {
@@ -158,6 +158,14 @@ class McDataTable extends HTMLElement {
 
     set permittedEvents(value: Array<string>) {
         this.dtstore.PermittedEvents = value;
+    }
+
+    get dataFetchAlert(): DataFetchAlert | null {
+        return this.dtstore.DataFetchAlert
+    }
+
+    set dataFetchAlert(value: DataFetchAlert | null) {
+        this.dtstore.DataFetchAlert = value
     }
 
     renderComponent() {
