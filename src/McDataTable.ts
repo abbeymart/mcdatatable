@@ -22,7 +22,7 @@ class McDataTable extends HTMLElement {
         super();
         this.DOM = {};
         this.dtstore = dtStore()
-        // TODO: paging(fetch/set dataitems by skip/limit), optional feature
+        // TODO: paging(fetch/set dataitems by skip/limit) - dataFetch
         // if paging === true, pass currentPage, pageLimit, searchKey and order...
         // to determine dataitems (by skip && limit)
         // issue/concerns/considerations: performance with fetch-action for every page
