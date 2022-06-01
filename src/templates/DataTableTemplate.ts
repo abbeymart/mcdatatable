@@ -10,8 +10,9 @@ import '../McTableSearch';
 import '../McTable';
 import '../McTableMessage';
 import '../McPageNav';
+import { DataTableProps } from '../types';
 
-export default () => {
+export default (props: DataTableProps) => {
     const mcData = `
       <div class="w3-row-padding">
         <div class="w3-half w3-left">
@@ -19,7 +20,7 @@ export default () => {
         </div>
         <div class="w3-half w3-right">
           <mc-table-search id="mc-table-search"></mc-table-search>
-      </div>
+        </div>
       </div>
       <div class="w3-panel">
         <mc-table id="mc-table"></mc-table>

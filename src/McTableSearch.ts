@@ -4,7 +4,6 @@
  * @Description: mc-table-search, simple auto search/filtering of the table data/records
  */
 
-import { dtstore } from "./dtStore";
 
 class McTableSearch extends HTMLElement {
     constructor() {
@@ -13,31 +12,14 @@ class McTableSearch extends HTMLElement {
         this.renderComponent();
     }
 
-    // getters ands setters
-    get searchKey(): string {
-        return dtstore.SearchKey;
-    }
-
-    set searchKey(value: string) {
-        dtstore.SearchKey = value;
-    }
 
     // methods
     renderComponent() {
         this.innerHTML = `
             <div>
-                <input class="w3-input mc-bold-label" type="text" id="mc-table-search-key" placeholder="${this.searchKey || 'Enter Search Keywords'}">
+                <input class="w3-input mc-bold-label" type="text" id="mc-table-search-key" placeholder="Enter Search Keywords">
             </div>
         `;
-
-        // event"s handlers | to set the search-key value
-        const searchKeyDom = document.getElementById("mc-table-search-key") as HTMLInputElement;
-        if (searchKeyDom) {
-            searchKeyDom.onkeyup = (e) => {
-                e.preventDefault();
-                this.searchKey = searchKeyDom.value;
-            }
-        }
     }
 
     disconnectedCallback() {

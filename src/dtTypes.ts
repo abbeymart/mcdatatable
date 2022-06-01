@@ -115,6 +115,7 @@ export interface DataTableProps {
     tableStyle?: TableStyle;
     sortStyle?: SortStyle;
     permittedEvents?: Array<PermittedEvents>;
+    searchKey?: string;
 }
 
 export interface DataTableState {

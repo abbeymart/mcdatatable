@@ -31,7 +31,7 @@ class McDataTable extends HTMLElement {
     // observed attributes to re-render mc-data-table
     static get observedAttributes() {
         return ["paging", "pagelimits", "datafields", "dataitems", "totalrecordscount", "datatotal",
-        "startpage", "endpage", "lastpage", "tablestyle", "sortstyle",];
+        "startpage", "endpage", "lastpage", "tablestyle", "sortstyle", "searchKey"];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
@@ -181,14 +181,21 @@ class McDataTable extends HTMLElement {
         this.dtstore.DataFetchAlert = value
     }
 
+    get searchKey(): string {
+        return this.dtstore.SearchKey
+    }
+
     renderComponent() {
         // render template,
         if (this.dtstore.RecordTotal > 0 && this.dtstore.DataFieldsCount > 0 && this.dtstore.DataItemsCount > 0) {
-            this.innerHTML = DataTableTemplate();
+            this.innerHTML = DataTableTemplate({
+                dataFields: this.dataFields,
+                dataItems: [],
+                searchKey: this.searchKey});
         } else {
             this.innerHTML = TableNoDataTemplate();
         }
-        // child-components' activation via data-setting | events
+        // inject parameters into child-components' activation via data-setting | events
         this.DOM.pageLimit = document.querySelector("mc-page-limit") as DataElementType;
         if (this.DOM.pageLimit) {
             this.DOM.pageLimit.pageLimits = this.dtstore.PageLimits;
@@ -217,6 +224,15 @@ class McDataTable extends HTMLElement {
             this.DOM.pageNav.pageLimit = this.dtstore.PageLimit;
             this.DOM.pageNav.dataTotal = this.dtstore.DataTotal;
         }
+        // event"s handlers | to set the search-key value
+        const searchKeyDom = document.getElementById("mc-table-search-key") as HTMLInputElement;
+        if (searchKeyDom) {
+            searchKeyDom.onkeyup = (e) => {
+                e.preventDefault();
+                this.dtstore.SearchKey = searchKeyDom.value;
+            }
+        }
+
         // update dtstore
         if (Object.keys(this.DOM).length > 0) {
             this.dtstore.Dom = {...this.dtstore.Dom, ...this.DOM}
