@@ -29,6 +29,8 @@ class DtStore {
     protected pagePosition: PagePositionType;
     protected pageLimits: Array<number>;
     protected currentPage: number;
+    protected startPage: number;
+    protected endPage: number;
     protected searchKey: string;
     protected dataCount: number;
     protected dataTotal: number;
@@ -42,6 +44,8 @@ class DtStore {
         // required attributes | default values
         this.pageLimit = props?.pageLimit || 10;
         this.currentPage = 1;
+        this.startPage = 1;
+        this.endPage = 1;
         this.dataFields = props?.dataFields || [];
         this.dataItems = props?.dataItems || [];
         this.dataStats = props?.dataStats || {};

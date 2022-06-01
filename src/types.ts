@@ -503,6 +503,9 @@ export interface DataElementType extends HTMLElement {
     pagePosition: PagePositionType;
     pageLimits: Array<number>;
     currentPage: number;
+    startPage: number;
+    endPage: number;
+    lastPage: number;
     searchKey: string;
     dataTotal: number;
     totalRecordsCount: number;     // to limit number of records to process
@@ -537,6 +540,8 @@ export type PageNavValueType = string | number | Array<string>;
 export interface PageNavPropsType {
     currentPage: number;
     lastPage: number;
+    startPage: number;
+    endPage: number;
     pageList: string[];
 }
 
@@ -608,12 +613,14 @@ export interface DataStats {
     skip?: number;
     limit?: number;
     recordsTotal?: number;
-    totalRecordsCount?: number;      // set to initialRecordTotal
+    totalRecordsCount?: number;
+    startPage?: number;     // calculate from skip/dataTotal
+    endPage?: number;       // calculate from skip/dataTotal
     pages?: {
-        start: number;      // calculate from skip/limit/totalRecordsCount
-        end: number;        // calculate from skip/limit/totalRecordsCount
+        start: number;      
+        end: number;       
     };
-    currentPages?: {        // calculate from pageLimit, skip, limit, recordsTotal/totalRecordsCount & pages
+    currentPages?: {      
         start: number;
         end: number;
     };
@@ -703,8 +710,13 @@ export interface PageNavProps {
     dataTotal?: number;
     pageLimit?: number;
     currentPage?: number;
+    startPage: number;
+    endPage: number;
+    lastPage: number;
     dataStats?: DataStats;
     setCurrentPage: SetCurrentPage;
+    setStartPage: SetCurrentPage;
+    setEndPage: SetCurrentPage;
     totalRecordsCount?: number;
     dataFetchAlert?: DataFetchAlert;
 }
@@ -714,11 +726,15 @@ export interface PageNavState {
     dataTotal: number;
     pageLimit: number;
     currentPage: number;
+    startPage: number;
+    endPage: number;
+    lastPage: number;
     dataStats: DataStats;
     setCurrentPage: SetCurrentPage;
+    setStartPage: SetCurrentPage;
+    setEndPage: SetCurrentPage;
     totalRecordsCount: number;
     dataFetchAlert?: DataFetchAlert;
-    lastPage: number;
     pageList: Array<string>;
 }
 
@@ -727,6 +743,9 @@ export interface TableMessageProps {
     dataTotal?: number;
     pageLimit?: number;
     currentPage?: number;
+    startPage: number;
+    endPage: number;
+    lastPage: number;
 }
 
 export interface TableMessageState {
