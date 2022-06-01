@@ -23,17 +23,15 @@ class McDataTable extends HTMLElement {
         this.DOM = {};
         this.dtstore = dtStore()
         // TODO: paging(fetch/set dataitems by skip/limit) - dataFetch
-        // if paging === true, pass currentPage, pageLimit, searchKey and order...
-        // to determine dataitems (by skip && limit)
-        // issue/concerns/considerations: performance with fetch-action for every page
-
+    
         // render template
         this.renderComponent();
     }
 
     // observed attributes to re-render mc-data-table
     static get observedAttributes() {
-        return ["paging", "pagelimits", "datafields", "dataitems", "totalrecordscount", "tablestyle", "sortstyle",];
+        return ["paging", "pagelimits", "datafields", "dataitems", "totalrecordscount", "datatotal",
+        "startpage", "endpage", "lastpage", "tablestyle", "sortstyle",];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
@@ -65,6 +63,21 @@ class McDataTable extends HTMLElement {
         this.dtstore.CurrentPage = value;
     }
 
+    get startPage(): number {
+        return this.dtstore.StartPage;
+    }
+
+    set startPage(value: number) {
+        this.dtstore.StartPage = value;
+    }
+
+    get endPage(): number {
+        return this.dtstore.EndPage;
+    }
+
+    set endPage(value: number) {
+        this.dtstore.EndPage = value;
+    }
     get paging(): boolean {
         return this.dtstore.Paging;
     }

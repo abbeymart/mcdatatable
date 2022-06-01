@@ -225,6 +225,35 @@ class DtStore {
         }
     }
 
+    get StartPage(): number {
+        return this.currentPage;
+    }
+
+    set StartPage(value: number) {
+        this.startPage = value;
+        // activate component re-rendering
+        if (this.DOM.table) {
+            this.DOM.table.startPage = dtstore.StartPage;
+        }
+        if (this.DOM.tableMessage) {
+            this.DOM.tableMessage.startPage = dtstore.StartPage;
+        }
+    }
+
+    get EndPage(): number {
+        return this.endPage;
+    }
+
+    set EndPage(value: number) {
+        this.endPage = value;
+        // activate component re-rendering
+        if (this.DOM.table) {
+            this.DOM.table.endPage = dtstore.EndPage;
+        }
+        if (this.DOM.tableMessage) {
+            this.DOM.tableMessage.endPage = dtstore.EndPage;
+        }
+    }
     get SearchKey(): string {
         return this.searchKey;
     }

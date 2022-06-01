@@ -101,6 +101,8 @@ class McPageNav extends HTMLElement {
         currentPage    : this.currentPage,
         lastPage       : this.lastPage,
         pageList       : this.pageList,
+        startPage: 1,
+        endPage: 1,
     }) {
         if (dtstore.DataTotal > 0) {
             this.innerHTML = PageNavTemplate(props);
