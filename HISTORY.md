@@ -1,5 +1,10 @@
 # Historical logs
 
+## Version 0.2.0
+
+- Release date: TBD
+- Refactor ui-components-types-methods
+
 ## Version 0.1.6
 
 - Release date: Dec 26, 2020
