@@ -1,5 +1,5 @@
 /**
- * @Author: abbeymart | Abi Akindele | @Created: 2020-06-29 | @Updated: 2020-07-01
+ * @Author: abbeymart | Abi Akindele | @Created: 2020-06-29 | @Updated: 2020-07-01, 2022-06-01
  * @Company: mConnect.biz | @License: MIT
  * @Description: datatable types
  */
@@ -31,18 +31,6 @@ export interface ObjectRefType {
 export type ObjectType = ObjectRefType | object;
 
 export type MenuAction = (item: ObjectType) => any
-
-export interface BaseModelType {
-    id?: string;
-    language?: string;
-    description?: string;
-    isActive?: boolean;
-    createdBy?: string;
-    updatedBy?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    appId?: string;  // application-_id in a multi-hosted apps environment (e.g. cloud-env)
-}
 
 export interface GetRecordStats {
     skip?: number;
@@ -104,7 +92,7 @@ export interface EventType {
     type: PermittedEvents;
     task?: Task;
     action?: Task;
-    params?: Array<string>;
+    params?: ObjectType // Array<string>;
 }
 
 export interface DataField {
@@ -178,6 +166,7 @@ export interface DataTableProps {
     tableStyle?: TableStyle;
     sortStyle?: SortStyle;
     permittedEvents?: Array<PermittedEvents>;
+    searchKey?: string;
 }
 
 export interface DataTableState {
@@ -214,6 +203,8 @@ export interface PageLimitState {
     setPageLimit: SetPageLimit;
     labelOn: boolean
 }
+
+export type SetCurrentPage = (val: number) => void;
 
 export interface PageNavProps {
     pagePosition?: PagePosition;
@@ -369,71 +360,10 @@ export interface UpdateProps {
 }
 // types
 
-export interface TaskFunctionType {
-    (val?: any): any
-}
-
 export interface ItemValueType {
     [key: string]: any;
 
     fieldsInfo?: Array<ItemFieldsInfoType>;
-}
-
-export interface SetValueType {
-    (val: any): void;
-}
-
-export interface ItemFieldType {
-    [key: string]: any;
-}
-
-export interface UpdateTaskFunctionType {
-    (item: ItemValueType): any
-}
-
-export interface ActivePropsType {
-    isActive?: boolean;
-    activeLabel?: string;
-    inActiveLabel?: string;
-}
-
-export interface UpdatePropsType {
-    itemTask: UpdateTaskFunctionType;
-    itemData: ItemValueType;
-    itemLabel?: string;
-}
-
-export interface DeleteTaskFunctionType {
-    (itemId: string): any
-}
-
-export interface DeletePropsType {
-    itemTask: DeleteTaskFunctionType;
-    itemId: string;
-    itemLabel?: string;
-}
-
-// export type ValueType = string | object | number | UpdateTaskFunctionType | DeleteTaskFunctionType;
-
-
-export interface DataTablePropsType extends HTMLElement{
-    dataFields: Array<DataFieldType>;
-    dataItems: Array<ItemValueType>;
-    currentPage: number;
-    dataTotal: number;         // default: 0
-    recordTotal: number;       // computed from dataTotal or dataItems
-    paging: boolean;           // default: true
-    pageStart: number;          // default: 1
-    pageLimits: Array<number>  // default: [10, 20, 30, 50, 100, 200]
-    tableStyle: {
-        table: string;      // default: "w3-table w3-striped w3-border w3-bordered w3-hoverable"
-        tableHeader: string;    // default: "w3-red"
-        tableBody: string;  // default: "w3-hover"
-    };
-    sortStyle: {
-        asc: string;    // default: "fa fa-caret-up"
-        desc: string;   // default: "fa fa-caret-down"
-    }
 }
 
 export interface TablePropsType {
@@ -535,8 +465,6 @@ export interface DOMType {
     tableBody?: DataElementType;
 }
 
-export type PageNavValueType = string | number | Array<string>;
-
 export interface PageNavPropsType {
     currentPage: number;
     lastPage: number;
@@ -555,13 +483,6 @@ export interface TablePropsType {
 }
 
 export type PagePositionType = "first-page" | "next-page" | "previous-page" | "last-page" | "page-number";
-
-export type PageNavEventType =
-    "page-nav-first"
-    | "page-nav-next"
-    | "page-nav-previous"
-    | "page-nav-last"
-    | "page-nav-number";
 
 export type Task = ((item?: ObjectType | any) => any) | null;
 export type TransformTask = ((item?: any) => any) | null;
@@ -664,7 +585,6 @@ export interface DataTableProps {
     tableStyle?: TableStyle;
     sortStyle?: SortStyle;
     permittedEvents?: Array<PermittedEvents>;
-    searchKey?: string;
 }
 
 export interface DataTableState {
@@ -703,8 +623,6 @@ export interface PageLimitState {
     setPageLimit: SetPageLimit;
     labelOn: boolean
 }
-
-export type SetCurrentPage = (val: number) => void;
 
 export interface PageNavProps {
     pagePosition?: PagePosition;

@@ -10,9 +10,8 @@ import '../McTableSearch';
 import '../McTable';
 import '../McTableMessage';
 import '../McPageNav';
-import { DataTableProps } from '../types';
 
-export default (props: DataTableProps) => {
+export default () => {
     const mcData = `
       <div class="w3-row-padding">
         <div class="w3-half w3-left">

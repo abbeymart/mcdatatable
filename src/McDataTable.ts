@@ -6,7 +6,8 @@
 
 //  web-component observed-attributes actions:
 //  1. set/activate the observed attributes at components-level
-//  2. set observed attributes from parent component and dtstore to reload/re-render the controlled/child component(s)
+//  2. set observed attributes from parent component
+//  3. dtstore to reload/re-render the controlled/child component(s), via observable-attribute-value-setting
 
 // templates
 import DataTableTemplate from "./templates/DataTableTemplate";
@@ -188,10 +189,7 @@ class McDataTable extends HTMLElement {
     renderComponent() {
         // render template,
         if (this.dtstore.RecordTotal > 0 && this.dtstore.DataFieldsCount > 0 && this.dtstore.DataItemsCount > 0) {
-            this.innerHTML = DataTableTemplate({
-                dataFields: this.dataFields,
-                dataItems: [],
-                searchKey: this.searchKey});
+            this.innerHTML = DataTableTemplate();
         } else {
             this.innerHTML = TableNoDataTemplate();
         }
