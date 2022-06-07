@@ -8,6 +8,7 @@ import {
     DataFetchAlert, DataFetchAlertResult, DataField, DataStats, DataTableProps, DOMType, GetRequestType, ObjectRefType,
     ObjectType, PagePositionType, SortStyle, TableStyle,
 } from "./types";
+import { getLocalStorage, setLocalStorage } from "./helper";
 
 class DtStore {
     // singleton variable
@@ -109,10 +110,31 @@ class DtStore {
             this.LastPage = Math.ceil(totalRecsCount / this.pageLimit)
             this.TotalRecordsCount = totalRecsCount
         }
+
+        const sCPage = getLocalStorage("currentPage");
+
+        if (this.sCPage && parseInt(sCPage)) {
+            let sCPageVal = parseInt(sCPage)
+            if (sCPageVal < this.startPage) {
+                sCPageVal = this.startPage
+            } else if (sCPageVal > this.endPage) {
+                sCPageVal = this.endPage
+            }
+            this.CurrentPage = sCPageVal
+            this.setLocalStorage("currentPage", sCPageVal)
+        }
     }
 
     public static get DtStoreInstance(): DtStore {
         return this._mcStore || (this._mcStore = new this())
+    }
+
+    setLocalStorage(storeId: string, storeValue: any) {
+        localStorage.setItem(storeId, JSON.stringify(storeValue))
+    }
+
+    getLocalStorage(storeId: string): any {
+        return localStorage.getItem(storeId)
     }
 
     // getters & setters
