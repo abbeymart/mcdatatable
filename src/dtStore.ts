@@ -113,7 +113,7 @@ class DtStore {
 
         const sCPage = getLocalStorage("currentPage");
 
-        if (this.sCPage && parseInt(sCPage)) {
+        if (sCPage && parseInt(sCPage)) {
             let sCPageVal = parseInt(sCPage)
             if (sCPageVal < this.startPage) {
                 sCPageVal = this.startPage

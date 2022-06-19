@@ -99,7 +99,7 @@ export interface DataField {
     name: string;
     label: string;
     type: FieldTypes;
-    default?: boolean | string | number | ObjectType | object;
+    default?: boolean | string | number | ObjectType | object | Array<boolean> | Array<string> | Array<number> | Array<ObjectType> | Array<object>;
     order?: number;
     sort?: boolean;
     source: DataSource;
@@ -395,16 +395,16 @@ export interface DataSourceType {
 
 export type DataItemsType = Array<ItemValueType>;
 
-export interface DataFieldType {
-    name: string;
-    label: string;
-    type: string; // "boolean"
-    default?: boolean | string | number | object | Array<boolean> | Array<string> | Array<number> | Array<object>;
-    order: number;
-    sort?: boolean;
-    source: DataSourceType;
-    events?: Array<EventType>;
-}
+// export interface DataFieldType {
+//     name: string;
+//     label: string;
+//     type: string; // "boolean"
+//     default?: boolean | string | number | object | Array<boolean> | Array<string> | Array<number> | Array<object>;
+//     order: number;
+//     sort?: boolean;
+//     source: DataSourceType;
+//     events?: Array<EventType>;
+// }
 
 export interface ItemFieldsInfoType {
     fieldValue: any;
@@ -416,7 +416,7 @@ export interface ItemFieldsInfoType {
     fieldLabel: string;
 }
 
-export type DataFieldsType = Array<DataFieldType>;
+export type DataFieldsType = Array<DataField>;
 
 // export interface HTMLDataType extends DataTablePropsType {
 //     // currentPage: string;
@@ -502,20 +502,9 @@ export interface DataSource {
     transform?: TransformTask;   // shortDesc
 }
 
-export type PermittedEvents = "click" | "mouseover" | "mouseleave" | "mouseenter" | "change";
+export type PermittedEvents = "click" | "mouseover" | "mouseleave" | "mouseenter" | "change" | "keyup" | "keydown";
 
 export type FieldTypes = "boolean" | "string" | "number" | ObjectType | "object" | "custom";
-
-export interface DataField {
-    name: string;
-    label: string;
-    type: FieldTypes;
-    default?: boolean | string | number | ObjectType | object;
-    order?: number;
-    sort?: boolean;
-    source: DataSource;
-    events?: Array<EventType>;
-}
 
 export interface TableStyle {
     table: string;

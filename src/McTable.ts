@@ -6,7 +6,7 @@
 
 import TableTemplate from "./templates/TableTemplate";
 import {
-    DataFieldType, DataFieldsType, DataItemsType,
+    DataField, DataFieldsType, DataItemsType,
     TablePropsType, TableStyle, SortStyle,
 } from "./types";
 import { dtstore } from "./dtStore";
@@ -453,7 +453,7 @@ class McTable extends HTMLElement {
     }
 
     // methods
-    async sortDataByField(field: DataFieldType) {
+    async sortDataByField(field: DataField) {
         // toggle sort order, for dataItems
         if (field.sort) {
             if (this.sortAsc) {
