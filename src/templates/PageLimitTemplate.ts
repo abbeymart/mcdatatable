@@ -1,10 +1,4 @@
-/**
- * @Author: abbeymart | Abi Akindele | @Created: 2019-06-24 | @Updated: 2020-07-01
- * @Company: mConnect.biz | @License: MIT
- * @Description: mc-page-limit template
- */
-
-import { PageLimitPropsType } from "../types";
+import {PageLimitPropsType} from "../types";
 
 export default function PageLimitTemplate(props: PageLimitPropsType) {
     // build select-options-DOM
@@ -17,8 +11,7 @@ export default function PageLimitTemplate(props: PageLimitPropsType) {
     return `
     <div>
         <span>Show </span>
-        <select id="mc-page-limit-value" name="mc-page-limit-value" class="w3-round"
-              value="${props.pageLimit}">
+        <select id="mc-page-limit-value" name="mc-page-limit-value" class="w3-round" data-page-limit="${props.pageLimit}">
             ${optionDom}
         </select>
         <span> items</span>

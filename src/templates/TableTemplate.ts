@@ -1,25 +1,20 @@
-/**
- * @Author: abbeymart | Abi Akindele | @Created: 2019-06-29 | @Updated: 2020-07-01
- * @Company: mConnect.biz | @License: MIT
- * @Description: mc-table template
- */
-
 import '../McUpdate';
 import '../McDelete';
-import { ItemFieldsInfoType, ItemValueType, TablePropsType } from "../types";
+import {ItemFieldsInfoType, ItemValueType, TablePropsType} from "../types";
 
+// TODO: include data-field-value in td
 export default (props: TablePropsType): string => {
     const checkBoxDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
-        return `<input type="checkbox" class="w3-check mc-table-checkbox" data-input-field="${fieldItem.fieldName}" data-input-value="${item._id || item.id}" id="${fieldItem.fieldName}_${item._id || item.id}">`;
+        return `<input type="checkbox" class="w3-check mc-table-checkbox" data-input-field="${fieldItem.fieldName}" data-input-value="${item.id || item._id}" id="${fieldItem.fieldName}_${item.id || item._id}">`;
     }
     const updateDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
-        return `<update class="mc-table-update" label="${fieldItem.fieldLabel}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}" id="${fieldItem.fieldName}_${item._id || item.id}></update>`;
+        return `<update class="mc-table-update" label="${fieldItem.fieldLabel}" data-update-field="${fieldItem.fieldName}" data-update-item="${JSON.stringify(item)}" id="${fieldItem.fieldName}_${item.id || item._id}></update>`;
     }
     const deleteDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
-        return `<delete class="mc-table-delete" label="${fieldItem.fieldLabel}" data-delete-field="${fieldItem.fieldName}" data-delete-itemid="${item._id || item.id}" id="${fieldItem.fieldName}_${item._id || item.id}></delete>`;
+        return `<delete class="mc-table-delete" label="${fieldItem.fieldLabel}" data-delete-field="${fieldItem.fieldName}" data-delete-itemid="${item.id || item._id}" id="${fieldItem.fieldName}_${item.id || item._id}></delete>`;
     }
     const customEventDom = (fieldItem: ItemFieldsInfoType, item: ItemValueType) => {
-        return `<span class="mc-table-event" data-event-field="${fieldItem.fieldName}" data-event-item="${JSON.stringify(item)}" id="${fieldItem.fieldName}_${item._id || item.id}>${fieldItem.fieldValue}</span>`
+        return `<span class="mc-table-event" data-event-field="${fieldItem.fieldName}" data-event-item="${JSON.stringify(item)}" id="${fieldItem.fieldName}_${item.id || item._id}>${fieldItem.fieldValue}</span>`
     }
     return `
     <div>
@@ -42,15 +37,16 @@ export default (props: TablePropsType): string => {
                     ${props.tableRecords.map(item => `
                         <tr id="${item.id || item._id}">
                         ${item.fieldsInfo?.map(fieldItem => `
-                            <td id="${fieldItem.fieldName + item._id}">
+                            <td id="${fieldItem.fieldName + (item.id || item._id)}">
                             ${
         fieldItem.fieldType === 'checkbox' && typeof fieldItem.fieldTask === "function"
             ? checkBoxDom(fieldItem, item)
             : fieldItem.fieldType === 'custom' ? updateDom(fieldItem, item)
-            : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Update' ? updateDom(fieldItem, item)
-                : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Delete' ? deleteDom(fieldItem, item)
-                    : fieldItem.fieldSource.domComp ? `<span>${fieldItem.fieldValue}</span>`
-                        : customEventDom(fieldItem, item)
+                : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Update' ? updateDom(fieldItem, item)
+                    : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Custom' ? updateDom(fieldItem, item)
+                        : fieldItem.fieldType === 'taskLink' && fieldItem.fieldLabel === 'Delete' ? deleteDom(fieldItem, item)
+                            : fieldItem.fieldSource.domComp ? `<span>${fieldItem.fieldValue}</span>`
+                                : customEventDom(fieldItem, item)
     }
                             </td>
                         `).join("")}

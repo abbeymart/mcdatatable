@@ -1,9 +1,4 @@
-/**
- * @Author: abbeymart | Abi Akindele | @Created: 2019-06-24 | @Updated: 2020-07-01
- * @Company: mConnect.biz | @License: MIT
- * @Description: mc-page-nav template
- */
-import { PageNavPropsType } from "../types";
+import {PageNavPropsType} from "../types";
 
 export default (props: PageNavPropsType) => {
     const firstPageDom = `<a href="#" class="w3-button w3-border w3-round-medium w3-hover-blue"

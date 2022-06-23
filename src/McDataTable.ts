@@ -1,5 +1,5 @@
 /**
- * @Author: abbeymart | Abi Akindele | @Created: 2019-06-24 | @Updated: 2020-06-30
+ * @Author: abbeymart | Abi Akindele | @Created: 2019-06-24 | @Updated: 2020-06-30, 2022-06-23
  * @Company: mConnect.biz | @License: MIT
  * @Description: mc-data-table web component
  */
@@ -12,8 +12,8 @@
 // templates
 import DataTableTemplate from "./templates/DataTableTemplate";
 import TableNoDataTemplate from "./templates/TableNoDataTemplate";
-import { DataItemsType, DataField, TableStyle, SortStyle, DOMType, DataElementType, DataFetchAlert } from "./types";
-import { dtStore, DtStore } from "./dtStore";
+import {DataElementType, DataFetchAlert, DataField, DataItemsType, DOMType, SortStyle, TableStyle} from "./types";
+import {dtStore, DtStore} from "./dtStore";
 
 class McDataTable extends HTMLElement {
     protected DOM: DOMType;
@@ -24,7 +24,7 @@ class McDataTable extends HTMLElement {
         this.DOM = {};
         this.dtstore = dtStore()
         // TODO: paging(fetch/set dataitems by skip/limit) - dataFetch
-    
+
         // render template
         this.renderComponent();
     }
@@ -32,7 +32,7 @@ class McDataTable extends HTMLElement {
     // observed attributes to re-render mc-data-table
     static get observedAttributes() {
         return ["paging", "pagelimits", "datafields", "dataitems", "totalrecordscount", "datatotal",
-        "startpage", "endpage", "lastpage", "tablestyle", "sortstyle", "searchKey"];
+            "startpage", "endpage", "lastpage", "tablestyle", "sortstyle", "searchKey"];
     }
 
     attributeChangedCallback(name: string, oldVal: string, newValue: string) {
@@ -79,6 +79,7 @@ class McDataTable extends HTMLElement {
     set endPage(value: number) {
         this.dtstore.EndPage = value;
     }
+
     get paging(): boolean {
         return this.dtstore.Paging;
     }
