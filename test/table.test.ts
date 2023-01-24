@@ -5,7 +5,7 @@
  * @Description: mc-central-ts: bookmark socket.io
  */
 
-import "../lib/esm/McDataTable";
+// import "../lib/esm/McDataTable";
 
 const htmlPage = `
     <mc-data-table></mc-data-table>   
