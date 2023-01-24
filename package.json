@@ -10,7 +10,7 @@
   "scripts": {
     "clean": "rm -rf lib",
     "build-watch": "tsc -w",
-    "build": "clean && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "prepublishOnly": "npm run build"
   },
   "repository": {
