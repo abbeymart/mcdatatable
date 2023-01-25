@@ -21,14 +21,85 @@ export interface UserInfoType {
     loginName?: string;
     token?: string;
     expire?: number;
+    group?: string;
     email?: string;
 }
+
+
+export type ValueType =
+    | Record<string, unknown>
+    | Array<Record<string, unknown>>
+    | string
+    | number
+    | Array<string>
+    | Array<number>
+    | Date
+    | Array<Date>
+    | boolean
+    | Array<boolean>
+    | { [key: string]: ValueType }
+    | unknown;
+
 
 export interface ObjectRefType {
     [key: string]: any;
 }
 
-export type ObjectType = ObjectRefType | object;
+export interface ObjectType {
+    [key: string]: ValueType;
+}
+
+export interface OkResponse {
+    ok: boolean;
+}
+
+export interface GetRecordStats {
+    skip?: number;
+    limit?: number;
+    recordsCount?: number;
+    totalRecordsCount?: number;
+    queryParams?: QueryParamsType;
+    recordIds?: Array<string>;
+    expire?: number;
+}
+
+export type GetRecords = Array<ObjectType>;
+
+export interface GetResultType {
+    records: GetRecords;
+    stats: GetRecordStats;
+    logRes?: ResponseMessage;
+    taskType?: string;
+}
+
+export interface DeleteResultType {
+    recordsCount: number;
+    logRes?: ResponseMessage;
+}
+
+export interface LogRecordsType {
+    logRecords?: ValueType;
+    queryParams?: QueryParamsType;
+    recordIds?: Array<string>;
+    tableFields?: Array<string>;
+}
+
+export interface CrudResultType {
+    queryParams?: QueryParamsType;
+    recordIds?: Array<string>;
+    recordsCount?: number;
+    records?: ActionParamsType;
+    taskType?: string;
+    logRes?: ResponseMessage;
+}
+
+export interface SaveResultType {
+    recordsCount: number;
+    taskType?: string;
+    logRes?: ResponseMessage;
+    recordIds?: Array<string>;
+    queryParams?: QueryParamsType;
+}
 
 export type MenuAction = (item: ObjectType) => any
 
@@ -40,12 +111,27 @@ export interface GetRecordStats {
     expire?: number;
 }
 
-export type GetRecords = Array<ObjectType>;
+export interface BaseModelType {
+    id?: string;
+    language?: string;
+    description?: string;
+    isActive?: boolean;
+    createdBy?: string;
+    updatedBy?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedBy?: string;
+    deletedAt?: Date;
+    appId?: string | null; // application-id in a multi-hosted apps environment (e.g. cloud-env)
+}
 
-export interface GetResultType {
-    records: GetRecords,
-    stats: GetRecordStats,
-    logRes?: ResponseMessage;
+export interface RelationBaseModelType {
+    description?: string;
+    isActive?: boolean;
+    createdBy?: string;
+    updatedBy?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface ActionParamType {

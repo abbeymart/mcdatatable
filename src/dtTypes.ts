@@ -3,11 +3,7 @@
  * @Company: mConnect.biz | @License: MIT
  * @Description: datatable types
  */
-import { CrudParamsType } from "./types";
-
-export interface ObjectType {
-    [key: string]: any;
-}
+import { CrudParamsType, ObjectType } from "./types";
 
 export type Task = ((item?: ObjectType | any) => any) | null;
 export type TransformTask = ((item?: any) => any) | null;

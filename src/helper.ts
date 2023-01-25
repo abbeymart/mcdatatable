@@ -25,3 +25,7 @@ export function setLocalStorage(storeId: string, storeValue: any) {
 export function getLocalStorage(storeId: string): any {
     return localStorage.getItem(storeId)
 }
+
+export function getLocalStorageValue(storeId: string): any {
+    return JSON.parse(localStorage.getItem(storeId) as string)
+}
