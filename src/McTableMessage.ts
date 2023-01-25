@@ -79,7 +79,7 @@ class McTableMessage extends HTMLElement {
             this.innerHTML += `
                 <div>
                     <span class="w3-text-black">Showing ${this.itemFrom} to ${this.itemTo} of ${this.dataTotal} entries </span>
-                    ${this.dataTotal < this.initialDataTotal ? `<span> (filtered from ${this.initialDataTotal} total entries) </span>` : ''}
+                    ${this.dataTotal < this.initialDataTotal ? `<span> (filtered from ${this.initialDataTotal} total entries) </span>` : ""}
                     <span class="w3-blue"><strong>[ Page ${this.currentPage} ]</strong></span>
                 </div>
             `;
@@ -95,12 +95,12 @@ class McTableMessage extends HTMLElement {
 
     disconnectedCallback() {
         // cleanup - removeEventLister(s), garbage collection...
-        this.innerHTML = '';
+        this.innerHTML = "";
     }
 
 }
 
-if (!customElements.get('mc-table-message')) {
-    customElements.define('mc-table-message', McTableMessage);
+if (!customElements.get("mc-table-message")) {
+    customElements.define("mc-table-message", McTableMessage);
 }
 

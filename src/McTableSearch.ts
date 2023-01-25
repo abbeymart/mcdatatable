@@ -24,10 +24,10 @@ class McTableSearch extends HTMLElement {
 
     disconnectedCallback() {
         // cleanup - reset DOM, removeEventLister(s), garbage collection...
-        this.innerHTML = '';
+        this.innerHTML = "";
     }
 }
 
-if (!customElements.get('mc-table-search')) {
-    customElements.define('mc-table-search', McTableSearch);
+if (!customElements.get("mc-table-search")) {
+    customElements.define("mc-table-search", McTableSearch);
 }

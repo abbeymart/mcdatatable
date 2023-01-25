@@ -8,7 +8,7 @@ import {
     DataFetchAlert, DataFetchAlertResult, DataField, DataStats, DataTableProps, DOMType, GetRequestType, ObjectRefType,
     ObjectType, PagePositionType, SortStyle, TableStyle,
 } from "./types";
-import { getLocalStorage, setLocalStorage } from "./helper";
+import { getLocalStorage, } from "./helper";
 
 class DtStore {
     // singleton variable
@@ -22,6 +22,7 @@ class DtStore {
     protected dataFetchAlert?: DataFetchAlert | null;
     protected fetchAlertResult: DataFetchAlertResult;
     protected dataItemsCount: number;
+    protected initialDataTotal: number;
     protected searchItemsCount: number;
     protected paging: boolean;
     protected pageStart: number;
@@ -55,6 +56,7 @@ class DtStore {
         this.dataStats = props?.dataStats || {};
         this.dataCount = this.dataStats.recordsTotal || 0; // TODO: redundant?
         this.dataTotal = this.dataStats.recordsTotal || 0;
+        this.initialDataTotal = this.dataStats.recordsTotal || 0;
         this.totalRecordsCount = this.dataStats.totalRecordsCount || 0;
         this.paging = props?.paging || true;
         this.pageStart = props?.pageStart || 1;
@@ -350,6 +352,14 @@ class DtStore {
         if (this.DOM.pageNav) {
             this.DOM.pageNav.dataTotal = this.DataTotal;
         }
+    }
+
+    get InitialDataTotal(): number {
+        return this.initialDataTotal;
+    }
+
+    set InitialDataTotal(value: number) {
+        this.initialDataTotal = value;
     }
 
     get SortAsc(): boolean {
